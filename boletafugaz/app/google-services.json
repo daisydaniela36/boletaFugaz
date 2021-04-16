@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "659319588008",
+    "project_id": "boletafugaz",
+    "storage_bucket": "boletafugaz.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:659319588008:android:f8abdbaa798df1bcd0ee9d",
+        "android_client_info": {
+          "package_name": "com.example.boletafugaz"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "659319588008-179h7jm3egbjk6ufit18gtl3306e00mq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD-wTkSGB5rxNkhIw9qdDBleeM2QaJuTtk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "659319588008-179h7jm3egbjk6ufit18gtl3306e00mq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
