@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/nav_inicio">
+
+    <fragment
+        android:id="@+id/nav_inicio"
+        android:name="com.example.boletafugaz.ui.InicioFragment"
+        android:label="@string/menu_inicio"
+        tools:layout="@layout/fragment_inicio" />
+
+    <fragment
+        android:id="@+id/nav_factura"
+        android:name="com.example.boletafugaz.ui.FacturaFragment"
+        android:label="@string/menu_factura"
+        tools:layout="@layout/fragment_factura" />
+
+    <fragment
+        android:id="@+id/nav_cuenta"
+        android:name="com.example.boletafugaz.ui.CuentaFragment"
+        android:label="@string/menu_cuenta"
+        tools:layout="@layout/fragment_cuenta" />
+</navigation>

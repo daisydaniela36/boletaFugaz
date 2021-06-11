@@ -85,7 +85,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
-                    startActivity(new Intent(LoginActivity.this,PerfilActivity.class));
+                    startActivity(new Intent(LoginActivity.this,ProfileActivity.class));
                     finish();
                 }else{
                     Toast.makeText(LoginActivity.this, "Correo o Contraseña incorrectos",Toast.LENGTH_SHORT).show();
