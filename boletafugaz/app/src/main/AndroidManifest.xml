@@ -12,8 +12,7 @@
         <activity
             android:name=".ProfileActivity"
             android:label="@string/title_activity_profile"
-            android:theme="@style/Theme.BoletaFugaz.NoActionBar.NoActionBar"></activity>
-        <activity android:name=".PerfilActivity" />
+            android:theme="@style/Theme.BoletaFugaz.NoActionBar"></activity>
         <activity android:name=".ResetPasswordActivity" />
         <activity android:name=".InicioActivity">
             <intent-filter>
