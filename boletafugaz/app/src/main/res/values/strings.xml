@@ -49,6 +49,7 @@
     <string name="btnX">X</string>
     <string name="btnMas">+</string>
     <string name="btnImprimir">Imprimir</string>
+    <string name="btnVolver">Volver</string>
 
     <string name="igual">=</string>
     <string name="ac">AC</string>

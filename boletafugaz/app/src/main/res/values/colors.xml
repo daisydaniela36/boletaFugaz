@@ -16,4 +16,5 @@
     <color name="color6">#040403</color>
     <color name="color7">#ffffff</color>
     <color name="gray">#7fffffff</color>
+    <color name="colorAccent">#FF4081</color>
 </resources>
