@@ -22,7 +22,19 @@
             android:id="@+id/btn_calculadora"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Calculadora" />
+            android:text="boleta" />
+
+        <Button
+            android:id="@+id/button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Factura" />
+
+        <Button
+            android:id="@+id/btn_registrarEmisor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Registrar Emisores" />
     </LinearLayout>
 
 

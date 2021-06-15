@@ -3,6 +3,7 @@
     package="com.example.boletafugaz">
 
     <uses-permission android:name="android.permission.BLUETOOTH" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -10,7 +11,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.BoletaFugaz.NoActionBar">
-        <activity android:name=".ListaBluetoothActivity"></activity>
+        <activity android:name=".RegistrarEmisorActivity"></activity>
+        <activity android:name=".ListaBluetoothActivity" />
         <activity
             android:name=".ProfileActivity"
             android:label="@string/title_activity_profile"
@@ -26,7 +28,6 @@
         <activity android:name=".CalculadoraActivity" />
         <activity android:name=".SignUpActivity" />
         <activity android:name=".LoginActivity" />
-
     </application>
 
 </manifest>

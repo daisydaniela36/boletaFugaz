@@ -12,23 +12,36 @@ import android.graphics.Matrix;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
 import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
+import com.example.boletafugaz.Model.Empresa;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class CalculadoraActivity extends AppCompatActivity implements View.OnClickListener {
@@ -39,20 +52,26 @@ public class CalculadoraActivity extends AppCompatActivity implements View.OnCli
     private TextView txtLabel;
     private EditText edtTexto;
     private Button btnImprimirTexto, btnCerrarConexion, btnVolver;
+    private Spinner spn_empresa;
+
     private BluetoothAdapter bluetoothAdapter;
     private BluetoothDevice dispositivoBluetooth;
     private BluetoothSocket bluetoothSocket;
-
-    private UUID aplicacionUUID = UUID
-            .fromString("00001101-0000-1000-8000-00805F9B34FB");
+    private UUID aplicacionUUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
     private OutputStream outputStream;
     private InputStream inputStream;
-
     private Thread hiloComunicacion;
     private byte[] bufferLectura;
     private int bufferLecturaPosicion;
-
     private volatile boolean pararLectura;
+
+    private FirebaseAuth firebaseAuth;
+    private DatabaseReference mDataBase;
+    List<Empresa> empresas;
+
+    String rut1, nombre1, direccion1, telefono1;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,13 +79,18 @@ public class CalculadoraActivity extends AppCompatActivity implements View.OnCli
         setContentView(R.layout.activity_calculadora);
 
 
-        txtLabel = (TextView) findViewById(R.id.txt_label);
-        edtTexto = (EditText) findViewById(R.id.txtPrecio);
-        btnImprimirTexto = (Button) findViewById(R.id.btnImprimir);
-        btnVolver = (Button) findViewById(R.id.btnVolver);
-        btnCerrarConexion = (Button) findViewById(R.id.btn_cerrar_conexion);
+        txtLabel = findViewById(R.id.txt_label);
+        edtTexto = findViewById(R.id.txtPrecio);
+        btnImprimirTexto =  findViewById(R.id.btnImprimir);
+        btnVolver = findViewById(R.id.btnVolver);
+        btnCerrarConexion = findViewById(R.id.btn_cerrar_conexion);
+        spn_empresa = findViewById(R.id.spn_empresa);
+
+        mDataBase = FirebaseDatabase.getInstance().getReference();
+        firebaseAuth = FirebaseAuth.getInstance();
 
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        loadEmpresa();
 
 
 
@@ -82,13 +106,101 @@ public class CalculadoraActivity extends AppCompatActivity implements View.OnCli
         btnCerrarConexion.setOnClickListener(this);
     }
 
+    public void loadEmpresa(){
+       empresas = new ArrayList<>();
+        String id = firebaseAuth.getCurrentUser().getUid();
+        mDataBase.child("usuario").child(id).child("empresa").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists()){
+                    for(DataSnapshot ds: snapshot.getChildren()){
+                        String id = ds.getKey();
+                        String rut = ds.child("rut").getValue().toString();
+                        String nombre = ds.child("nombre").getValue().toString();
+                        String direccion = ds.child("direccion").getValue().toString();
+                        String telefono = ds.child("telefono").getValue().toString();
+                        empresas.add(new Empresa(id, rut, nombre,direccion,telefono));
+
+                        ArrayAdapter<Empresa> arrayAdapter = new ArrayAdapter<>(CalculadoraActivity.this, android.R.layout.simple_dropdown_item_1line, empresas);
+                        spn_empresa.setAdapter(arrayAdapter);
+
+                        spn_empresa.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                            @Override
+                            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                                String id2 = firebaseAuth.getCurrentUser().getUid();
+
+                                String item = parent.getSelectedItem().toString();
+
+                                DatabaseReference mDataBase2 = FirebaseDatabase.getInstance().getReference();
+                                Query q = mDataBase2.child("usuario").child(id2).child("empresa").orderByChild("nombre").equalTo(item);
+
+                                q.addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        for(DataSnapshot dataSnapshot : snapshot.getChildren()){
+
+                                            String rut =  dataSnapshot.child("rut").getValue().toString();
+                                            String nombre =  dataSnapshot.child("nombre").getValue().toString();
+                                            String direccion =  dataSnapshot.child("direccion").getValue().toString();
+                                            String telefono =  dataSnapshot.child("telefono").getValue().toString();
+
+                                            rut1 = "R.U.T.: "+rut;
+                                            nombre1 = nombre;
+                                            direccion1 = direccion;
+                                            telefono1 = telefono;
+
+                                        }
+
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                    }
+                                });
+
+                            }
+
+                            @Override
+                            public void onNothingSelected(AdapterView<?> parent) {
+
+                            }
+                        });
+                    }
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btnImprimir:
                 if (bluetoothSocket != null) {
                     try {
+
                         String texto = edtTexto.getText().toString() + "\n";
+                        String st1 = rut1 + "\n";
+                        String st2 = "BOLETA ELECTRONICA" + "\n";
+                        String st3 = "N° 541" + "\n";
+                        String st4 = "------------------------------" + "\n";
+                        String st5= "S.I.I - MOSTAZAL" + "\n";
+                        String st6 = "FECHA EMISION: 11/06/2021" + "\n";
+                        String st7 = "------------------------------" + "\n";
+                        String st8 = nombre1+ "\n";
+                        String st9 = direccion1 + "\n";
+                        String st10 = telefono1 + "\n";
+                        String st11 = "------------------------------" + "\n";
+                        String st12= "MONTO TOTAL: 5000" + "\n"+ "\n";
+                        String st13= "el iva incluido en esta boleta  es de $950" + "\n";
+
 
 
                         outputStream.write(0x1C); outputStream.write(0x2E); // Cancelamos el modo de caracteres chino (FS .)
@@ -99,8 +211,31 @@ public class CalculadoraActivity extends AppCompatActivity implements View.OnCli
                         int ancho = 1;
                         int alto = 1;
 
-                        outputStream.write( getByteString(texto, negrita, fuente, ancho, alto) );
+                        int fuente2 = 0;
+                        int negrita2 = 1;
+                        int ancho2 = 0;
+                        int alto2 = 0;
 
+
+
+                        outputStream.write( getByteString(texto, negrita, fuente, ancho, alto));
+                        outputStream.write( getByteString(st1,negrita2, fuente2, ancho2, alto2));
+                        outputStream.write( getByteString(st2,negrita2, fuente2, ancho2, alto2));
+                        outputStream.write( getByteString(st3,negrita2, fuente2, ancho2, alto2));
+                        outputStream.write( getByteString(st4,negrita2, fuente2, ancho2, alto2));
+                        outputStream.write( getByteString(st5,negrita2, fuente2, ancho2, alto2));
+                        outputStream.write( getByteString(st6,negrita2, fuente2, ancho2, alto2));
+                        outputStream.write( getByteString(st7,negrita2, fuente2, ancho2, alto2));
+                        outputStream.write( getByteString(st8,negrita2, fuente2, ancho2, alto2));
+                        outputStream.write( getByteString(st9,negrita2, fuente2, ancho2, alto2));
+                        outputStream.write( getByteString(st10,negrita2, fuente2, ancho2, alto2));
+                        outputStream.write( getByteString(st11,negrita2, fuente2, ancho2, alto2));
+                        outputStream.write( getByteString(st12,negrita2, fuente2, ancho2, alto2));
+                        outputStream.write( getByteString(st13,negrita2, fuente2, ancho2, alto2));
+
+
+                        byte[] center = new byte[]{ 0x1b, 0x61, 0x01 };
+                        outputStream.write( center );
                         outputStream.write("\n\n".getBytes());
 
                     } catch (IOException e) {

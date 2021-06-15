@@ -51,6 +51,11 @@
     <string name="btnImprimir">Imprimir</string>
     <string name="btnVolver">Volver</string>
 
+
+    <string-array name="dlangs">
+        <item>Registre un emisor para usar la calculadora ...</item>
+    </string-array>
+
     <string name="igual">=</string>
     <string name="ac">AC</string>
 </resources>
