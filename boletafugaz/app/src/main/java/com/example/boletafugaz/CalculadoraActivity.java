@@ -8,14 +8,20 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.View;
+import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,10 +30,13 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.print.PrintHelper;
 
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
 import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
 import com.example.boletafugaz.Model.Empresa;
+import com.example.boletafugaz.utilidades.PrintBitmap;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -35,7 +44,14 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.WriterException;
+import com.google.zxing.common.BitMatrix;
+import com.journeyapps.barcodescanner.BarcodeEncoder;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -51,7 +67,7 @@ public class CalculadoraActivity extends AppCompatActivity implements View.OnCli
 
     private TextView txtLabel;
     private EditText edtTexto;
-    private Button btnImprimirTexto, btnCerrarConexion, btnVolver;
+    private Button btnImprimirTexto, btnCerrarConexion, btnVolver, btnGenerateCode;
     private Spinner spn_empresa;
 
     private BluetoothAdapter bluetoothAdapter;
@@ -69,6 +85,20 @@ public class CalculadoraActivity extends AppCompatActivity implements View.OnCli
     private DatabaseReference mDataBase;
     List<Empresa> empresas;
 
+    private String  rutaFoto;
+
+    private BarcodeEncoder barcodeEncoder;
+    private String valueOfEditText;
+    private File codeFile;
+    private RelativeLayout relativeLayout;
+    private MultiFormatWriter writer;
+    private BitMatrix bitMatrix;
+    private Bitmap bitmap = null;
+    private ImageView ivCodeContainer;
+    private final int ANCHO_IMG_58_MM = 384;
+    private static final int MODE_PRINT_IMG = 0;
+
+
     String rut1, nombre1, direccion1, telefono1;
 
 
@@ -85,6 +115,9 @@ public class CalculadoraActivity extends AppCompatActivity implements View.OnCli
         btnVolver = findViewById(R.id.btnVolver);
         btnCerrarConexion = findViewById(R.id.btn_cerrar_conexion);
         spn_empresa = findViewById(R.id.spn_empresa);
+        btnGenerateCode     = findViewById(R.id.btn_generar);
+
+        ivCodeContainer = findViewById(R.id.ivg_imagen);;
 
         mDataBase = FirebaseDatabase.getInstance().getReference();
         firebaseAuth = FirebaseAuth.getInstance();
@@ -92,7 +125,12 @@ public class CalculadoraActivity extends AppCompatActivity implements View.OnCli
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         loadEmpresa();
 
+        btnGenerateCode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
+            }
+        });
 
         btnVolver.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -123,6 +161,8 @@ public class CalculadoraActivity extends AppCompatActivity implements View.OnCli
 
                         ArrayAdapter<Empresa> arrayAdapter = new ArrayAdapter<>(CalculadoraActivity.this, android.R.layout.simple_dropdown_item_1line, empresas);
                         spn_empresa.setAdapter(arrayAdapter);
+
+
 
                         spn_empresa.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                             @Override
@@ -179,13 +219,21 @@ public class CalculadoraActivity extends AppCompatActivity implements View.OnCli
         });
     }
 
+
+
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btnImprimir:
                 if (bluetoothSocket != null) {
                     try {
-
+                        valueOfEditText = edtTexto.getText().toString();
+                        if(valueOfEditText.equals("")|| valueOfEditText == null){
+                            showSnackbar(getResources().getString(R.string.etWithoutContent));
+                        }else{
+                            Toast.makeText(getApplicationContext(), getResources().getString(R.string.etWithContent), Toast.LENGTH_SHORT).show();
+                            generateQrCode(valueOfEditText);
+                        }
                         String texto = edtTexto.getText().toString() + "\n";
                         String st1 = rut1 + "\n";
                         String st2 = "BOLETA ELECTRONICA" + "\n";
@@ -199,7 +247,9 @@ public class CalculadoraActivity extends AppCompatActivity implements View.OnCli
                         String st10 = telefono1 + "\n";
                         String st11 = "------------------------------" + "\n";
                         String st12= "MONTO TOTAL: 5000" + "\n"+ "\n";
-                        String st13= "el iva incluido en esta boleta  es de $950" + "\n";
+                        String st13= "el iva incluido en esta boleta  es de $798" + "\n";
+
+
 
 
 
@@ -233,10 +283,18 @@ public class CalculadoraActivity extends AppCompatActivity implements View.OnCli
                         outputStream.write( getByteString(st12,negrita2, fuente2, ancho2, alto2));
                         outputStream.write( getByteString(st13,negrita2, fuente2, ancho2, alto2));
 
+                        PrintHelper photoPrinter = new PrintHelper(CalculadoraActivity.this);
+                        photoPrinter.setScaleMode(PrintHelper.SCALE_MODE_FIT);
+
+                        Bitmap bitmap = ((BitmapDrawable) ivCodeContainer.getDrawable()).getBitmap();
+
+                        outputStream.write(PrintBitmap.POS_PrintBMP(bitmap, ANCHO_IMG_58_MM, MODE_PRINT_IMG));
 
                         byte[] center = new byte[]{ 0x1b, 0x61, 0x01 };
                         outputStream.write( center );
                         outputStream.write("\n\n".getBytes());
+
+
 
                     } catch (IOException e) {
                         Log.e(TAG_DEBUG, "Error al escribir en el socket");
@@ -245,6 +303,8 @@ public class CalculadoraActivity extends AppCompatActivity implements View.OnCli
                         e.printStackTrace();
                     }
                 } else {
+
+
 
                     Log.e(TAG_DEBUG, "Socket nulo");
 
@@ -258,6 +318,33 @@ public class CalculadoraActivity extends AppCompatActivity implements View.OnCli
 
                 break;
 
+        }
+    }
+
+
+
+
+    private void showSnackbar(String message){
+        final Snackbar snackBar = Snackbar.make(relativeLayout, message, Snackbar.LENGTH_LONG);
+        snackBar.setAction(getResources().getString(R.string.accept), new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                snackBar.dismiss();
+            }
+        })
+                .setActionTextColor(getResources().getColor(R.color.colorPrimary))
+                .show();
+    }
+
+    private void generateQrCode(String qrContent){
+        writer = new MultiFormatWriter();
+        try {
+            bitMatrix = writer.encode(qrContent, BarcodeFormat.PDF_417, 500, 500);
+            barcodeEncoder = new BarcodeEncoder();
+            bitmap = barcodeEncoder.createBitmap(bitMatrix);
+            ivCodeContainer.setImageBitmap(bitmap);
+        } catch (WriterException e) {
+            e.printStackTrace();
         }
     }
 

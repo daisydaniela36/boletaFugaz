@@ -52,6 +52,20 @@
     <string name="btnVolver">Volver</string>
 
 
+    <string name="etQrContent">Contenido del código (Mensaje, Página web, étc)</string>
+    <string name="qrContentButton">GENERAR</string>
+    <string name="saveQrCodeButton">GUARDAR CÓDIGO</string>
+    <string name="shareQrCodeButton">COMPARTIR CÓDIGO</string>
+    <string name="etWithContent">Código generado</string>
+    <string name="etWithoutContent">Error: Contenido vacío</string>
+    <string name="errorNullFile">El código aún no ha sido generado</string>
+    <string name="errorNullBitmap">Código no generado aún</string>
+    <string name="correctImageSaved">¡Imagen guardada correctamente!</string>
+    <string name="codeGeneratedMessage">Código QR generado y enviado desde QRCodeGenerator</string>
+    <string name="qrGeneratorTitle">Generar Código</string>
+    <string name="accept">ACEPTAR</string>
+
+
     <string-array name="dlangs">
         <item>Registre un emisor para usar la calculadora ...</item>
     </string-array>
