@@ -345,13 +345,6 @@
                 android:layout_marginBottom="40dp"
                 android:text="CERRAR CONEXION" />
 
-            <Button
-                android:id="@+id/btn_generar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="generar" />
-
             <ImageView
                 android:id="@+id/ivg_imagen"
                 android:layout_width="match_parent"

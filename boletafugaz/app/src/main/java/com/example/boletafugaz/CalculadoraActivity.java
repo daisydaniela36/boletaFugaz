@@ -67,7 +67,7 @@ public class CalculadoraActivity extends AppCompatActivity implements View.OnCli
 
     private TextView txtLabel;
     private EditText edtTexto;
-    private Button btnImprimirTexto, btnCerrarConexion, btnVolver, btnGenerateCode;
+    private Button btnImprimirTexto, btnCerrarConexion, btnVolver;
     private Spinner spn_empresa;
 
     private BluetoothAdapter bluetoothAdapter;
@@ -115,7 +115,6 @@ public class CalculadoraActivity extends AppCompatActivity implements View.OnCli
         btnVolver = findViewById(R.id.btnVolver);
         btnCerrarConexion = findViewById(R.id.btn_cerrar_conexion);
         spn_empresa = findViewById(R.id.spn_empresa);
-        btnGenerateCode     = findViewById(R.id.btn_generar);
 
         ivCodeContainer = findViewById(R.id.ivg_imagen);;
 
@@ -125,12 +124,7 @@ public class CalculadoraActivity extends AppCompatActivity implements View.OnCli
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         loadEmpresa();
 
-        btnGenerateCode.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-            }
-        });
 
         btnVolver.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -227,30 +221,34 @@ public class CalculadoraActivity extends AppCompatActivity implements View.OnCli
             case R.id.btnImprimir:
                 if (bluetoothSocket != null) {
                     try {
-                        valueOfEditText = edtTexto.getText().toString();
+
+
+                        String st = "\n";
+                        String st1 = "==============================" + "\n";
+                        String st2 = rut1 + "\n";
+                        String st3 = "BOLETA ELECTRONICA" + "\n";
+                        String st4 = "N° 541" + "\n";
+                        String st5 = "------------------------------" + "\n";
+                        String st6= nombre1+ "\n";
+                        String st7 = direccion1 + "\n";
+                        String st8 = telefono1 + "\n";
+                        String st9 = "==============================" + "\n";
+                        String st10 = "FECHA EMISION: 11/06/2021" + "\n";
+                        String st11 = "==============================" + "\n";
+                        String st12= "MONTO TOTAL: 5000" + "\n"+ "\n";
+                        String st13= "el iva incluido en esta boleta  es de $798" + "\n";
+                        String st14= "------------------------------" + "\n";
+                        String st15= "TIMBRE ELECTRONICO SII" + "\n";
+                        String st16= "Verifique documento en sii.cl" + "\n";
+
+                        valueOfEditText = rut1+"BOLETA ELECTRONICA"+"N° 541"+nombre1+direccion1+telefono1+"FECHA EMISION: 11/06/2021"+"MONTO TOTAL: 5000"+"el iva incluido en esta boleta  es de $798";
+
                         if(valueOfEditText.equals("")|| valueOfEditText == null){
                             showSnackbar(getResources().getString(R.string.etWithoutContent));
                         }else{
                             Toast.makeText(getApplicationContext(), getResources().getString(R.string.etWithContent), Toast.LENGTH_SHORT).show();
                             generateQrCode(valueOfEditText);
                         }
-                        String texto = edtTexto.getText().toString() + "\n";
-                        String st1 = rut1 + "\n";
-                        String st2 = "BOLETA ELECTRONICA" + "\n";
-                        String st3 = "N° 541" + "\n";
-                        String st4 = "------------------------------" + "\n";
-                        String st5= "S.I.I - MOSTAZAL" + "\n";
-                        String st6 = "FECHA EMISION: 11/06/2021" + "\n";
-                        String st7 = "------------------------------" + "\n";
-                        String st8 = nombre1+ "\n";
-                        String st9 = direccion1 + "\n";
-                        String st10 = telefono1 + "\n";
-                        String st11 = "------------------------------" + "\n";
-                        String st12= "MONTO TOTAL: 5000" + "\n"+ "\n";
-                        String st13= "el iva incluido en esta boleta  es de $798" + "\n";
-
-
-
 
 
                         outputStream.write(0x1C); outputStream.write(0x2E); // Cancelamos el modo de caracteres chino (FS .)
@@ -268,7 +266,6 @@ public class CalculadoraActivity extends AppCompatActivity implements View.OnCli
 
 
 
-                        outputStream.write( getByteString(texto, negrita, fuente, ancho, alto));
                         outputStream.write( getByteString(st1,negrita2, fuente2, ancho2, alto2));
                         outputStream.write( getByteString(st2,negrita2, fuente2, ancho2, alto2));
                         outputStream.write( getByteString(st3,negrita2, fuente2, ancho2, alto2));
@@ -282,18 +279,25 @@ public class CalculadoraActivity extends AppCompatActivity implements View.OnCli
                         outputStream.write( getByteString(st11,negrita2, fuente2, ancho2, alto2));
                         outputStream.write( getByteString(st12,negrita2, fuente2, ancho2, alto2));
                         outputStream.write( getByteString(st13,negrita2, fuente2, ancho2, alto2));
+                        outputStream.write( getByteString(st14,negrita2, fuente2, ancho2, alto2));
+
+                        byte[] center = new byte[]{ 0x1b, 0x61, 0x01 };
+                        outputStream.write( center );
 
                         PrintHelper photoPrinter = new PrintHelper(CalculadoraActivity.this);
                         photoPrinter.setScaleMode(PrintHelper.SCALE_MODE_FIT);
 
                         Bitmap bitmap = ((BitmapDrawable) ivCodeContainer.getDrawable()).getBitmap();
 
-                        outputStream.write(PrintBitmap.POS_PrintBMP(bitmap, ANCHO_IMG_58_MM, MODE_PRINT_IMG));
+                        outputStream.write(PrintBitmap.POS_PrintBMP(bitmap, ANCHO_IMG_58_MM,MODE_PRINT_IMG));
 
-                        byte[] center = new byte[]{ 0x1b, 0x61, 0x01 };
-                        outputStream.write( center );
-                        outputStream.write("\n\n".getBytes());
+                        outputStream.write("\n".getBytes());
 
+                        outputStream.write( getByteString(st15,negrita2, fuente2, ancho2, alto2));
+                        outputStream.write( getByteString(st16,negrita2, fuente2, ancho2, alto2));
+
+                        byte[] center1 = new byte[]{ 0x1b, 0x61, 0x01 };
+                        outputStream.write( center1 );
 
 
                     } catch (IOException e) {
@@ -339,7 +343,7 @@ public class CalculadoraActivity extends AppCompatActivity implements View.OnCli
     private void generateQrCode(String qrContent){
         writer = new MultiFormatWriter();
         try {
-            bitMatrix = writer.encode(qrContent, BarcodeFormat.PDF_417, 500, 500);
+            bitMatrix = writer.encode(qrContent, BarcodeFormat.PDF_417, 700, 700);
             barcodeEncoder = new BarcodeEncoder();
             bitmap = barcodeEncoder.createBitmap(bitMatrix);
             ivCodeContainer.setImageBitmap(bitmap);

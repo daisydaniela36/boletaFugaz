@@ -13,7 +13,7 @@ public class PrintBitmap {
     public static byte[] POS_PrintBMP(Bitmap mBitmap, int nWidth, int nMode) {
         int width = ((nWidth + 7) / 8) * 8;
         int height = mBitmap.getHeight() * width / mBitmap.getWidth();
-        height = ((height + 7) / 8) * 8;
+        height = ((height + 7) / 8) * 15;
 
         Bitmap rszBitmap = mBitmap;
         if (mBitmap.getWidth() != width){
