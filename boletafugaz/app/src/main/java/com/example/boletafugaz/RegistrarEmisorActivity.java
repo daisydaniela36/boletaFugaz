@@ -18,7 +18,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class RegistrarEmisorActivity extends AppCompatActivity {
 
-    private EditText edt_rut, edt_nombre, edt_direccion, edt_telefono;
+    private EditText edt_rut, edt_nombre,edt_comuna, edt_direccion, edt_telefono;
     private Button btn_registrar, btn_volver;
     private FirebaseAuth firebaseAuth;
     private DatabaseReference bdEmpresa;
@@ -37,6 +37,7 @@ public class RegistrarEmisorActivity extends AppCompatActivity {
 
         edt_rut = findViewById(R.id.edt_rut);
         edt_nombre = findViewById(R.id.edt_nombre);
+        edt_comuna = findViewById(R.id.edt_comuna);
         edt_direccion = findViewById(R.id.edt_direccion);
         edt_telefono = findViewById(R.id.edt_telefono);
         btn_registrar = findViewById(R.id.btn_registrar);
@@ -60,13 +61,14 @@ public class RegistrarEmisorActivity extends AppCompatActivity {
 
                 String rut = edt_rut.getText().toString();
                 String nombre = edt_nombre.getText().toString();
+                String comuna = edt_comuna.getText().toString();
                 String direccion = edt_direccion.getText().toString();
                 String telefono = edt_telefono.getText().toString();
 
-                if (!TextUtils.isEmpty(rut) && !TextUtils.isEmpty(nombre)  && !TextUtils.isEmpty(direccion)  && !TextUtils.isEmpty(telefono) ) {
+                if (!TextUtils.isEmpty(rut) && !TextUtils.isEmpty(nombre) && !TextUtils.isEmpty(comuna) && !TextUtils.isEmpty(direccion)  && !TextUtils.isEmpty(telefono) ) {
                     String id = bdEmpresa.push().getKey();
 
-                    Empresa mascota = new Empresa(id,rut, nombre, direccion, telefono);
+                    Empresa mascota = new Empresa(id,rut, nombre,comuna, direccion, telefono);
                     bdEmpresa.child(id).setValue(mascota);
 
                     Toast.makeText(RegistrarEmisorActivity.this, "Se registro correctamente", Toast.LENGTH_SHORT).show();
@@ -82,6 +84,7 @@ public class RegistrarEmisorActivity extends AppCompatActivity {
 
                 edt_rut.setText("");
                 edt_nombre.setText("");
+                edt_comuna.setText("");
                 edt_direccion.setText("");
                 edt_telefono.setText("");
             }

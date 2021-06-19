@@ -11,10 +11,26 @@
         <item
             android:id="@+id/nav_factura"
             android:icon="@drawable/factura"
-            android:title="@string/menu_factura" />
+            android:title="@string/menu_reporte" />
         <item
             android:id="@+id/nav_cuenta"
             android:icon="@drawable/cuenta"
             android:title="@string/menu_cuenta" />
+        <item
+            android:id="@+id/nav_emisor"
+            android:icon="@drawable/empresa"
+            android:title="@string/menu_emisor" />
+        <item
+            android:id="@+id/nav_lista_emisor"
+            android:icon="@drawable/lista"
+            android:title="@string/menu_lista_emisor" />
+        <item
+            android:id="@+id/nav_termino"
+            android:icon="@drawable/terminos"
+            android:title="@string/menu_termino" />
+        <item
+            android:id="@+id/nav_politica"
+            android:icon="@drawable/politica"
+            android:title="@string/menu_politica" />
     </group>
 </menu>

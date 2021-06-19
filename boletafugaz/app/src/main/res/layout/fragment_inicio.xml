@@ -6,35 +6,56 @@
     android:layout_height="match_parent"
     tools:context=".ui.InicioFragment">
 
-
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/boleta"
+        android:scaleType="centerCrop"
+        />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_alignParentBottom="true"
-        android:background="@color/colorPrimary"
-        android:backgroundTint="@color/colorPrimary"
+        android:backgroundTint="@color/black"
         android:orientation="vertical"
-        android:padding="1dp">
+        android:background="#d8000000"
+        android:padding="1dp"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="0dp">
+
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="342dp"
+            android:layout_height="157dp"
+            android:layout_marginLeft="9dp"
+            android:layout_marginTop="90dp"
+            android:src="@drawable/boletae" />
 
         <Button
             android:id="@+id/btn_calculadora"
-            android:layout_width="match_parent"
+            android:layout_width="262dp"
             android:layout_height="wrap_content"
-            android:text="boleta" />
+            android:layout_marginLeft="50dp"
+            android:text="INGRESAR BOLETAS" />
+
+        <ImageView
+            android:id="@+id/imageView4"
+            android:layout_width="342dp"
+            android:layout_height="157dp"
+            android:layout_marginLeft="9dp"
+            android:layout_marginTop="70dp"
+            android:src="@drawable/facturae" />
 
         <Button
             android:id="@+id/button"
-            android:layout_width="match_parent"
+            android:layout_width="262dp"
             android:layout_height="wrap_content"
-            android:text="Factura" />
+            android:layout_marginLeft="50dp"
+            android:text="INGRESAR FACTURAS" />
 
-        <Button
-            android:id="@+id/btn_registrarEmisor"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Registrar Emisores" />
     </LinearLayout>
 
 

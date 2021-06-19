@@ -5,16 +5,18 @@ public class Empresa {
     String id;
     String rut;
     String nombre;
+    String comuna;
     String direccion;
     String telefono;
 
     public Empresa() {
     }
 
-    public Empresa(String id, String rut, String nombre, String direccion, String telefono) {
+    public Empresa(String id, String rut, String nombre,String comuna, String direccion, String telefono) {
         this.id = id;
         this.rut = rut;
         this.nombre = nombre;
+        this.comuna = comuna;
         this.direccion = direccion;
         this.telefono = telefono;
     }
@@ -41,6 +43,14 @@ public class Empresa {
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
+    }
+
+    public String getComuna() {
+        return comuna;
+    }
+
+    public void setComuna(String comuna) {
+        this.comuna = comuna;
     }
 
     public String getDireccion() {

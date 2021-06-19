@@ -28,10 +28,15 @@
 
     <string name="menu_inicio">Inicio</string>
     <string name="menu_factura">Factura</string>
+    <string name="menu_reporte">Reportes</string>
+    <string name="menu_termino">Terminos y condiciones</string>
+    <string name="menu_politica">Politica de privacidad</string>
     <string name="menu_cuenta">Cuenta</string>
+    <string name="menu_emisor">Registra a tus emisores</string>
+    <string name="menu_lista_emisor">Lista de emisores</string>
 
     <string name="txtCantidad">Cantidad</string>
-    <string name="txtPrecio">Precio X Cantidad</string>
+    <string name="txtPrecio">0</string>
     <string name="lblTotal">Total:</string>
 
     <string name="btn0">0</string>

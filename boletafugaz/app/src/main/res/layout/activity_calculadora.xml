@@ -55,7 +55,7 @@
             android:focusable="true"
             android:hint="@string/txtPrecio"
             android:inputType="textPersonName"
-            android:textAlignment="center"
+            android:textAlignment="viewEnd"
             android:textColor="#000000"
             android:textSize="30sp"
             android:textStyle="bold" />
@@ -174,8 +174,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:background="@color/color3"
-                    android:contentDescription="@string/btnClear" />
+                    android:background="@color/color5"
+                    android:contentDescription="@string/btnClear"
+                    android:src="@android:drawable/ic_input_delete" />
 
             </LinearLayout>
 
@@ -345,15 +346,15 @@
                 android:layout_marginBottom="40dp"
                 android:text="CERRAR CONEXION" />
 
-            <ImageView
-                android:id="@+id/ivg_imagen"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:visibility="invisible"
-                tools:srcCompat="@tools:sample/avatars" />
-
         </LinearLayout>
+
+        <ImageView
+            android:id="@+id/ivg_imagen"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:visibility="invisible"
+            tools:srcCompat="@tools:sample/avatars" />
 
 
     </LinearLayout>

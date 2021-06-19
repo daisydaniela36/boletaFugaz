@@ -85,10 +85,11 @@ public class CalculadoraActivity extends AppCompatActivity implements View.OnCli
     private DatabaseReference mDataBase;
     List<Empresa> empresas;
 
-    private String  rutaFoto;
 
     private BarcodeEncoder barcodeEncoder;
     private String valueOfEditText;
+    private String valueOfEditText1;
+    private String valueOfEditText2;
     private File codeFile;
     private RelativeLayout relativeLayout;
     private MultiFormatWriter writer;
@@ -99,7 +100,7 @@ public class CalculadoraActivity extends AppCompatActivity implements View.OnCli
     private static final int MODE_PRINT_IMG = 0;
 
 
-    String rut1, nombre1, direccion1, telefono1;
+    String rut1, nombre1,comuna1, direccion1, telefono1;
 
 
 
@@ -149,9 +150,10 @@ public class CalculadoraActivity extends AppCompatActivity implements View.OnCli
                         String id = ds.getKey();
                         String rut = ds.child("rut").getValue().toString();
                         String nombre = ds.child("nombre").getValue().toString();
+                        String comuna = ds.child("comuna").getValue().toString();
                         String direccion = ds.child("direccion").getValue().toString();
                         String telefono = ds.child("telefono").getValue().toString();
-                        empresas.add(new Empresa(id, rut, nombre,direccion,telefono));
+                        empresas.add(new Empresa(id, rut, nombre,comuna,direccion,telefono));
 
                         ArrayAdapter<Empresa> arrayAdapter = new ArrayAdapter<>(CalculadoraActivity.this, android.R.layout.simple_dropdown_item_1line, empresas);
                         spn_empresa.setAdapter(arrayAdapter);
@@ -176,11 +178,13 @@ public class CalculadoraActivity extends AppCompatActivity implements View.OnCli
 
                                             String rut =  dataSnapshot.child("rut").getValue().toString();
                                             String nombre =  dataSnapshot.child("nombre").getValue().toString();
+                                            String comuna =  dataSnapshot.child("comuna").getValue().toString();
                                             String direccion =  dataSnapshot.child("direccion").getValue().toString();
                                             String telefono =  dataSnapshot.child("telefono").getValue().toString();
 
                                             rut1 = "R.U.T.: "+rut;
                                             nombre1 = nombre;
+                                            comuna1 = comuna;
                                             direccion1 = direccion;
                                             telefono1 = telefono;
 
@@ -231,17 +235,22 @@ public class CalculadoraActivity extends AppCompatActivity implements View.OnCli
                         String st5 = "------------------------------" + "\n";
                         String st6= nombre1+ "\n";
                         String st7 = direccion1 + "\n";
-                        String st8 = telefono1 + "\n";
-                        String st9 = "==============================" + "\n";
-                        String st10 = "FECHA EMISION: 11/06/2021" + "\n";
-                        String st11 = "==============================" + "\n";
-                        String st12= "MONTO TOTAL: 5000" + "\n"+ "\n";
-                        String st13= "el iva incluido en esta boleta  es de $798" + "\n";
-                        String st14= "------------------------------" + "\n";
-                        String st15= "TIMBRE ELECTRONICO SII" + "\n";
-                        String st16= "Verifique documento en sii.cl" + "\n";
+                        String st8 = comuna1 + "\n";
+                        String st9 = "+569"+telefono1 + "\n";
+                        String st10 = "==============================" + "\n";
+                        String st11 = "FECHA EMISION: 11/06/2021" + "\n";
+                        String st12 = "==============================" + "\n";
+                        String st13= "MONTO TOTAL: 5000" + "\n"+ "\n";
+                        String st14= "el iva incluido en esta boleta  es de $798" + "\n";
+                        String st15= "------------------------------" + "\n";
+                        String st16= "TIMBRE ELECTRONICO SII" + "\n";
+                        String st17= "Verifique documento en sii.cl" + "\n";
 
-                        valueOfEditText = rut1+"BOLETA ELECTRONICA"+"N° 541"+nombre1+direccion1+telefono1+"FECHA EMISION: 11/06/2021"+"MONTO TOTAL: 5000"+"el iva incluido en esta boleta  es de $798";
+                        String vt1 = rut1;
+
+                        valueOfEditText = rut1+"B"+"O"+"L"+"E"+"T"+"A"+ "ELECTRONICA"+"N° 541"+nombre1+direccion1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1;
+
+                        //"fecha emision: 11/06/2021 monto total: 5000 el iva incluido               "
 
                         if(valueOfEditText.equals("")|| valueOfEditText == null){
                             showSnackbar(getResources().getString(R.string.etWithoutContent));
@@ -254,10 +263,6 @@ public class CalculadoraActivity extends AppCompatActivity implements View.OnCli
                         outputStream.write(0x1C); outputStream.write(0x2E); // Cancelamos el modo de caracteres chino (FS .)
                         outputStream.write(0x1B); outputStream.write(0x74); outputStream.write(0x10); // Seleccionamos los caracteres escape (ESC t n) - n = 16(0x10) para WPC1252
 
-                        int fuente = 0;
-                        int negrita = 0;
-                        int ancho = 1;
-                        int alto = 1;
 
                         int fuente2 = 0;
                         int negrita2 = 1;
@@ -280,6 +285,7 @@ public class CalculadoraActivity extends AppCompatActivity implements View.OnCli
                         outputStream.write( getByteString(st12,negrita2, fuente2, ancho2, alto2));
                         outputStream.write( getByteString(st13,negrita2, fuente2, ancho2, alto2));
                         outputStream.write( getByteString(st14,negrita2, fuente2, ancho2, alto2));
+                        outputStream.write( getByteString(st15,negrita2, fuente2, ancho2, alto2));
 
                         byte[] center = new byte[]{ 0x1b, 0x61, 0x01 };
                         outputStream.write( center );
@@ -293,8 +299,9 @@ public class CalculadoraActivity extends AppCompatActivity implements View.OnCli
 
                         outputStream.write("\n".getBytes());
 
-                        outputStream.write( getByteString(st15,negrita2, fuente2, ancho2, alto2));
+
                         outputStream.write( getByteString(st16,negrita2, fuente2, ancho2, alto2));
+                        outputStream.write( getByteString(st17,negrita2, fuente2, ancho2, alto2));
 
                         byte[] center1 = new byte[]{ 0x1b, 0x61, 0x01 };
                         outputStream.write( center1 );
@@ -324,9 +331,6 @@ public class CalculadoraActivity extends AppCompatActivity implements View.OnCli
 
         }
     }
-
-
-
 
     private void showSnackbar(String message){
         final Snackbar snackBar = Snackbar.make(relativeLayout, message, Snackbar.LENGTH_LONG);

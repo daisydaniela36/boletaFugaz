@@ -33,7 +33,7 @@ public class PrintBitmap {
     public static byte[] Print_1D2A(Bitmap bmp){
         int width = bmp.getWidth();
         int height = bmp.getHeight();
-        byte data[]=new byte[1024*100];
+        byte data[]=new byte[1024*720];
         data[0] = 0x1D;// caracter GS
         data[1] = 0x2A;// caracter *
         data[2] =(byte)( (width - 1)/ 8 + 1);// X
