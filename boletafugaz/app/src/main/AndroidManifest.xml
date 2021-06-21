@@ -11,7 +11,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.BoletaFugaz.NoActionBar">
-        <activity android:name=".GenerarQRActivity"></activity>
+        <activity android:name=".MostrarEmisorActivity"></activity>
+        <activity android:name=".FacturaActivity" />
+        <activity android:name=".GenerarQRActivity" />
         <activity android:name=".RegistrarEmisorActivity" />
         <activity android:name=".ListaBluetoothActivity" />
         <activity

@@ -17,4 +17,5 @@
     <color name="color7">#ffffff</color>
     <color name="gray">#7fffffff</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="red">#FF5722</color>
 </resources>

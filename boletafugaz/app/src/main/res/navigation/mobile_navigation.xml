@@ -12,14 +12,35 @@
         tools:layout="@layout/fragment_inicio" />
 
     <fragment
-        android:id="@+id/nav_factura"
-        android:name="com.example.boletafugaz.ui.FacturaFragment"
-        android:label="@string/menu_factura"
-        tools:layout="@layout/fragment_factura" />
+        android:id="@+id/nav_reportes"
+        android:name="com.example.boletafugaz.ui.ReporteFragment"
+        android:label="@string/menu_reporte"
+        tools:layout="@layout/fragment_reporte" />
 
     <fragment
         android:id="@+id/nav_cuenta"
         android:name="com.example.boletafugaz.ui.CuentaFragment"
         android:label="@string/menu_cuenta"
         tools:layout="@layout/fragment_cuenta" />
+
+    <fragment
+        android:id="@+id/nav_emisor"
+        android:name="com.example.boletafugaz.ui.RegistroEmisorFragment"
+        android:label="@string/menu_emisor"
+        tools:layout="@layout/fragment_registro_emisor" />
+    <fragment
+        android:id="@+id/nav_lista_emisor"
+        android:name="com.example.boletafugaz.ui.ListaEmisorFragment"
+        android:label="@string/menu_lista_emisor"
+        tools:layout="@layout/fragment_lista_emisor" />
+    <fragment
+        android:id="@+id/nav_termino"
+        android:name="com.example.boletafugaz.ui.TerminosFragment"
+        android:label="@string/menu_termino"
+        tools:layout="@layout/fragment_terminos" />
+    <fragment
+        android:id="@+id/nav_politica"
+        android:name="com.example.boletafugaz.ui.PoliticaFragment"
+        android:label="@string/menu_politica"
+        tools:layout="@layout/fragment_politica" />
 </navigation>

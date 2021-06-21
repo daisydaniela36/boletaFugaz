@@ -50,7 +50,7 @@
             android:src="@drawable/facturae" />
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/btn_factura"
             android:layout_width="262dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="50dp"
