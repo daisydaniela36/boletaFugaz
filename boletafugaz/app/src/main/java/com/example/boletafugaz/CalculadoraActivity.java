@@ -70,7 +70,7 @@ public class CalculadoraActivity extends AppCompatActivity implements View.OnCli
     private static final int COD_PERMISOS = 872;
 
     private TextView txtLabel;
-    private EditText edtTexto;
+    private EditText edtTexto, etconcatenar;
     private Button btnImprimirTexto, btnCerrarConexion, btnVolver;
     private Button btnMas,btnIgual,btnNdoble0,btnN0,btnMultiplicar,btnN3,btnN2,btnN1,btnN6,btnN5,btnN4,btnAC,btnN9,btnN8,btnN7;
     private ImageButton btnClear;
@@ -155,6 +155,73 @@ public class CalculadoraActivity extends AppCompatActivity implements View.OnCli
         btnN9 = findViewById(R.id.btnN9);
         btnN8 = findViewById(R.id.btnN8);
         btnN7 = findViewById(R.id.btnN7);
+
+        btnNdoble0.setOnClickListener((v) -> {
+
+            etconcatenar = findViewById(R.id.txtPrecio);
+            edtTexto.setText(etconcatenar.getText().toString() + "00");
+        });
+
+        btnN0.setOnClickListener((v) -> {
+
+            etconcatenar = findViewById(R.id.txtPrecio);
+            edtTexto.setText(etconcatenar.getText().toString() + "0");
+
+        });
+        btnN3.setOnClickListener((v) -> {
+
+            etconcatenar = findViewById(R.id.txtPrecio);
+            edtTexto.setText(etconcatenar.getText().toString() + "3");
+
+        });
+        btnN2.setOnClickListener((v) -> {
+
+            etconcatenar = findViewById(R.id.txtPrecio);
+            edtTexto.setText(etconcatenar.getText().toString() + "2");
+
+        });
+        btnN1.setOnClickListener((v) -> {
+
+            etconcatenar = findViewById(R.id.txtPrecio);
+            edtTexto.setText(etconcatenar.getText().toString() + "1");
+
+        });
+        btnN6.setOnClickListener((v) -> {
+
+            etconcatenar = findViewById(R.id.txtPrecio);
+            edtTexto.setText(etconcatenar.getText().toString() + "6");
+
+        });
+        btnN5.setOnClickListener((v) -> {
+
+            etconcatenar = findViewById(R.id.txtPrecio);
+            edtTexto.setText(etconcatenar.getText().toString() + "5");
+
+        });
+        btnN4.setOnClickListener((v) -> {
+
+            etconcatenar = findViewById(R.id.txtPrecio);
+            edtTexto.setText(etconcatenar.getText().toString() + "4");
+
+        });
+        btnN9.setOnClickListener((v) -> {
+
+            etconcatenar = findViewById(R.id.txtPrecio);
+            edtTexto.setText(etconcatenar.getText().toString() + "9");
+
+        });
+        btnN8.setOnClickListener((v) -> {
+
+            etconcatenar = findViewById(R.id.txtPrecio);
+            edtTexto.setText(etconcatenar.getText().toString() + "8");
+
+        });
+        btnN7.setOnClickListener((v) -> {
+
+            etconcatenar = findViewById(R.id.txtPrecio);
+            edtTexto.setText(etconcatenar.getText().toString() + "7");
+
+        });
 
 
         btnVolver.setOnClickListener(new View.OnClickListener() {
