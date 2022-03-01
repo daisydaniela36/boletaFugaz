@@ -20,6 +20,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
@@ -71,6 +72,8 @@ public class CalculadoraActivity extends AppCompatActivity implements View.OnCli
     private TextView txtLabel;
     private EditText edtTexto;
     private Button btnImprimirTexto, btnCerrarConexion, btnVolver;
+    private Button btnMas,btnIgual,btnNdoble0,btnN0,btnMultiplicar,btnN3,btnN2,btnN1,btnN6,btnN5,btnN4,btnAC,btnN9,btnN8,btnN7;
+    private ImageButton btnClear;
     private Spinner spn_empresa;
 
     private BluetoothAdapter bluetoothAdapter;
@@ -136,6 +139,22 @@ public class CalculadoraActivity extends AppCompatActivity implements View.OnCli
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         loadEmpresa();
 
+        btnMas = findViewById(R.id.btnMas);
+        btnIgual = findViewById(R.id.btnIgual);
+        btnNdoble0 = findViewById(R.id.btnNdoble0);
+        btnN0 = findViewById(R.id.btnN0);
+        btnMultiplicar = findViewById(R.id.btnMultiplicar);
+        btnN3 = findViewById(R.id.btnN3);
+        btnN2 = findViewById(R.id.btnN2);
+        btnN1 = findViewById(R.id.btnN1);
+        btnClear = findViewById(R.id.btnClear);
+        btnN6 = findViewById(R.id.btnN6);
+        btnN5 = findViewById(R.id.btnN5);
+        btnN4 = findViewById(R.id.btnN4);
+        btnAC = findViewById(R.id.btnAC);
+        btnN9 = findViewById(R.id.btnN9);
+        btnN8 = findViewById(R.id.btnN8);
+        btnN7 = findViewById(R.id.btnN7);
 
 
         btnVolver.setOnClickListener(new View.OnClickListener() {
