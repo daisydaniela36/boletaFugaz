@@ -58,6 +58,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -86,6 +87,7 @@ public class CalculadoraActivity extends AppCompatActivity implements View.OnCli
     private byte[] bufferLectura;
     private int bufferLecturaPosicion;
     private volatile boolean pararLectura;
+    double calc1, calc2,resultIva;
 
     private FirebaseAuth firebaseAuth;
     private DatabaseReference mDataBase;
@@ -177,11 +179,10 @@ public class CalculadoraActivity extends AppCompatActivity implements View.OnCli
                     edtTexto.setText(etconcatenar.getText().toString() + resultado);
 
                 }
-                if (operador.equals("*")){
+                else if (operador.equals("*")){
                     edtTexto.setText("");
                     resultado = numero1 * numero2;
                     edtTexto.setText(etconcatenar.getText().toString() + resultado);
-
                 }
             }
         });
@@ -369,6 +370,12 @@ public class CalculadoraActivity extends AppCompatActivity implements View.OnCli
                 if (bluetoothSocket != null) {
                     try {
 
+                        DecimalFormat df = new DecimalFormat("#");
+
+                        calc1 = resultado / 1.19;
+                        calc2 = calc1 * 1.19;
+                        resultIva = calc2-calc1;
+
 
                         String st = "\n";
                         String st1 = "==============================" + "\n";
@@ -384,12 +391,13 @@ public class CalculadoraActivity extends AppCompatActivity implements View.OnCli
                         String st11 = "FECHA EMISION: "+salida+ "\n";
                         String st12 = "==============================" + "\n";
                         String st13= "MONTO TOTAL: "+resultado + "\n"+ "\n";
-                        String st14= "el iva incluido en esta boleta  es de $798" + "\n";
+                        String st14= "el iva incluido en esta boleta  es de $"+df.format(resultIva) + "\n";
                         String st15= "------------------------------" + "\n";
                         String st16= "TIMBRE ELECTRONICO SII" + "\n";
                         String st17= "Verifique documento en sii.cl" + "\n";
 
                         String vt1 = rut1;
+
 
                         valueOfEditText = rut1+"B"+"O"+"L"+"E"+"T"+"A"+ "ELECTRONICA"+"N° 541"+nombre1+direccion1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1+telefono1;
 
