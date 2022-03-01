@@ -56,7 +56,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -100,7 +103,15 @@ public class CalculadoraActivity extends AppCompatActivity implements View.OnCli
     private static final int MODE_PRINT_IMG = 0;
 
 
+
+
     String rut1, nombre1,comuna1, direccion1, telefono1;
+
+    long ahora = System.currentTimeMillis();
+    Date fecha = new Date(ahora);
+
+    DateFormat df = new SimpleDateFormat("dd/MM/yy");
+    String salida = df.format(fecha);
 
 
 
@@ -238,7 +249,7 @@ public class CalculadoraActivity extends AppCompatActivity implements View.OnCli
                         String st8 = comuna1 + "\n";
                         String st9 = "+569"+telefono1 + "\n";
                         String st10 = "==============================" + "\n";
-                        String st11 = "FECHA EMISION: 11/06/2021" + "\n";
+                        String st11 = "FECHA EMISION: "+salida+ "\n";
                         String st12 = "==============================" + "\n";
                         String st13= "MONTO TOTAL: 5000" + "\n"+ "\n";
                         String st14= "el iva incluido en esta boleta  es de $798" + "\n";
