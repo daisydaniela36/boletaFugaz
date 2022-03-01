@@ -104,7 +104,8 @@ public class CalculadoraActivity extends AppCompatActivity implements View.OnCli
     private ImageView ivCodeContainer;
     private final int ANCHO_IMG_58_MM = 384;
     private static final int MODE_PRINT_IMG = 0;
-
+    int numero1,numero2,resultado;
+    String operador;
 
 
 
@@ -155,6 +156,51 @@ public class CalculadoraActivity extends AppCompatActivity implements View.OnCli
         btnN9 = findViewById(R.id.btnN9);
         btnN8 = findViewById(R.id.btnN8);
         btnN7 = findViewById(R.id.btnN7);
+
+        btnMas.setOnClickListener((v) -> {
+            operador = "+";
+            etconcatenar = findViewById(R.id.txtPrecio);
+            numero1 = Integer.parseInt(etconcatenar.getText().toString());
+            edtTexto.setText("");
+
+        });
+
+        btnIgual.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                etconcatenar = findViewById(R.id.txtPrecio);
+                numero2 = Integer.parseInt(etconcatenar.getText().toString());
+                if(operador.equals("+")){
+                    edtTexto.setText("");
+                    resultado = numero1 + numero2;
+                    edtTexto.setText(etconcatenar.getText().toString() + resultado);
+
+                }
+                if (operador.equals("*")){
+                    edtTexto.setText("");
+                    resultado = numero1 * numero2;
+                    edtTexto.setText(etconcatenar.getText().toString() + resultado);
+
+                }
+            }
+        });
+
+        btnAC.setOnClickListener((v) -> {
+            operador = "AC";
+            edtTexto.setText("");
+
+
+        });
+
+        btnMultiplicar.setOnClickListener((v) -> {
+            operador = "*";
+            etconcatenar = findViewById(R.id.txtPrecio);
+            numero1 = Integer.parseInt(etconcatenar.getText().toString());
+            edtTexto.setText("");
+
+
+        });
 
         btnNdoble0.setOnClickListener((v) -> {
 
@@ -337,7 +383,7 @@ public class CalculadoraActivity extends AppCompatActivity implements View.OnCli
                         String st10 = "==============================" + "\n";
                         String st11 = "FECHA EMISION: "+salida+ "\n";
                         String st12 = "==============================" + "\n";
-                        String st13= "MONTO TOTAL: 5000" + "\n"+ "\n";
+                        String st13= "MONTO TOTAL: "+resultado + "\n"+ "\n";
                         String st14= "el iva incluido en esta boleta  es de $798" + "\n";
                         String st15= "------------------------------" + "\n";
                         String st16= "TIMBRE ELECTRONICO SII" + "\n";
