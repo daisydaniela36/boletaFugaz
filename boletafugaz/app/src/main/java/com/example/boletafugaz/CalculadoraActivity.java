@@ -159,6 +159,7 @@ public class CalculadoraActivity extends AppCompatActivity implements View.OnCli
         btnN8 = findViewById(R.id.btnN8);
         btnN7 = findViewById(R.id.btnN7);
 
+
         btnMas.setOnClickListener((v) -> {
             operador = "+";
             etconcatenar = findViewById(R.id.txtPrecio);
@@ -183,13 +184,22 @@ public class CalculadoraActivity extends AppCompatActivity implements View.OnCli
                     edtTexto.setText("");
                     resultado = numero1 * numero2;
                     edtTexto.setText(etconcatenar.getText().toString() + resultado);
+                }else if (resultado == 0){
+                    resultado = numero1;
+                    edtTexto.setText(etconcatenar.getText().toString() + resultado);
                 }
             }
         });
 
         btnAC.setOnClickListener((v) -> {
             operador = "AC";
+            numero1 = 0;
+            numero2 = 0;
+            resultado = 0;
             edtTexto.setText("");
+
+
+
 
 
         });
@@ -376,6 +386,24 @@ public class CalculadoraActivity extends AppCompatActivity implements View.OnCli
                         calc2 = calc1 * 1.19;
                         resultIva = calc2-calc1;
 
+                        if(resultado > 0 ){
+                            calc1 = resultado / 1.19;
+                            calc2 = calc1 * 1.19;
+                            resultIva = calc2-calc1;
+
+                        }else if(resultado == 0 ){
+                            String value= edtTexto.getText().toString();
+                            int finalValue=Integer.parseInt(value);
+                            calc1 = finalValue / 1.19;
+                            calc2 = calc1 * 1.19;
+                            resultIva = calc2-calc1;
+                        }
+
+                        int fuente2 = 0;
+                        int negrita2 = 1;
+                        int ancho2 = 0;
+                        int alto2 = 0;
+
 
                         String st = "\n";
                         String st1 = "==============================" + "\n";
@@ -390,7 +418,7 @@ public class CalculadoraActivity extends AppCompatActivity implements View.OnCli
                         String st10 = "==============================" + "\n";
                         String st11 = "FECHA EMISION: "+salida+ "\n";
                         String st12 = "==============================" + "\n";
-                        String st13= "MONTO TOTAL: "+resultado + "\n"+ "\n";
+                        String st13= "MONTO TOTAL: "+edtTexto.getText().toString() + "\n"+ "\n";
                         String st14= "el iva incluido en esta boleta  es de $"+df.format(resultIva) + "\n";
                         String st15= "------------------------------" + "\n";
                         String st16= "TIMBRE ELECTRONICO SII" + "\n";
@@ -415,10 +443,7 @@ public class CalculadoraActivity extends AppCompatActivity implements View.OnCli
                         outputStream.write(0x1B); outputStream.write(0x74); outputStream.write(0x10); // Seleccionamos los caracteres escape (ESC t n) - n = 16(0x10) para WPC1252
 
 
-                        int fuente2 = 0;
-                        int negrita2 = 1;
-                        int ancho2 = 0;
-                        int alto2 = 0;
+
 
 
 
@@ -482,6 +507,8 @@ public class CalculadoraActivity extends AppCompatActivity implements View.OnCli
 
         }
     }
+
+
 
     private void showSnackbar(String message){
         final Snackbar snackBar = Snackbar.make(relativeLayout, message, Snackbar.LENGTH_LONG);
