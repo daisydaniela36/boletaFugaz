@@ -1,6 +1,7 @@
 package com.example.boletafugaz;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
@@ -76,6 +77,7 @@ public class CalculadoraActivity extends AppCompatActivity implements View.OnCli
     private Button btnMas,btnIgual,btnNdoble0,btnN0,btnMultiplicar,btnN3,btnN2,btnN1,btnN6,btnN5,btnN4,btnAC,btnN9,btnN8,btnN7;
     private ImageButton btnClear;
     private Spinner spn_empresa;
+    private String memoria = "";
 
     private BluetoothAdapter bluetoothAdapter;
     private BluetoothDevice dispositivoBluetooth;
@@ -202,6 +204,17 @@ public class CalculadoraActivity extends AppCompatActivity implements View.OnCli
 
 
 
+        });
+
+        btnClear.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void onClick(View v) {
+                if (!edtTexto.getText().toString().equals("")) {
+                    edtTexto.setText(edtTexto.getText().subSequence(0, edtTexto.getText().length() - 1) + "");
+                    memoria = "";
+                }
+            }
         });
 
         btnMultiplicar.setOnClickListener((v) -> {

@@ -51,7 +51,7 @@
             android:background="@color/color7"
             android:editable="false"
             android:ems="10"
-            android:enabled="true"
+            android:enabled="false"
             android:focusable="true"
             android:hint="@string/txtPrecio"
             android:inputType="number"
