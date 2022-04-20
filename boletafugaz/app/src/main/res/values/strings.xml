@@ -69,6 +69,24 @@
     <string name="qrGeneratorTitle">Generar Código</string>
     <string name="accept">ACEPTAR</string>
 
+    <string-array name="regiones">
+        <item>Arica y Parinacota</item>
+        <item>Tarapaca</item>
+        <item>Antofagasta</item>
+        <item>Atacama</item>
+        <item>Coquimbo</item>
+        <item>Valparaiso</item>
+        <item>Metropolitana</item>
+        <item>OHiggins</item>
+        <item>Maule</item>
+        <item>Biobio</item>
+        <item>Araucania</item>
+        <item>Los Rios</item>
+        <item>Los Lagos</item>
+        <item>Aysen</item>
+        <item>Magallanes</item>
+    </string-array>
+
 
     <string-array name="dlangs">
         <item>Registre un emisor para usar la calculadora ...</item>
