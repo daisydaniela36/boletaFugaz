@@ -1,5 +1,6 @@
 package com.example.boletafugaz;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -29,8 +30,16 @@ import android.widget.Toast;
 
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
 import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
+import com.example.boletafugaz.Model.Empresa;
 import com.example.boletafugaz.utilidades.PrintBitmap;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
@@ -44,13 +53,18 @@ import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class FacturaActivity extends AppCompatActivity implements View.OnClickListener{
     private static final int REQUEST_DISPOSITIVO = 425;
     private static final String TAG_DEBUG = "tag_debug";
     private static final int COD_PERMISOS = 872;
-
+    private Spinner spn_empresa;
+    List<Empresa> empresas;
+    String rut1, nombre1,comuna1, direccion1, telefono1;
+    private FirebaseAuth firebaseAuth;
+    private DatabaseReference mDataBase;
     Spinner combo1,combo2,combo3;
     ArrayAdapter<String> a1,a2,a3,a4;
     String regiones[] = {"Arica y Parinacota","Tarapaca",
@@ -188,6 +202,10 @@ public class FacturaActivity extends AppCompatActivity implements View.OnClickLi
         combo1 = findViewById(R.id.spinner7);
         combo2 = findViewById(R.id.spinner8);
         combo3 = findViewById(R.id.spinner6);
+        spn_empresa = findViewById(R.id.spn_empresa);
+        mDataBase = FirebaseDatabase.getInstance().getReference();
+        firebaseAuth = FirebaseAuth.getInstance();
+        loadEmpresa();
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         btnImprimirTexto2.setOnClickListener(this);
         btnCerrarConexion.setOnClickListener(this);
@@ -600,6 +618,83 @@ public class FacturaActivity extends AppCompatActivity implements View.OnClickLi
             }
         });
 
+    }
+    public void loadEmpresa(){
+        empresas = new ArrayList<>();
+        String id = firebaseAuth.getCurrentUser().getUid();
+        mDataBase.child("usuario").child(id).child("empresa").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists()){
+                    for(DataSnapshot ds: snapshot.getChildren()){
+                        String id = ds.getKey();
+                        String rut = ds.child("rut").getValue().toString();
+                        String nombre = ds.child("nombre").getValue().toString();
+                        String comuna = ds.child("comuna").getValue().toString();
+                        String direccion = ds.child("direccion").getValue().toString();
+                        String telefono = ds.child("telefono").getValue().toString();
+                        empresas.add(new Empresa(id, rut, nombre,comuna,direccion,telefono));
+
+                        ArrayAdapter<Empresa> arrayAdapter = new ArrayAdapter<>(FacturaActivity.this, android.R.layout.simple_dropdown_item_1line, empresas);
+                        spn_empresa.setAdapter(arrayAdapter);
+
+
+
+                        spn_empresa.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                            @Override
+                            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                                String id2 = firebaseAuth.getCurrentUser().getUid();
+
+                                String item = parent.getSelectedItem().toString();
+
+                                DatabaseReference mDataBase2 = FirebaseDatabase.getInstance().getReference();
+                                Query q = mDataBase2.child("usuario").child(id2).child("empresa").orderByChild("nombre").equalTo(item);
+
+                                q.addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        for(DataSnapshot dataSnapshot : snapshot.getChildren()){
+
+                                            String rut =  dataSnapshot.child("rut").getValue().toString();
+                                            String nombre =  dataSnapshot.child("nombre").getValue().toString();
+                                            String comuna =  dataSnapshot.child("comuna").getValue().toString();
+                                            String direccion =  dataSnapshot.child("direccion").getValue().toString();
+                                            String telefono =  dataSnapshot.child("telefono").getValue().toString();
+
+                                            rut1 = "R.U.T.: "+rut;
+                                            nombre1 = nombre;
+                                            comuna1 = comuna;
+                                            direccion1 = direccion;
+                                            telefono1 = telefono;
+
+                                        }
+
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                    }
+                                });
+
+                            }
+
+                            @Override
+                            public void onNothingSelected(AdapterView<?> parent) {
+
+                            }
+                        });
+                    }
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
     @Override
