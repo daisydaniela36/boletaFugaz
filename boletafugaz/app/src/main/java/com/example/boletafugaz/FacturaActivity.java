@@ -31,6 +31,7 @@ import android.widget.Toast;
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
 import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
 import com.example.boletafugaz.Model.Empresa;
+import com.example.boletafugaz.Model.Giro;
 import com.example.boletafugaz.utilidades.PrintBitmap;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
@@ -61,8 +62,11 @@ public class FacturaActivity extends AppCompatActivity implements View.OnClickLi
     private static final String TAG_DEBUG = "tag_debug";
     private static final int COD_PERMISOS = 872;
     private Spinner spn_empresa;
+    private Spinner spn_giro;
     List<Empresa> empresas;
+    List<Giro> giro;
     String rut1, nombre1,comuna1, direccion1, telefono1;
+    String nombre2;
     private FirebaseAuth firebaseAuth;
     private DatabaseReference mDataBase;
     Spinner combo1,combo2,combo3;
@@ -163,6 +167,8 @@ public class FacturaActivity extends AppCompatActivity implements View.OnClickLi
     String comuna3p15[] = {"Porvenir","Primavera","Timaukel"};
     String comuna4p15[] = {"Cabo de Hornos","Antártica"};
 
+    String giroN[] = {"Sin giro registrado"};
+
     private BluetoothAdapter bluetoothAdapter;
     private BluetoothDevice dispositivoBluetooth;
     private BluetoothSocket bluetoothSocket;
@@ -203,6 +209,7 @@ public class FacturaActivity extends AppCompatActivity implements View.OnClickLi
         combo2 = findViewById(R.id.spinner8);
         combo3 = findViewById(R.id.spinner6);
         spn_empresa = findViewById(R.id.spn_empresa);
+        spn_giro = findViewById(R.id.spn_giro);
         mDataBase = FirebaseDatabase.getInstance().getReference();
         firebaseAuth = FirebaseAuth.getInstance();
         loadEmpresa();
@@ -655,7 +662,7 @@ public class FacturaActivity extends AppCompatActivity implements View.OnClickLi
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                                         for(DataSnapshot dataSnapshot : snapshot.getChildren()){
-
+                                            String id = dataSnapshot.child("id").getValue().toString();
                                             String rut =  dataSnapshot.child("rut").getValue().toString();
                                             String nombre =  dataSnapshot.child("nombre").getValue().toString();
                                             String comuna =  dataSnapshot.child("comuna").getValue().toString();
@@ -667,6 +674,32 @@ public class FacturaActivity extends AppCompatActivity implements View.OnClickLi
                                             comuna1 = comuna;
                                             direccion1 = direccion;
                                             telefono1 = telefono;
+
+                                            giro = new ArrayList<>();
+                                            String id2 = firebaseAuth.getCurrentUser().getUid();
+                                            mDataBase.child("usuario").child(id2).child("empresa").child(id).child("giro").addListenerForSingleValueEvent(new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                    if(snapshot.exists()){
+                                                        for(DataSnapshot ds: snapshot.getChildren()){
+                                                            String id = ds.getKey();
+                                                            String nombre = ds.child("nombre").getValue().toString();
+
+                                                            giro.add(new Giro(id, nombre));
+
+                                                            ArrayAdapter<Giro> arrayAdapter = new ArrayAdapter<>(FacturaActivity.this, android.R.layout.simple_dropdown_item_1line, giro);
+                                                            spn_giro.setAdapter(arrayAdapter);
+                                                        }
+                                                    }else{
+                                                        spn_giro.setAdapter(new ArrayAdapter<String>(FacturaActivity.this, android.R.layout.simple_spinner_dropdown_item, giroN));
+                                                    }
+                                                }
+
+                                                @Override
+                                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                                }
+                                            });
 
                                         }
 

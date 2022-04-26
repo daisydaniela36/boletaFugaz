@@ -11,7 +11,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.BoletaFugaz.NoActionBar">
-        <activity android:name=".MostrarEmisorActivity"></activity>
+        <activity
+            android:name=".RegistrarGiroActivity"
+            android:label="@string/title_activity_registrar_giro"
+            android:theme="@style/Theme.BoletaFugaz.NoActionBar.NoActionBar"></activity>
+        <activity android:name=".MostrarEmisorActivity" />
         <activity android:name=".FacturaActivity" />
         <activity android:name=".GenerarQRActivity" />
         <activity android:name=".RegistrarEmisorActivity" />

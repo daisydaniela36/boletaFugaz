@@ -91,7 +91,7 @@
                 android:textColor="@color/black" />
 
             <Spinner
-                android:id="@+id/spinner4"
+                android:id="@+id/spn_giro"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="4"
