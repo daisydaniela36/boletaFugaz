@@ -7,30 +7,12 @@
     android:textAlignment="center"
     tools:context=".FacturaActivity">
 
-    <TextView
-        android:id="@+id/txt_label"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:padding="10dp"
-        android:textColor="@color/black"
-        android:textSize="19sp"
-        android:textStyle="bold" />
 
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="7dp"
-        android:layout_marginTop="40dp"
-        android:layout_marginRight="7dp"
-        android:onClick="clickBuscarDispositivosSync"
-        android:text="Dispositivos sincornizados" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#CDFFFFFF"
-        android:gravity="center"
         android:orientation="vertical">
 
 
@@ -115,7 +97,7 @@
 
             <TextView
                 android:id="@+id/textView18"
-                android:layout_width="64dp"
+                android:layout_width="60dp"
                 android:layout_height="41dp"
                 android:layout_marginLeft="15dp"
                 android:layout_weight="1"
@@ -134,12 +116,11 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="61dp"
+            android:layout_height="wrap_content"
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/textView19"
-                android:layout_width="64dp"
+                android:layout_width="62dp"
                 android:layout_height="41dp"
                 android:layout_marginLeft="15dp"
                 android:layout_weight="1"
@@ -162,7 +143,7 @@
 
             <TextView
                 android:id="@+id/edt2"
-                android:layout_width="64dp"
+                android:layout_width="59dp"
                 android:layout_height="41dp"
                 android:layout_marginLeft="15dp"
                 android:layout_weight="1"
@@ -170,17 +151,18 @@
                 android:textColor="@color/black"
                 android:textColorLink="@color/black" />
 
-            <Spinner
-                android:id="@+id/spinner5"
+            <EditText
+                android:id="@+id/editTextTextPersonName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="4"
-                android:ems="10" />
+                android:layout_weight="1"
+                android:ems="10"
+                android:inputType="textPersonName" />
 
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="61dp"
+            android:layout_height="wrap_content"
             android:orientation="horizontal">
 
             <TextView
@@ -271,9 +253,8 @@
 
         </LinearLayout>
 
-
         <Button
-            android:id="@+id/button3"
+            android:id="@+id/btn_agregar_productos"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="7dp"
@@ -285,16 +266,6 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-
-            <Button
-                android:id="@+id/btnImprimir2"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_width="50dp"
-                android:layout_marginLeft="7dp"
-                android:layout_marginRight="7dp"
-                android:text="IMPRIMIR" />
-
             <Button
                 android:id="@+id/button2"
                 style="@style/Widget.AppCompat.Button.Colored"
@@ -305,14 +276,6 @@
                 android:layout_width="50dp"
                 android:text="VOLVER" />
         </LinearLayout>
-        <Button
-            android:id="@+id/btn_cerrar_conexion"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="7dp"
-            android:layout_marginRight="7dp"
-            android:text="CERRAR CONEXION" />
-
 
     </LinearLayout>
 </RelativeLayout>

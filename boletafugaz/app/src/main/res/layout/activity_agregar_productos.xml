@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:textAlignment="center"
+    tools:context=".AgregarProductosActivity">
+
+    <TextView
+        android:id="@+id/txt_label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="10dp"
+        android:textColor="@color/black"
+        android:textSize="19sp"
+        android:textStyle="bold" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="7dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginRight="7dp"
+        android:onClick="clickBuscarDispositivosSync"
+        android:text="Dispositivos sincornizados" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#CDFFFFFF"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="90dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textView1"
+                android:layout_width="60dp"
+                android:layout_height="41dp"
+                android:layout_marginLeft="15dp"
+                android:layout_weight="1"
+                android:text="NOMBRE:"
+                android:textColor="@color/black" />
+
+            <EditText
+                android:id="@+id/txtNombre"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:textColor="@color/black" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="60dp"
+                android:layout_height="41dp"
+                android:layout_marginLeft="15dp"
+                android:layout_weight="1"
+                android:text="CANTIDAD:"
+                android:textColor="@color/black" />
+
+            <EditText
+                android:id="@+id/txtCantidad"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ems="10"
+                android:inputType="number"
+                android:textColor="@color/black" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="60dp"
+                android:layout_height="41dp"
+                android:layout_marginLeft="15dp"
+                android:layout_weight="1"
+                android:text="PRECIO:"
+                android:textColor="@color/black" />
+
+            <EditText
+                android:id="@+id/txtPrecio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ems="10"
+                android:inputType="number"
+                android:textColor="@color/black" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btn_Agregar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="7dp"
+                android:layout_marginRight="7dp"
+                android:text="Añadir"
+                android:onClick="save"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="350dp"
+            android:background="#CDFFFFFF"
+            android:orientation="horizontal">
+
+            <TableLayout
+                android:id="@+id/tblProductos"
+                android:layout_width="100dp"
+                android:layout_height="336dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_weight="1"
+                android:background="#FFFFFF">
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+            </TableLayout>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+
+            <Button
+                android:id="@+id/btnImprimir2"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_width="50dp"
+                android:layout_marginLeft="7dp"
+                android:layout_marginRight="7dp"
+                android:text="IMPRIMIR" />
+
+            <Button
+                android:id="@+id/btn_volver"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginLeft="7dp"
+                android:layout_marginRight="7dp"
+                android:layout_width="50dp"
+                android:text="VOLVER" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btn_cerrar_conexion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="7dp"
+            android:layout_marginRight="7dp"
+            android:text="CERRAR CONEXION" />
+
+    </LinearLayout>
+
+</RelativeLayout>
