@@ -65,7 +65,7 @@ public class AgregarProductosActivity extends AppCompatActivity {
 
     private TableRow row;
 
-    EditText txtLabel;
+    TextView txtLabel;
 
 
     Context context = this;
@@ -79,10 +79,31 @@ public class AgregarProductosActivity extends AppCompatActivity {
         btnCerrarConexion = findViewById(R.id.btn_cerrar_conexion);
         btnVolver = findViewById(R.id.btn_volver);
         btnAgregar = findViewById(R.id.btn_Agregar);
+        txtLabel = findViewById(R.id.txt_label);
 
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
         tblProductos = findViewById(R.id.tblProductos);
+
+        String empresa = getIntent().getStringExtra("empresa");
+        String giro_empresa = getIntent().getStringExtra("giro_Empresa");
+        String rut = getIntent().getStringExtra("rut");
+        String razon_Social = getIntent().getStringExtra("razon_Social");
+        String giro = getIntent().getStringExtra("giro");
+        String direccion = getIntent().getStringExtra("direccion");
+        String region = getIntent().getStringExtra("region");
+        String provincia = getIntent().getStringExtra("provincia");
+        String comuna = getIntent().getStringExtra("comuna");
+
+        System.out.println("empresa: "+empresa);
+        System.out.println("giro empresa: "+giro_empresa);
+        System.out.println("rut: "+rut);
+        System.out.println("razon Social: "+razon_Social);
+        System.out.println("giro: "+giro);
+        System.out.println("direccion: "+direccion);
+        System.out.println("region: "+region);
+        System.out.println("provincia: "+provincia);
+        System.out.println("comuna: "+comuna);
 
         TextView textView1;
         TextView textView2;
@@ -126,6 +147,10 @@ public class AgregarProductosActivity extends AppCompatActivity {
                 txtCantidad = findViewById(R.id.txtCantidad);
                 txtPrecio = findViewById(R.id.txtPrecio);
 
+                listaProductos = new ArrayList<>();
+
+                listaProductos.add(new Productos(txtNombre.getText().toString(),txtCantidad.getText().toString(),txtPrecio.getText().toString()));
+
 
                 String[] cadena = {txtNombre.getText().toString(),txtCantidad.getText().toString(),txtPrecio.getText().toString()};
                 row = new TableRow(getBaseContext());
@@ -149,8 +174,20 @@ public class AgregarProductosActivity extends AppCompatActivity {
         btnVolver.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(AgregarProductosActivity.this,FacturaActivity.class));
-                finish();
+                Intent i = new Intent(getApplicationContext(), FacturaActivity.class);
+
+                i.putExtra("empresa1", empresa);
+                i.putExtra("giro_Empresa1", giro_empresa);
+                i.putExtra("rut1", rut);
+                i.putExtra("razon_Social1", razon_Social);
+                i.putExtra("giro1", giro);
+                i.putExtra("direccion1", direccion);
+                i.putExtra("region1", region);
+                i.putExtra("provincia1", provincia);
+                i.putExtra("comuna1", comuna);
+
+
+                startActivity(i);
             }
         });
 

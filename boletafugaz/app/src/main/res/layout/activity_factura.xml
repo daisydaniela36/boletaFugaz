@@ -128,7 +128,7 @@
                 android:textColor="@color/black" />
 
             <EditText
-                android:id="@+id/edt_Ucontraseña"
+                android:id="@+id/edt_Razon_Social"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -152,7 +152,7 @@
                 android:textColorLink="@color/black" />
 
             <EditText
-                android:id="@+id/editTextTextPersonName"
+                android:id="@+id/edt_Giro"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -267,7 +267,7 @@
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/button2"
+                android:id="@+id/btn_Volver1"
                 style="@style/Widget.AppCompat.Button.Colored"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"

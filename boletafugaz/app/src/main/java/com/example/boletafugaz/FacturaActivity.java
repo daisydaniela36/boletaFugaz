@@ -18,10 +18,12 @@ import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
@@ -31,6 +33,7 @@ import android.widget.Toast;
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
 import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
 import com.example.boletafugaz.Model.Empresa;
+import com.example.boletafugaz.Model.Factura;
 import com.example.boletafugaz.Model.Giro;
 import com.example.boletafugaz.utilidades.PrintBitmap;
 import com.google.android.material.snackbar.Snackbar;
@@ -66,6 +69,9 @@ public class FacturaActivity extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private DatabaseReference mDataBase;
     Spinner combo1,combo2,combo3;
+    private EditText edt_rut,edt_Razon_Social,edt_Giro,edt_Direccion;
+
+
     String regiones[] = {"Arica y Parinacota","Tarapaca",
                         "Antofagasta","Atacama","Coquimbo",
                         "Valparaiso","Metropolitana","OHiggins",
@@ -164,34 +170,121 @@ public class FacturaActivity extends AppCompatActivity {
 
     String giroN[] = {"Sin giro registrado"};
 
+    String empresa;
+    String giro_empresa;
+    String region;
+    String provincia;
+    String comuna;
+
 
     private RelativeLayout relativeLayout;
 
-    private Button btnAgregarProductos;
+    private Button btnAgregarProductos,btn_Volver1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_factura);
 
+        spn_empresa = findViewById(R.id.spn_empresa);
+        spn_giro = findViewById(R.id.spn_giro);
+        edt_rut = findViewById(R.id.edt_rut);
+        edt_Razon_Social = findViewById(R.id.edt_Razon_Social);
+        edt_Giro = findViewById(R.id.edt_Giro);
+        edt_Direccion = findViewById(R.id.edt_direccion);
         combo1 = findViewById(R.id.spinner7);
         combo2 = findViewById(R.id.spinner8);
         combo3 = findViewById(R.id.spinner6);
-        spn_empresa = findViewById(R.id.spn_empresa);
-        spn_giro = findViewById(R.id.spn_giro);
+        btn_Volver1 = findViewById(R.id.btn_Volver1);
+
+        empresa = getIntent().getStringExtra("empresa1");
+        giro_empresa = getIntent().getStringExtra("giro_Empresa1");
+        String rut = getIntent().getStringExtra("rut1");
+        String razon_Social = getIntent().getStringExtra("razon_Social1");
+        String giro = getIntent().getStringExtra("giro1");
+        String direccion = getIntent().getStringExtra("direccion1");
+        region = getIntent().getStringExtra("region1");
+        provincia = getIntent().getStringExtra("provincia1");
+        comuna = getIntent().getStringExtra("comuna1");
+
+        System.out.println("empresa: "+empresa);
+        System.out.println("giro empresa: "+giro_empresa);
+        System.out.println("rut: "+rut);
+        System.out.println("razon Social: "+razon_Social);
+        System.out.println("giro: "+giro);
+        System.out.println("direccion: "+direccion);
+        System.out.println("region: "+region);
+        System.out.println("provincia: "+provincia);
+        System.out.println("comuna: "+comuna);
+
+
+
+        edt_rut.setText(rut);
+        edt_Razon_Social.setText(razon_Social);
+        edt_Giro.setText(giro);
+        edt_Direccion.setText(direccion);
+
+
+
+
         mDataBase = FirebaseDatabase.getInstance().getReference();
         firebaseAuth = FirebaseAuth.getInstance();
-        loadEmpresa();
         btnAgregarProductos = findViewById(R.id.btn_agregar_productos);
 
-        btnAgregarProductos.setOnClickListener((v) -> {
-            startActivity(new Intent(FacturaActivity.this,AgregarProductosActivity.class));
-            finish();
+        loadEmpresa();
+
+        spn_empresa.getSelectedItem();
+
+
+        btnAgregarProductos.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                String empresa = spn_empresa.getSelectedItem().toString();
+                String giro_Empresa = spn_giro.getSelectedItem().toString();
+                String rut = edt_rut.getText().toString();
+                String razon_Social = edt_Razon_Social.getText().toString();
+                String giro = edt_Giro.getText().toString();
+                String direccion = edt_Direccion.getText().toString();
+                String region = combo1.getSelectedItem().toString();
+                String  provincia = combo2.getSelectedItem().toString();
+                String comuna = combo3.getSelectedItem().toString();
+
+
+                Factura f = new Factura(empresa,giro_Empresa,rut,razon_Social,giro,direccion,region,provincia,comuna);
+
+                Intent i = new Intent(getApplicationContext(), AgregarProductosActivity.class);
+
+
+                i.putExtra("empresa", f.getEmpresa());
+                i.putExtra("giro_Empresa", f.getGiro_Empresa());
+                i.putExtra("rut", f.getRut());
+                i.putExtra("razon_Social", f.getRazon_Social());
+                i.putExtra("giro", f.getGiro());
+                i.putExtra("direccion", f.getDireccion());
+                i.putExtra("region", f.getRegion());
+                i.putExtra("provincia", f.getProvincia());
+                i.putExtra("comuna", f.getComuna());
+
+                startActivity(i);
+
+            }
 
         });
 
+        btn_Volver1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(getApplicationContext(), ProfileActivity.class);
+
+                startActivity(i);
+            }
+        });
+
+
 
         combo1.setAdapter(new ArrayAdapter<String>(FacturaActivity.this, android.R.layout.simple_spinner_dropdown_item, regiones));
+        combo1.setSelection(getIndexSpinner(combo1, region));
 
         combo1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -202,15 +295,18 @@ public class FacturaActivity extends AppCompatActivity {
                     case 0 :
 
                         combo2.setAdapter(new ArrayAdapter<String>(FacturaActivity.this, android.R.layout.simple_spinner_dropdown_item, provincia1));
+                        combo2.setSelection(getIndexSpinner(combo2, provincia));
                         combo2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                             @Override
                             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                                 switch (position) {
                                     case 0 :
                                         combo3.setAdapter(new ArrayAdapter<String>(FacturaActivity.this, android.R.layout.simple_spinner_dropdown_item, comuna1p1));
+                                        combo3.setSelection(getIndexSpinner(combo3, comuna));
                                         break;
                                     case 1:
                                         combo3.setAdapter(new ArrayAdapter<String>(FacturaActivity.this, android.R.layout.simple_spinner_dropdown_item, comuna2p1));
+                                        combo3.setSelection(getIndexSpinner(combo3, comuna));
                                         break;
                                 }
                             }
@@ -226,15 +322,18 @@ public class FacturaActivity extends AppCompatActivity {
 
                     case 1:
                         combo2.setAdapter(new ArrayAdapter<String>(FacturaActivity.this, android.R.layout.simple_spinner_dropdown_item, provincia2));
+                        combo2.setSelection(getIndexSpinner(combo2, provincia));
                         combo2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                             @Override
                             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                                 switch (position) {
                                     case 0 :
                                         combo3.setAdapter(new ArrayAdapter<String>(FacturaActivity.this, android.R.layout.simple_spinner_dropdown_item, comuna1p2));
+                                        combo3.setSelection(getIndexSpinner(combo3, comuna));
                                         break;
                                     case 1:
                                         combo3.setAdapter(new ArrayAdapter<String>(FacturaActivity.this, android.R.layout.simple_spinner_dropdown_item, comuna2p2));
+                                        combo3.setSelection(getIndexSpinner(combo3, comuna));
                                         break;
                                 }
                             }
@@ -247,18 +346,22 @@ public class FacturaActivity extends AppCompatActivity {
                         break;
                     case 2:
                         combo2.setAdapter(new ArrayAdapter<String>(FacturaActivity.this, android.R.layout.simple_spinner_dropdown_item, provincia3));
+                        combo2.setSelection(getIndexSpinner(combo2, provincia));
                         combo2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                             @Override
                             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                                 switch (position) {
                                     case 0 :
                                         combo3.setAdapter(new ArrayAdapter<String>(FacturaActivity.this, android.R.layout.simple_spinner_dropdown_item, comuna1p3));
+                                        combo3.setSelection(getIndexSpinner(combo3, comuna));
                                         break;
                                     case 1:
                                         combo3.setAdapter(new ArrayAdapter<String>(FacturaActivity.this, android.R.layout.simple_spinner_dropdown_item, comuna2p3));
+                                        combo3.setSelection(getIndexSpinner(combo3, comuna));
                                         break;
                                     case 2:
                                         combo3.setAdapter(new ArrayAdapter<String>(FacturaActivity.this, android.R.layout.simple_spinner_dropdown_item, comuna3p3));
+                                        combo3.setSelection(getIndexSpinner(combo3, comuna));
                                         break;
                                 }
                             }
@@ -271,18 +374,22 @@ public class FacturaActivity extends AppCompatActivity {
                         break;
                     case 3:
                         combo2.setAdapter(new ArrayAdapter<String>(FacturaActivity.this, android.R.layout.simple_spinner_dropdown_item, provincia4));
+                        combo2.setSelection(getIndexSpinner(combo2, provincia));
                         combo2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                             @Override
                             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                                 switch (position) {
                                     case 0 :
                                         combo3.setAdapter(new ArrayAdapter<String>(FacturaActivity.this, android.R.layout.simple_spinner_dropdown_item, comuna1p4));
+                                        combo3.setSelection(getIndexSpinner(combo3, comuna));
                                         break;
                                     case 1:
                                         combo3.setAdapter(new ArrayAdapter<String>(FacturaActivity.this, android.R.layout.simple_spinner_dropdown_item, comuna2p4));
+                                        combo3.setSelection(getIndexSpinner(combo3, comuna));
                                         break;
                                     case 2:
                                         combo3.setAdapter(new ArrayAdapter<String>(FacturaActivity.this, android.R.layout.simple_spinner_dropdown_item, comuna3p4));
+                                        combo3.setSelection(getIndexSpinner(combo3, comuna));
                                         break;
 
                                 }
@@ -296,18 +403,22 @@ public class FacturaActivity extends AppCompatActivity {
                         break;
                     case 4:
                         combo2.setAdapter(new ArrayAdapter<String>(FacturaActivity.this, android.R.layout.simple_spinner_dropdown_item, provincia5));
+                        combo2.setSelection(getIndexSpinner(combo2, provincia));
                         combo2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                             @Override
                             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                                 switch (position) {
                                     case 0 :
                                         combo3.setAdapter(new ArrayAdapter<String>(FacturaActivity.this, android.R.layout.simple_spinner_dropdown_item, comuna1p5));
+                                        combo3.setSelection(getIndexSpinner(combo3, comuna));
                                         break;
                                     case 1:
                                         combo3.setAdapter(new ArrayAdapter<String>(FacturaActivity.this, android.R.layout.simple_spinner_dropdown_item, comuna2p5));
+                                        combo3.setSelection(getIndexSpinner(combo3, comuna));
                                         break;
                                     case 2:
                                         combo3.setAdapter(new ArrayAdapter<String>(FacturaActivity.this, android.R.layout.simple_spinner_dropdown_item, comuna3p5));
+                                        combo3.setSelection(getIndexSpinner(combo3, comuna));
                                         break;
                                 }
                             }
@@ -320,33 +431,42 @@ public class FacturaActivity extends AppCompatActivity {
                         break;
                     case 5:
                         combo2.setAdapter(new ArrayAdapter<String>(FacturaActivity.this, android.R.layout.simple_spinner_dropdown_item, provincia6));
+                        combo2.setSelection(getIndexSpinner(combo2, provincia));
                         combo2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                             @Override
                             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                                 switch (position) {
                                     case 0 :
                                         combo3.setAdapter(new ArrayAdapter<String>(FacturaActivity.this, android.R.layout.simple_spinner_dropdown_item, comuna1p6));
+                                        combo3.setSelection(getIndexSpinner(combo3, comuna));
                                         break;
                                     case 1:
                                         combo3.setAdapter(new ArrayAdapter<String>(FacturaActivity.this, android.R.layout.simple_spinner_dropdown_item, comuna2p6));
+                                        combo3.setSelection(getIndexSpinner(combo3, comuna));
                                         break;
                                     case 2:
                                         combo3.setAdapter(new ArrayAdapter<String>(FacturaActivity.this, android.R.layout.simple_spinner_dropdown_item, comuna3p6));
+                                        combo3.setSelection(getIndexSpinner(combo3, comuna));
                                         break;
                                     case 3:
                                         combo3.setAdapter(new ArrayAdapter<String>(FacturaActivity.this, android.R.layout.simple_spinner_dropdown_item, comuna4p6));
+                                        combo3.setSelection(getIndexSpinner(combo3, comuna));
                                         break;
                                     case 4:
                                         combo3.setAdapter(new ArrayAdapter<String>(FacturaActivity.this, android.R.layout.simple_spinner_dropdown_item, comuna5p6));
+                                        combo3.setSelection(getIndexSpinner(combo3, comuna));
                                         break;
                                     case 5:
                                         combo3.setAdapter(new ArrayAdapter<String>(FacturaActivity.this, android.R.layout.simple_spinner_dropdown_item, comuna6p6));
+                                        combo3.setSelection(getIndexSpinner(combo3, comuna));
                                         break;
                                     case 6:
                                         combo3.setAdapter(new ArrayAdapter<String>(FacturaActivity.this, android.R.layout.simple_spinner_dropdown_item, comuna7p6));
+                                        combo3.setSelection(getIndexSpinner(combo3, comuna));
                                         break;
                                     case 7:
                                         combo3.setAdapter(new ArrayAdapter<String>(FacturaActivity.this, android.R.layout.simple_spinner_dropdown_item, comuna8p6));
+                                        combo3.setSelection(getIndexSpinner(combo3, comuna));
                                         break;
                                 }
                             }
@@ -359,27 +479,34 @@ public class FacturaActivity extends AppCompatActivity {
                         break;
                     case 6:
                         combo2.setAdapter(new ArrayAdapter<String>(FacturaActivity.this, android.R.layout.simple_spinner_dropdown_item, provincia7));
+                        combo2.setSelection(getIndexSpinner(combo2, provincia));
                         combo2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                             @Override
                             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                                 switch (position) {
                                     case 0 :
                                         combo3.setAdapter(new ArrayAdapter<String>(FacturaActivity.this, android.R.layout.simple_spinner_dropdown_item, comuna1p7));
+                                        combo3.setSelection(getIndexSpinner(combo3, comuna));
                                         break;
                                     case 1:
                                         combo3.setAdapter(new ArrayAdapter<String>(FacturaActivity.this, android.R.layout.simple_spinner_dropdown_item, comuna2p7));
+                                        combo3.setSelection(getIndexSpinner(combo3, comuna));
                                         break;
                                     case 2:
                                         combo3.setAdapter(new ArrayAdapter<String>(FacturaActivity.this, android.R.layout.simple_spinner_dropdown_item, comuna3p7));
+                                        combo3.setSelection(getIndexSpinner(combo3, comuna));
                                         break;
                                     case 3:
                                         combo3.setAdapter(new ArrayAdapter<String>(FacturaActivity.this, android.R.layout.simple_spinner_dropdown_item, comuna4p7));
+                                        combo3.setSelection(getIndexSpinner(combo3, comuna));
                                         break;
                                     case 4:
                                         combo3.setAdapter(new ArrayAdapter<String>(FacturaActivity.this, android.R.layout.simple_spinner_dropdown_item, comuna5p7));
+                                        combo3.setSelection(getIndexSpinner(combo3, comuna));
                                         break;
                                     case 5:
                                         combo3.setAdapter(new ArrayAdapter<String>(FacturaActivity.this, android.R.layout.simple_spinner_dropdown_item, comuna6p7));
+                                        combo3.setSelection(getIndexSpinner(combo3, comuna));
                                         break;
                                 }
                             }
@@ -392,18 +519,22 @@ public class FacturaActivity extends AppCompatActivity {
                         break;
                     case 7:
                         combo2.setAdapter(new ArrayAdapter<String>(FacturaActivity.this, android.R.layout.simple_spinner_dropdown_item, provincia8));
+                        combo2.setSelection(getIndexSpinner(combo2, provincia));
                         combo2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                             @Override
                             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                                 switch (position) {
                                     case 0 :
                                         combo3.setAdapter(new ArrayAdapter<String>(FacturaActivity.this, android.R.layout.simple_spinner_dropdown_item, comuna1p8));
+                                        combo3.setSelection(getIndexSpinner(combo3, comuna));
                                         break;
                                     case 1:
                                         combo3.setAdapter(new ArrayAdapter<String>(FacturaActivity.this, android.R.layout.simple_spinner_dropdown_item, comuna2p8));
+                                        combo3.setSelection(getIndexSpinner(combo3, comuna));
                                         break;
                                     case 2:
                                         combo3.setAdapter(new ArrayAdapter<String>(FacturaActivity.this, android.R.layout.simple_spinner_dropdown_item, comuna3p8));
+                                        combo3.setSelection(getIndexSpinner(combo3, comuna));
                                         break;
                                 }
                             }
@@ -416,21 +547,26 @@ public class FacturaActivity extends AppCompatActivity {
                         break;
                     case 8:
                         combo2.setAdapter(new ArrayAdapter<String>(FacturaActivity.this, android.R.layout.simple_spinner_dropdown_item, provincia9));
+                        combo2.setSelection(getIndexSpinner(combo2, provincia));
                         combo2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                             @Override
                             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                                 switch (position) {
                                     case 0 :
                                         combo3.setAdapter(new ArrayAdapter<String>(FacturaActivity.this, android.R.layout.simple_spinner_dropdown_item, comuna1p9));
+                                        combo3.setSelection(getIndexSpinner(combo3, comuna));
                                         break;
                                     case 1:
                                         combo3.setAdapter(new ArrayAdapter<String>(FacturaActivity.this, android.R.layout.simple_spinner_dropdown_item, comuna2p9));
+                                        combo3.setSelection(getIndexSpinner(combo3, comuna));
                                         break;
                                     case 2:
                                         combo3.setAdapter(new ArrayAdapter<String>(FacturaActivity.this, android.R.layout.simple_spinner_dropdown_item, comuna3p9));
+                                        combo3.setSelection(getIndexSpinner(combo3, comuna));
                                         break;
                                     case 3:
                                         combo3.setAdapter(new ArrayAdapter<String>(FacturaActivity.this, android.R.layout.simple_spinner_dropdown_item, comuna4p9));
+                                        combo3.setSelection(getIndexSpinner(combo3, comuna));
                                         break;
                                 }
                             }
@@ -443,18 +579,22 @@ public class FacturaActivity extends AppCompatActivity {
                         break;
                     case 9:
                         combo2.setAdapter(new ArrayAdapter<String>(FacturaActivity.this, android.R.layout.simple_spinner_dropdown_item, provincia10));
+                        combo2.setSelection(getIndexSpinner(combo2, provincia));
                         combo2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                             @Override
                             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                                 switch (position) {
                                     case 0 :
                                         combo3.setAdapter(new ArrayAdapter<String>(FacturaActivity.this, android.R.layout.simple_spinner_dropdown_item, comuna1p10));
+                                        combo3.setSelection(getIndexSpinner(combo3, comuna));
                                         break;
                                     case 1:
                                         combo3.setAdapter(new ArrayAdapter<String>(FacturaActivity.this, android.R.layout.simple_spinner_dropdown_item, comuna2p10));
+                                        combo3.setSelection(getIndexSpinner(combo3, comuna));
                                         break;
                                     case 2:
                                         combo3.setAdapter(new ArrayAdapter<String>(FacturaActivity.this, android.R.layout.simple_spinner_dropdown_item, comuna3p10));
+                                        combo3.setSelection(getIndexSpinner(combo3, comuna));
                                         break;
                                 }
                             }
@@ -467,15 +607,18 @@ public class FacturaActivity extends AppCompatActivity {
                         break;
                     case 10:
                         combo2.setAdapter(new ArrayAdapter<String>(FacturaActivity.this, android.R.layout.simple_spinner_dropdown_item, provincia11));
+                        combo2.setSelection(getIndexSpinner(combo2, provincia));
                         combo2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                             @Override
                             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                                 switch (position) {
                                     case 0 :
                                         combo3.setAdapter(new ArrayAdapter<String>(FacturaActivity.this, android.R.layout.simple_spinner_dropdown_item, comuna1p11));
+                                        combo3.setSelection(getIndexSpinner(combo3, comuna));
                                         break;
                                     case 1:
                                         combo3.setAdapter(new ArrayAdapter<String>(FacturaActivity.this, android.R.layout.simple_spinner_dropdown_item, comuna2p11));
+                                        combo3.setSelection(getIndexSpinner(combo3, comuna));
                                         break;
                                 }
                             }
@@ -488,15 +631,18 @@ public class FacturaActivity extends AppCompatActivity {
                         break;
                     case 11:
                         combo2.setAdapter(new ArrayAdapter<String>(FacturaActivity.this, android.R.layout.simple_spinner_dropdown_item, provincia12));
+                        combo2.setSelection(getIndexSpinner(combo2, provincia));
                         combo2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                             @Override
                             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                                 switch (position) {
                                     case 0 :
                                         combo3.setAdapter(new ArrayAdapter<String>(FacturaActivity.this, android.R.layout.simple_spinner_dropdown_item, comuna1p12));
+                                        combo3.setSelection(getIndexSpinner(combo3, comuna));
                                         break;
                                     case 1:
                                         combo3.setAdapter(new ArrayAdapter<String>(FacturaActivity.this, android.R.layout.simple_spinner_dropdown_item, comuna2p12));
+                                        combo3.setSelection(getIndexSpinner(combo3, comuna));
                                         break;
                                 }
                             }
@@ -509,21 +655,26 @@ public class FacturaActivity extends AppCompatActivity {
                         break;
                     case 12:
                         combo2.setAdapter(new ArrayAdapter<String>(FacturaActivity.this, android.R.layout.simple_spinner_dropdown_item, provincia13));
+                        combo2.setSelection(getIndexSpinner(combo2, provincia));
                         combo2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                             @Override
                             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                                 switch (position) {
                                     case 0 :
                                         combo3.setAdapter(new ArrayAdapter<String>(FacturaActivity.this, android.R.layout.simple_spinner_dropdown_item, comuna1p13));
+                                        combo3.setSelection(getIndexSpinner(combo3, comuna));
                                         break;
                                     case 1:
                                         combo3.setAdapter(new ArrayAdapter<String>(FacturaActivity.this, android.R.layout.simple_spinner_dropdown_item, comuna2p13));
+                                        combo3.setSelection(getIndexSpinner(combo3, comuna));
                                         break;
                                     case 2:
                                         combo3.setAdapter(new ArrayAdapter<String>(FacturaActivity.this, android.R.layout.simple_spinner_dropdown_item, comuna3p13));
+                                        combo3.setSelection(getIndexSpinner(combo3, comuna));
                                         break;
                                     case 3:
                                         combo3.setAdapter(new ArrayAdapter<String>(FacturaActivity.this, android.R.layout.simple_spinner_dropdown_item, comuna4p13));
+                                        combo3.setSelection(getIndexSpinner(combo3, comuna));
                                         break;
                                 }
                             }
@@ -536,21 +687,26 @@ public class FacturaActivity extends AppCompatActivity {
                         break;
                     case 13:
                         combo2.setAdapter(new ArrayAdapter<String>(FacturaActivity.this, android.R.layout.simple_spinner_dropdown_item, provincia14));
+                        combo2.setSelection(getIndexSpinner(combo2, provincia));
                         combo2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                             @Override
                             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                                 switch (position) {
                                     case 0 :
                                         combo3.setAdapter(new ArrayAdapter<String>(FacturaActivity.this, android.R.layout.simple_spinner_dropdown_item, comuna1p14));
+                                        combo3.setSelection(getIndexSpinner(combo3, comuna));
                                         break;
                                     case 1:
                                         combo3.setAdapter(new ArrayAdapter<String>(FacturaActivity.this, android.R.layout.simple_spinner_dropdown_item, comuna2p14));
+                                        combo3.setSelection(getIndexSpinner(combo3, comuna));
                                         break;
                                     case 2:
                                         combo3.setAdapter(new ArrayAdapter<String>(FacturaActivity.this, android.R.layout.simple_spinner_dropdown_item, comuna3p14));
+                                        combo3.setSelection(getIndexSpinner(combo3, comuna));
                                         break;
                                     case 3:
                                         combo3.setAdapter(new ArrayAdapter<String>(FacturaActivity.this, android.R.layout.simple_spinner_dropdown_item, comuna4p14));
+                                        combo3.setSelection(getIndexSpinner(combo3, comuna));
                                         break;
                                 }
                             }
@@ -563,21 +719,26 @@ public class FacturaActivity extends AppCompatActivity {
                         break;
                     case 14:
                         combo2.setAdapter(new ArrayAdapter<String>(FacturaActivity.this, android.R.layout.simple_spinner_dropdown_item, provincia15));
+                        combo2.setSelection(getIndexSpinner(combo2, provincia));
                         combo2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                             @Override
                             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                                 switch (position) {
                                     case 0 :
                                         combo3.setAdapter(new ArrayAdapter<String>(FacturaActivity.this, android.R.layout.simple_spinner_dropdown_item, comuna1p15));
+                                        combo3.setSelection(getIndexSpinner(combo3, comuna));
                                         break;
                                     case 1:
                                         combo3.setAdapter(new ArrayAdapter<String>(FacturaActivity.this, android.R.layout.simple_spinner_dropdown_item, comuna2p15));
+                                        combo3.setSelection(getIndexSpinner(combo3, comuna));
                                         break;
                                     case 2:
                                         combo3.setAdapter(new ArrayAdapter<String>(FacturaActivity.this, android.R.layout.simple_spinner_dropdown_item, comuna3p15));
+                                        combo3.setSelection(getIndexSpinner(combo3, comuna));
                                         break;
                                     case 3:
                                         combo3.setAdapter(new ArrayAdapter<String>(FacturaActivity.this, android.R.layout.simple_spinner_dropdown_item, comuna4p15));
+                                        combo3.setSelection(getIndexSpinner(combo3, comuna));
                                         break;
                                 }
                             }
@@ -618,6 +779,8 @@ public class FacturaActivity extends AppCompatActivity {
                         ArrayAdapter<Empresa> arrayAdapter = new ArrayAdapter<>(FacturaActivity.this, android.R.layout.simple_dropdown_item_1line, empresas);
                         spn_empresa.setAdapter(arrayAdapter);
 
+
+                        spn_empresa.setSelection(getIndexSpinner(spn_empresa, empresa));
 
 
                         spn_empresa.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -660,8 +823,12 @@ public class FacturaActivity extends AppCompatActivity {
 
                                                             giro.add(new Giro(id, nombre));
 
+
+
                                                             ArrayAdapter<Giro> arrayAdapter = new ArrayAdapter<>(FacturaActivity.this, android.R.layout.simple_dropdown_item_1line, giro);
                                                             spn_giro.setAdapter(arrayAdapter);
+
+                                                            spn_giro.setSelection(getIndexSpinner(spn_giro, giro_empresa));
                                                         }
                                                     }else{
                                                         spn_giro.setAdapter(new ArrayAdapter<String>(FacturaActivity.this, android.R.layout.simple_spinner_dropdown_item, giroN));
@@ -713,6 +880,19 @@ public class FacturaActivity extends AppCompatActivity {
         })
                 .setActionTextColor(getResources().getColor(R.color.colorPrimary))
                 .show();
+    }
+
+
+    public static int getIndexSpinner(Spinner spinner, String myString)
+    {
+        int index = 0;
+
+        for (int i = 0; i < spinner.getCount(); i++) {
+            if (spinner.getItemAtPosition(i).toString().equalsIgnoreCase(myString)) {
+                index = i;
+            }
+        }
+        return index;
     }
 
 
