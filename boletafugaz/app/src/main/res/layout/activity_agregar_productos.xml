@@ -123,14 +123,14 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="350dp"
+            android:layout_height="306dp"
             android:background="#CDFFFFFF"
             android:orientation="horizontal">
 
             <TableLayout
                 android:id="@+id/tblProductos"
                 android:layout_width="100dp"
-                android:layout_height="336dp"
+                android:layout_height="304dp"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
                 android:layout_weight="1"
@@ -146,6 +146,19 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
+            <EditText
+                android:id="@+id/edt_Total"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:textAlignment="center" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
             <Button
                 android:id="@+id/btnImprimir2"
@@ -174,6 +187,14 @@
             android:layout_marginLeft="7dp"
             android:layout_marginRight="7dp"
             android:text="CERRAR CONEXION" />
+
+        <ImageView
+            android:id="@+id/ivg_imagen"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:visibility="invisible"
+            tools:srcCompat="@tools:sample/avatars" />
 
     </LinearLayout>
 

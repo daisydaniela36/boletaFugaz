@@ -4,15 +4,17 @@ public class Productos {
     String nombre;
     String cantidad;
     String precio;
+    Integer total;
 
     public Productos() {
     }
 
 
-    public Productos(String nombre,String cantidad, String precio) {
+    public Productos(String nombre,String cantidad, String precio,Integer total) {
         this.nombre = nombre;
         this.cantidad = cantidad;
         this.precio = precio;
+        this.total = total;
     }
 
 
@@ -40,7 +42,17 @@ public class Productos {
         this.precio = precio;
     }
 
+    public Integer getTotal() {
+        return total;
+    }
+
+    public void setTotal(Integer total) {
+        this.total = total;
+    }
+
     public String toString() {
         return  nombre;
     }
+
+
 }

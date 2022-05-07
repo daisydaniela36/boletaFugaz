@@ -66,6 +66,8 @@ public class CalculadoraActivity extends AppCompatActivity implements View.OnCli
     private static final int REQUEST_DISPOSITIVO = 425;
     private static final String TAG_DEBUG = "tag_debug";
     private static final int COD_PERMISOS = 872;
+    private final int ANCHO_IMG_58_MM = 384;
+    private static final int MODE_PRINT_IMG = 0;
 
     private TextView txtLabel;
     private EditText edtTexto, etconcatenar;
@@ -102,8 +104,7 @@ public class CalculadoraActivity extends AppCompatActivity implements View.OnCli
     private BitMatrix bitMatrix;
     private Bitmap bitmap = null;
     private ImageView ivCodeContainer;
-    private final int ANCHO_IMG_58_MM = 384;
-    private static final int MODE_PRINT_IMG = 0;
+
     int numero1,numero2,resultado;
     String operador;
 
@@ -131,12 +132,9 @@ public class CalculadoraActivity extends AppCompatActivity implements View.OnCli
         btnVolver = findViewById(R.id.btnVolver);
         btnCerrarConexion = findViewById(R.id.btn_cerrar_conexion);
         spn_empresa = findViewById(R.id.spn_empresa);
-
-        ivCodeContainer = findViewById(R.id.ivg_imagen);;
-
+        ivCodeContainer = findViewById(R.id.ivg_imagen);
         mDataBase = FirebaseDatabase.getInstance().getReference();
         firebaseAuth = FirebaseAuth.getInstance();
-
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         loadEmpresa();
 
@@ -449,11 +447,6 @@ public class CalculadoraActivity extends AppCompatActivity implements View.OnCli
                         outputStream.write(0x1C); outputStream.write(0x2E); // Cancelamos el modo de caracteres chino (FS .)
                         outputStream.write(0x1B); outputStream.write(0x74); outputStream.write(0x10); // Seleccionamos los caracteres escape (ESC t n) - n = 16(0x10) para WPC1252
 
-
-
-
-
-
                         outputStream.write( getByteString(st1,negrita2, fuente2, ancho2, alto2));
                         outputStream.write( getByteString(st2,negrita2, fuente2, ancho2, alto2));
                         outputStream.write( getByteString(st3,negrita2, fuente2, ancho2, alto2));
@@ -497,8 +490,6 @@ public class CalculadoraActivity extends AppCompatActivity implements View.OnCli
                         e.printStackTrace();
                     }
                 } else {
-
-
 
                     Log.e(TAG_DEBUG, "Socket nulo");
 

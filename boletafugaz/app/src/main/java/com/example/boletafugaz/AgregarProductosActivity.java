@@ -3,6 +3,7 @@ package com.example.boletafugaz;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.print.PrintHelper;
 
 import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
@@ -14,12 +15,15 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Matrix;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -29,46 +33,78 @@ import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
 import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
 import com.example.boletafugaz.Model.Giro;
 import com.example.boletafugaz.Model.Productos;
+import com.example.boletafugaz.utilidades.PrintBitmap;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.WriterException;
+import com.google.zxing.common.BitMatrix;
+import com.journeyapps.barcodescanner.BarcodeEncoder;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Array;
+import java.text.DateFormat;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.UUID;
 
-public class AgregarProductosActivity extends AppCompatActivity {
+public class AgregarProductosActivity extends AppCompatActivity implements View.OnClickListener{
 
+    private final int ANCHO_IMG_58_MM = 384;
+    private static final int MODE_PRINT_IMG = 0;
     private static final int REQUEST_DISPOSITIVO = 425;
     private static final String TAG_DEBUG = "tag_debug";
     private static final int COD_PERMISOS = 872;
     private BluetoothAdapter bluetoothAdapter;
     private BluetoothDevice dispositivoBluetooth;
     private BluetoothSocket bluetoothSocket;
-    private OutputStream outputStream;
+    private OutputStream out;
     private InputStream inputStream;
     private Thread hiloComunicacion;
     private UUID aplicacionUUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
     private byte[] bufferLectura;
     private int bufferLecturaPosicion;
     private volatile boolean pararLectura;
+    private String valueOfEditText;
+    private ImageView ivCodeContainer;
+    private RelativeLayout relativeLayout;
+    private MultiFormatWriter writer;
+    private BitMatrix bitMatrix;
+    private Bitmap bitmap = null;
+    private BarcodeEncoder barcodeEncoder;
+    int suma;
 
-    ArrayList<Productos> listaProductos;
+    long ahora = System.currentTimeMillis();
+    Date fecha = new Date(ahora);
+    DateFormat df = new SimpleDateFormat("dd/MM/yy");
+    String salida = df.format(fecha);
+
+    ArrayList<Productos> listaProductos = new ArrayList<>();
 
 
-    private Button btnCerrarConexion,btnVolver,btnAgregar;
+    private Button btnCerrarConexion,btnVolver,btnAgregar,btnImprimirTexto;
     private TableLayout tblProductos;
 
     private TextView txtNombre;
     private TextView txtCantidad;
     private TextView txtPrecio;
+    private EditText total3;
 
     private TableRow row;
-
+    int suma1 = 0 ;
+    String s;
     TextView txtLabel;
 
-
     Context context = this;
+
+    String rut_empresa,comuna_empresa,direccion_empresa,empresa,giro_empresa,rut,razon_Social,giro,direccion,region,provincia,comuna;
+
+    public static final byte[] ESC_ALIGN_LEFT = new byte[] { 0x1b, 'a', 0x00 };
 
 
     @Override
@@ -80,20 +116,31 @@ public class AgregarProductosActivity extends AppCompatActivity {
         btnVolver = findViewById(R.id.btn_volver);
         btnAgregar = findViewById(R.id.btn_Agregar);
         txtLabel = findViewById(R.id.txt_label);
+        btnImprimirTexto = findViewById(R.id.btnImprimir2);
+        ivCodeContainer = findViewById(R.id.ivg_imagen);
+        total3 = findViewById(R.id.edt_Total);
+        txtNombre = findViewById(R.id.txtNombre);
+        txtCantidad = findViewById(R.id.txtCantidad);
+        txtPrecio = findViewById(R.id.txtPrecio);
+        listaProductos = new ArrayList<>();
 
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
         tblProductos = findViewById(R.id.tblProductos);
 
-        String empresa = getIntent().getStringExtra("empresa");
-        String giro_empresa = getIntent().getStringExtra("giro_Empresa");
-        String rut = getIntent().getStringExtra("rut");
-        String razon_Social = getIntent().getStringExtra("razon_Social");
-        String giro = getIntent().getStringExtra("giro");
-        String direccion = getIntent().getStringExtra("direccion");
-        String region = getIntent().getStringExtra("region");
-        String provincia = getIntent().getStringExtra("provincia");
-        String comuna = getIntent().getStringExtra("comuna");
+        rut_empresa = getIntent().getStringExtra("rut empresa");
+        comuna_empresa = getIntent().getStringExtra("comuna empresa");
+        direccion_empresa = getIntent().getStringExtra("direccion empresa");
+
+        empresa = getIntent().getStringExtra("empresa");
+        giro_empresa = getIntent().getStringExtra("giro_Empresa");
+        rut = getIntent().getStringExtra("rut");
+        razon_Social = getIntent().getStringExtra("razon_Social");
+        giro = getIntent().getStringExtra("giro");
+        direccion = getIntent().getStringExtra("direccion");
+        region = getIntent().getStringExtra("region");
+        provincia = getIntent().getStringExtra("provincia");
+        comuna = getIntent().getStringExtra("comuna");
 
         System.out.println("empresa: "+empresa);
         System.out.println("giro empresa: "+giro_empresa);
@@ -108,13 +155,14 @@ public class AgregarProductosActivity extends AppCompatActivity {
         TextView textView1;
         TextView textView2;
         TextView textView3;
+        TextView textView4;
 
         row = new TableRow(getBaseContext());
 
         textView1 = new TextView(getBaseContext());
         textView1.setText("Nombre");
         textView1.setGravity(Gravity.CENTER);
-        textView1.setPadding(100,30,100,30);
+        textView1.setPadding(54,30,54,30);
         textView1.setBackgroundResource(R.color.black);
         textView1.setTextColor(Color.WHITE);
         row.addView(textView1);
@@ -122,7 +170,7 @@ public class AgregarProductosActivity extends AppCompatActivity {
         textView2 = new TextView(getBaseContext());
         textView2.setText("Cantidad");
         textView2.setGravity(Gravity.CENTER);
-        textView2.setPadding(100,30,100,30);
+        textView2.setPadding(54,30,54,30);
         textView2.setBackgroundResource(R.color.black);
         textView2.setTextColor(Color.WHITE);
         row.addView(textView2);
@@ -130,34 +178,60 @@ public class AgregarProductosActivity extends AppCompatActivity {
         textView3 = new TextView(getBaseContext());
         textView3.setText("Precio");
         textView3.setGravity(Gravity.CENTER);
-        textView3.setPadding(100,30,100,30);
+        textView3.setPadding(54,30,54,30);
         textView3.setBackgroundResource(R.color.black);
         textView3.setTextColor(Color.WHITE);
         row.addView(textView3);
 
+        textView4 = new TextView(getBaseContext());
+        textView4.setText("Total");
+        textView4.setGravity(Gravity.CENTER);
+        textView4.setPadding(54,30,54,30);
+        textView4.setBackgroundResource(R.color.black);
+        textView4.setTextColor(Color.WHITE);
+        row.addView(textView4);
+
+
         tblProductos.addView(row);
+
+
 
 
         btnAgregar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-
-                txtNombre = findViewById(R.id.txtNombre);
-                txtCantidad = findViewById(R.id.txtCantidad);
-                txtPrecio = findViewById(R.id.txtPrecio);
-
                 listaProductos = new ArrayList<>();
 
-                listaProductos.add(new Productos(txtNombre.getText().toString(),txtCantidad.getText().toString(),txtPrecio.getText().toString()));
+                String cantidad = txtCantidad.getText().toString();
+                String precio = txtPrecio.getText().toString();
 
+                int cantidadInt = Integer.parseInt(cantidad);
+                int precioInt = Integer.parseInt(precio);
 
-                String[] cadena = {txtNombre.getText().toString(),txtCantidad.getText().toString(),txtPrecio.getText().toString()};
+                int total = precioInt * cantidadInt ;
+
+                String total1 = String.valueOf(total);
+
+                listaProductos.add(new Productos(txtNombre.getText().toString(),txtCantidad.getText().toString(),txtPrecio.getText().toString(),total));
+
+                for(Productos p : listaProductos) {
+
+                    p = listaProductos.get(listaProductos.size()-1);
+
+                    suma1 += p.getTotal();
+                }
+
+                String t = String.valueOf(suma1);
+
+                total3.setText("Total: "+t);
+                System.out.println(suma1);
+
+                String[] cadena = {txtNombre.getText().toString(),txtCantidad.getText().toString(),txtPrecio.getText().toString(),total1};
                 row = new TableRow(getBaseContext());
 
                 TextView textView;
 
-                for (int i = 0; i < 3; i++){
+                for (int i = 0; i < 4; i++){
 
                     textView = new TextView(getBaseContext());
                     textView.setGravity(Gravity.CENTER);
@@ -166,6 +240,7 @@ public class AgregarProductosActivity extends AppCompatActivity {
                     textView.setText(cadena[i]);
                     textView.setTextColor(Color.BLACK);
                     row.addView(textView);
+
                 }
                 tblProductos.addView(row);
             }
@@ -191,6 +266,9 @@ public class AgregarProductosActivity extends AppCompatActivity {
             }
         });
 
+        btnImprimirTexto.setOnClickListener(this);
+        btnCerrarConexion.setOnClickListener(this);
+
     }
 
 
@@ -198,6 +276,88 @@ public class AgregarProductosActivity extends AppCompatActivity {
         switch (view.getId()) {
             case R.id.btnImprimir2:
                 if (bluetoothSocket != null) {
+                    try {
+
+
+                        int fuente2 = 0;
+                        int negrita2 = 1;
+                        int ancho2 = 0;
+                        int alto2 = 0;
+
+                        String st1 = " ==============================" + "\n";
+                        String st2 = "     "+rut_empresa+"\n";
+                        String st3 = "      FACTURA ELECTRONICA" + "\n";
+                        String st4 = "             N° 10" + "\n";
+                        String st5 = " ==============================" + "\n";
+                        String st6 = "Vendedor: " +empresa+ "\n";
+                        String st7 = "Fecha emision: " +salida+ "\n";
+                        String st8 = "direccion: " +direccion_empresa+" "+comuna_empresa+"\n";
+                        String st9 = " ==============================" + "\n";
+                        String st10 = "        DATOS CLIENTE" + "\n";
+                        String st11 = "Rut: " +rut+ "\n";
+                        String st12 = "Razon Social: " +razon_Social+"\n";
+                        String st13 = "Giro: " +giro+"\n";
+                        String st14 = "Direccion: " +direccion+"\n";
+                        String st15 = "Region: " +region+"\n";
+                        String st16 = "Provincia: " +provincia+"\n";
+                        String st17 = "Comuna: " +comuna+"\n";
+
+
+
+                        valueOfEditText = empresa+"B"+"O"+"L"+"E"+"T"+"A"+ "ELECTRONICA"+"N° 541";
+
+
+                        if(valueOfEditText.equals("")|| valueOfEditText == null){
+                            showSnackbar(getResources().getString(R.string.etWithoutContent));
+                        }else{
+                            Toast.makeText(getApplicationContext(), getResources().getString(R.string.etWithContent), Toast.LENGTH_SHORT).show();
+                            generateQrCode(valueOfEditText);
+                        }
+
+
+
+
+
+                        out.write( getByteString(st1,negrita2, fuente2, ancho2, alto2));
+                        out.write( getByteString(st2,negrita2, fuente2, ancho2, alto2));
+                        out.write( getByteString(st3,negrita2, fuente2, ancho2, alto2));
+                        out.write( getByteString(st4,negrita2, fuente2, ancho2, alto2));
+                        out.write( getByteString(st5,negrita2, fuente2, ancho2, alto2));
+
+                        out.write(ESC_ALIGN_LEFT);
+                        out.write( getByteString(st6,negrita2, fuente2, ancho2, alto2));
+                        out.write( getByteString(st7,negrita2, fuente2, ancho2, alto2));
+                        out.write( getByteString(st8,negrita2, fuente2, ancho2, alto2));
+                        out.write( getByteString(st9,negrita2, fuente2, ancho2, alto2));
+                        out.write( getByteString(st10,negrita2, fuente2, ancho2, alto2));
+                        out.write( getByteString(st11,negrita2, fuente2, ancho2, alto2));
+                        out.write( getByteString(st12,negrita2, fuente2, ancho2, alto2));
+                        out.write( getByteString(st13,negrita2, fuente2, ancho2, alto2));
+                        out.write( getByteString(st14,negrita2, fuente2, ancho2, alto2));
+                        out.write( getByteString(st15,negrita2, fuente2, ancho2, alto2));
+                        out.write( getByteString(st16,negrita2, fuente2, ancho2, alto2));
+                        out.write( getByteString(st17,negrita2, fuente2, ancho2, alto2));
+
+
+
+
+
+                        PrintHelper photoPrinter = new PrintHelper(AgregarProductosActivity.this);
+                        photoPrinter.setScaleMode(PrintHelper.SCALE_MODE_FIT);
+
+                        Bitmap bitmap = ((BitmapDrawable) ivCodeContainer.getDrawable()).getBitmap();
+                        out.write(PrintBitmap.POS_PrintBMP(bitmap, ANCHO_IMG_58_MM,MODE_PRINT_IMG));
+
+
+
+
+
+                    } catch (IOException e) {
+                        Log.e(TAG_DEBUG, "Error al escribir en el socket");
+
+                        Toast.makeText(this, "Error al interntar imprimir texto", Toast.LENGTH_SHORT).show();
+                        e.printStackTrace();
+                    }
 
                 }else {
 
@@ -214,6 +374,22 @@ public class AgregarProductosActivity extends AppCompatActivity {
                 break;
 
         }
+    }
+
+    public void cargarlista(){
+
+        listaProductos = new ArrayList<>();
+
+        String cantidad = txtCantidad.getText().toString();
+        String precio = txtPrecio.getText().toString();
+
+        int cantidadInt = Integer.parseInt(cantidad);
+        int precioInt = Integer.parseInt(precio);
+
+        int total = precioInt * cantidadInt ;
+
+        String total1 = String.valueOf(total);
+        listaProductos.add(new Productos(txtNombre.getText().toString(),txtCantidad.getText().toString(),txtPrecio.getText().toString(),total));
     }
 
 
@@ -248,7 +424,7 @@ public class AgregarProductosActivity extends AppCompatActivity {
                                 // Creamos un socket
                                 bluetoothSocket = dispositivoBluetooth.createRfcommSocketToServiceRecord(aplicacionUUID);
                                 bluetoothSocket.connect();// conectamos el socket
-                                outputStream = bluetoothSocket.getOutputStream();
+                                out = bluetoothSocket.getOutputStream();
                                 inputStream = bluetoothSocket.getInputStream();
 
                                 //empezarEscucharDatos();
@@ -280,6 +456,30 @@ public class AgregarProductosActivity extends AppCompatActivity {
             }
 
         }
+    }
+
+    private void generateQrCode(String qrContent){
+        writer = new MultiFormatWriter();
+        try {
+            bitMatrix = writer.encode(qrContent, BarcodeFormat.PDF_417, 700, 700);
+            barcodeEncoder = new BarcodeEncoder();
+            bitmap = barcodeEncoder.createBitmap(bitMatrix);
+            ivCodeContainer.setImageBitmap(bitmap);
+        } catch (WriterException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void showSnackbar(String message){
+        final Snackbar snackBar = Snackbar.make(relativeLayout, message, Snackbar.LENGTH_LONG);
+        snackBar.setAction(getResources().getString(R.string.accept), new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                snackBar.dismiss();
+            }
+        })
+                .setActionTextColor(getResources().getColor(R.color.colorPrimary))
+                .show();
     }
 
 
@@ -362,7 +562,7 @@ public class AgregarProductosActivity extends AppCompatActivity {
     private void cerrarConexion() {
         try {
             if (bluetoothSocket != null) {
-                if (outputStream != null) outputStream.close();
+                if (out != null) out.close();
                 pararLectura = true;
                 if (inputStream != null) inputStream.close();
                 bluetoothSocket.close();

@@ -255,7 +255,9 @@ public class FacturaActivity extends AppCompatActivity {
 
                 Intent i = new Intent(getApplicationContext(), AgregarProductosActivity.class);
 
-
+                i.putExtra("rut empresa",rut1);
+                i.putExtra("comuna empresa",comuna1);
+                i.putExtra("direccion empresa",direccion1);
                 i.putExtra("empresa", f.getEmpresa());
                 i.putExtra("giro_Empresa", f.getGiro_Empresa());
                 i.putExtra("rut", f.getRut());
