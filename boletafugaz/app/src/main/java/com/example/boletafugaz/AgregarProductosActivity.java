@@ -33,6 +33,7 @@ import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
 import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
 import com.example.boletafugaz.Model.Giro;
 import com.example.boletafugaz.Model.Productos;
+import com.example.boletafugaz.Model.Total;
 import com.example.boletafugaz.utilidades.PrintBitmap;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.zxing.BarcodeFormat;
@@ -78,6 +79,32 @@ public class AgregarProductosActivity extends AppCompatActivity implements View.
     private Bitmap bitmap = null;
     private BarcodeEncoder barcodeEncoder;
     int suma;
+    String a;
+
+    String st1;
+    String st2;
+    String st3;
+    String st4;
+    String st5;
+    String st6;
+    String st7;
+    String st8;
+    String st9;
+    String st10;
+    String st11;
+    String st12;
+    String st13;
+    String st14;
+    String st15;
+    String st16;
+    String st17;
+    String st18;
+    String st19;
+    String st20;
+    String st21;
+    String st22;
+    String st23;
+    String st24;
 
     long ahora = System.currentTimeMillis();
     Date fecha = new Date(ahora);
@@ -85,6 +112,7 @@ public class AgregarProductosActivity extends AppCompatActivity implements View.
     String salida = df.format(fecha);
 
     ArrayList<Productos> listaProductos = new ArrayList<>();
+    ArrayList<Total> listaTotal = new ArrayList<>();
 
 
     private Button btnCerrarConexion,btnVolver,btnAgregar,btnImprimirTexto;
@@ -96,7 +124,8 @@ public class AgregarProductosActivity extends AppCompatActivity implements View.
     private EditText total3;
 
     private TableRow row;
-    int suma1 = 0 ;
+    int suma1 = 0;
+
     String s;
     TextView txtLabel;
 
@@ -111,6 +140,8 @@ public class AgregarProductosActivity extends AppCompatActivity implements View.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_agregar_productos);
+
+
 
         btnCerrarConexion = findViewById(R.id.btn_cerrar_conexion);
         btnVolver = findViewById(R.id.btn_volver);
@@ -194,13 +225,14 @@ public class AgregarProductosActivity extends AppCompatActivity implements View.
 
         tblProductos.addView(row);
 
-
+        listaProductos = new ArrayList<>();
 
 
         btnAgregar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                listaProductos = new ArrayList<>();
+
+                listaTotal = new ArrayList<>();
 
                 String cantidad = txtCantidad.getText().toString();
                 String precio = txtPrecio.getText().toString();
@@ -212,24 +244,32 @@ public class AgregarProductosActivity extends AppCompatActivity implements View.
 
                 String total1 = String.valueOf(total);
 
+
                 listaProductos.add(new Productos(txtNombre.getText().toString(),txtCantidad.getText().toString(),txtPrecio.getText().toString(),total));
 
-                for(Productos p : listaProductos) {
+                listaTotal.add(new Total(total));
 
-                    p = listaProductos.get(listaProductos.size()-1);
+                for(Total t : listaTotal) {
 
-                    suma1 += p.getTotal();
+                    t = listaTotal.get(listaTotal.size()-1);
+
+                    suma1 += t.getTotal();
+
                 }
+
+
 
                 String t = String.valueOf(suma1);
 
                 total3.setText("Total: "+t);
                 System.out.println(suma1);
 
+
                 String[] cadena = {txtNombre.getText().toString(),txtCantidad.getText().toString(),txtPrecio.getText().toString(),total1};
                 row = new TableRow(getBaseContext());
 
                 TextView textView;
+
 
                 for (int i = 0; i < 4; i++){
 
@@ -245,6 +285,8 @@ public class AgregarProductosActivity extends AppCompatActivity implements View.
                 tblProductos.addView(row);
             }
         });
+
+
 
         btnVolver.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -271,6 +313,12 @@ public class AgregarProductosActivity extends AppCompatActivity implements View.
 
     }
 
+    public void sumar(){
+
+        listaProductos = new ArrayList<>();
+
+    }
+
 
     public void onClick(View view) {
         switch (view.getId()) {
@@ -284,23 +332,27 @@ public class AgregarProductosActivity extends AppCompatActivity implements View.
                         int ancho2 = 0;
                         int alto2 = 0;
 
-                        String st1 = " ==============================" + "\n";
-                        String st2 = "     "+rut_empresa+"\n";
-                        String st3 = "      FACTURA ELECTRONICA" + "\n";
-                        String st4 = "             N° 10" + "\n";
-                        String st5 = " ==============================" + "\n";
-                        String st6 = "Vendedor: " +empresa+ "\n";
-                        String st7 = "Fecha emision: " +salida+ "\n";
-                        String st8 = "direccion: " +direccion_empresa+" "+comuna_empresa+"\n";
-                        String st9 = " ==============================" + "\n";
-                        String st10 = "        DATOS CLIENTE" + "\n";
-                        String st11 = "Rut: " +rut+ "\n";
-                        String st12 = "Razon Social: " +razon_Social+"\n";
-                        String st13 = "Giro: " +giro+"\n";
-                        String st14 = "Direccion: " +direccion+"\n";
-                        String st15 = "Region: " +region+"\n";
-                        String st16 = "Provincia: " +provincia+"\n";
-                        String st17 = "Comuna: " +comuna+"\n";
+                        st1 = " ==============================" + "\n";
+                        st2 = "     "+rut_empresa+"\n";
+                        st3 = "      FACTURA ELECTRONICA" + "\n";
+                        st4 = "             N° 10" + "\n";
+                        st5 = " ==============================" + "\n";
+                        st6 = "Vendedor: " +empresa+ "\n";
+                        st7 = "Fecha emision: " +salida+ "\n";
+                        st8 = "direccion: " +direccion_empresa+" "+comuna_empresa+"\n";
+                        st9 =  " ==============================" + "\n";
+                        st10 = "         DATOS CLIENTE" + "\n";
+                        st11 = " ==============================" + "\n";
+                        st12 = "Rut: " +rut+ "\n";
+                        st13 = "Razon Social: " +razon_Social+"\n";
+                        st14 = "Giro: " +giro+"\n";
+                        st15 = "Direccion: " +direccion+"\n";
+                        st16 = "Region: " +region+"\n";
+                        st17 = "Provincia: " +provincia+"\n";
+                        st18 = "Comuna: " +comuna+"\n";
+                        st19 = " =============================="+"\n";
+                        st20 = "        DATOS PRODUCTOS"+"\n";
+                        st21 = " =============================="+"\n";
 
 
 
@@ -313,7 +365,6 @@ public class AgregarProductosActivity extends AppCompatActivity implements View.
                             Toast.makeText(getApplicationContext(), getResources().getString(R.string.etWithContent), Toast.LENGTH_SHORT).show();
                             generateQrCode(valueOfEditText);
                         }
-
 
 
 
@@ -337,10 +388,30 @@ public class AgregarProductosActivity extends AppCompatActivity implements View.
                         out.write( getByteString(st15,negrita2, fuente2, ancho2, alto2));
                         out.write( getByteString(st16,negrita2, fuente2, ancho2, alto2));
                         out.write( getByteString(st17,negrita2, fuente2, ancho2, alto2));
+                        out.write( getByteString(st18,negrita2, fuente2, ancho2, alto2));
+                        out.write( getByteString(st19,negrita2, fuente2, ancho2, alto2));
+                        out.write( getByteString(st20,negrita2, fuente2, ancho2, alto2));
+                        out.write( getByteString(st21,negrita2, fuente2, ancho2, alto2));
 
 
 
+                        for(Productos p : listaProductos) {
 
+                            st22 ="Nombre: "+p.getNombre()+"\n"+"Cantidad: "+p.getCantidad()+"\n"+"Precio: "+p.getPrecio()+"\n"+"Total: "+p.getTotal()+"\n";
+                            st23 =" =============================="+"\n";
+
+                            System.out.println(p.getNombre());
+
+                            out.write( getByteString(st22,negrita2, fuente2, ancho2, alto2));
+                            out.write( getByteString(st23,negrita2, fuente2, ancho2, alto2));
+
+                        }
+
+                        String total1 = String.valueOf(suma1);
+
+                        st24 = "Total: "+total1+"\n";
+
+                        out.write( getByteString(st24,negrita2, fuente2, ancho2, alto2));
 
                         PrintHelper photoPrinter = new PrintHelper(AgregarProductosActivity.this);
                         photoPrinter.setScaleMode(PrintHelper.SCALE_MODE_FIT);
