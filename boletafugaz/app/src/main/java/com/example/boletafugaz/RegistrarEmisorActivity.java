@@ -68,8 +68,8 @@ public class RegistrarEmisorActivity extends AppCompatActivity {
                 if (!TextUtils.isEmpty(rut) && !TextUtils.isEmpty(nombre) && !TextUtils.isEmpty(comuna) && !TextUtils.isEmpty(direccion)  && !TextUtils.isEmpty(telefono) ) {
                     String id = bdEmpresa.push().getKey();
 
-                    Empresa mascota = new Empresa(id,rut, nombre,comuna, direccion, telefono);
-                    bdEmpresa.child(id).setValue(mascota);
+                    Empresa empresa = new Empresa(id,rut, nombre,comuna, direccion, telefono);
+                    bdEmpresa.child(id).setValue(empresa);
 
                     Toast.makeText(RegistrarEmisorActivity.this, "Se registro correctamente", Toast.LENGTH_SHORT).show();
                     Limpiar();

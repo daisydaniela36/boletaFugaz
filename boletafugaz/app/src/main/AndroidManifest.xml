@@ -11,7 +11,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.BoletaFugaz.NoActionBar">
-        <activity android:name=".AgregarProductosActivity"></activity>
+        <activity android:name=".HistorialFacturasActivity"></activity>
+        <activity android:name=".HistorialBoletasActivity" />
+        <activity android:name=".AgregarProductosActivity" />
         <activity
             android:name=".RegistrarGiroActivity"
             android:label="@string/title_activity_registrar_giro"

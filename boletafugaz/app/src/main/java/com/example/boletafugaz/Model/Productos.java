@@ -12,8 +12,6 @@ public class Productos {
 
     public Productos() {
     }
-
-
     public Productos(String nombre,String cantidad, String precio,Integer total) {
         this.nombre = nombre;
         this.cantidad = cantidad;

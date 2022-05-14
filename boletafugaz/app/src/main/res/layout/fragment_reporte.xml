@@ -37,11 +37,11 @@
                 android:layout_width="267dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="REPORTES DIARIOS:"
+                android:text="BOLETAS:"
                 android:textColor="@color/color1" />
 
             <RadioButton
-                android:id="@+id/radioButton"
+                android:id="@+id/rbt_Boletas"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -60,11 +60,11 @@
                 android:layout_width="267dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="REPORTES MENSUALES:"
+                android:text="FACTURAS:"
                 android:textColor="@color/color1" />
 
             <RadioButton
-                android:id="@+id/radioButton2"
+                android:id="@+id/rbt_Facturas"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -72,7 +72,7 @@
         </LinearLayout>
 
         <Button
-            android:id="@+id/button4"
+            android:id="@+id/btn_Entrar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"

@@ -29,7 +29,7 @@ import java.util.List;
 public class ListaEmisorFragment extends Fragment {
 
     private List<Empresa> lista_empresa = new ArrayList<Empresa>();
-    ArrayAdapter<Empresa> arrayadaptermascota;
+    ArrayAdapter<Empresa> arrayadapterempresa;
     private FirebaseAuth firebaseAuth;
     ListView lbl_emisor;
     private DatabaseReference mDataBase;
@@ -85,8 +85,8 @@ public class ListaEmisorFragment extends Fragment {
                     Empresa e = objSnaoshot.getValue(Empresa.class);
                     lista_empresa.add(e);
 
-                    arrayadaptermascota = new ArrayAdapter<Empresa>(getContext(), R.layout.list_item, lista_empresa);
-                    lbl_emisor.setAdapter(arrayadaptermascota);
+                    arrayadapterempresa = new ArrayAdapter<Empresa>(getContext(), R.layout.list_item, lista_empresa);
+                    lbl_emisor.setAdapter(arrayadapterempresa);
                 }
             }
             @Override

@@ -780,8 +780,6 @@ public class FacturaActivity extends AppCompatActivity {
 
                         ArrayAdapter<Empresa> arrayAdapter = new ArrayAdapter<>(FacturaActivity.this, android.R.layout.simple_dropdown_item_1line, empresas);
                         spn_empresa.setAdapter(arrayAdapter);
-
-
                         spn_empresa.setSelection(getIndexSpinner(spn_empresa, empresa));
 
 
@@ -790,7 +788,6 @@ public class FacturaActivity extends AppCompatActivity {
                             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
                                 String id2 = firebaseAuth.getCurrentUser().getUid();
-
                                 String item = parent.getSelectedItem().toString();
 
                                 DatabaseReference mDataBase2 = FirebaseDatabase.getInstance().getReference();

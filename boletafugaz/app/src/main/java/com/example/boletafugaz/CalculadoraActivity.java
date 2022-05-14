@@ -8,10 +8,12 @@ import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -33,7 +35,9 @@ import androidx.print.PrintHelper;
 
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
 import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
+import com.example.boletafugaz.Model.Boleta;
 import com.example.boletafugaz.Model.Empresa;
+import com.example.boletafugaz.db.dbValor;
 import com.example.boletafugaz.utilidades.PrintBitmap;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
@@ -104,6 +108,13 @@ public class CalculadoraActivity extends AppCompatActivity implements View.OnCli
     private BitMatrix bitMatrix;
     private Bitmap bitmap = null;
     private ImageView ivCodeContainer;
+    private DatabaseReference bdEmpresa;
+    String id2;
+    String id1;
+
+    Integer idd;
+    private static int valor =1;
+    private static int valor2 =0;
 
     int numero1,numero2,resultado;
     String operador;
@@ -118,13 +129,14 @@ public class CalculadoraActivity extends AppCompatActivity implements View.OnCli
     DateFormat df = new SimpleDateFormat("dd/MM/yy");
     String salida = df.format(fecha);
 
+    Context context = this;
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calculadora);
-
 
         txtLabel = findViewById(R.id.txt_label);
         edtTexto = findViewById(R.id.txtPrecio);
@@ -154,6 +166,8 @@ public class CalculadoraActivity extends AppCompatActivity implements View.OnCli
         btnN9 = findViewById(R.id.btnN9);
         btnN8 = findViewById(R.id.btnN8);
         btnN7 = findViewById(R.id.btnN7);
+
+        id1 = firebaseAuth.getCurrentUser().getUid();
 
 
         btnMas.setOnClickListener((v) -> {
@@ -193,8 +207,6 @@ public class CalculadoraActivity extends AppCompatActivity implements View.OnCli
             numero2 = 0;
             resultado = 0;
             edtTexto.setText("");
-
-
 
 
 
@@ -301,20 +313,22 @@ public class CalculadoraActivity extends AppCompatActivity implements View.OnCli
     }
 
     public void loadEmpresa(){
-       empresas = new ArrayList<>();
+
+        empresas = new ArrayList<>();
         String id = firebaseAuth.getCurrentUser().getUid();
         mDataBase.child("usuario").child(id).child("empresa").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.exists()){
                     for(DataSnapshot ds: snapshot.getChildren()){
-                        String id = ds.getKey();
+
+                        String id3 = ds.getKey();
                         String rut = ds.child("rut").getValue().toString();
                         String nombre = ds.child("nombre").getValue().toString();
                         String comuna = ds.child("comuna").getValue().toString();
                         String direccion = ds.child("direccion").getValue().toString();
                         String telefono = ds.child("telefono").getValue().toString();
-                        empresas.add(new Empresa(id, rut, nombre,comuna,direccion,telefono));
+                        empresas.add(new Empresa(id3, rut, nombre,comuna,direccion,telefono));
 
                         ArrayAdapter<Empresa> arrayAdapter = new ArrayAdapter<>(CalculadoraActivity.this, android.R.layout.simple_dropdown_item_1line, empresas);
                         spn_empresa.setAdapter(arrayAdapter);
@@ -325,7 +339,7 @@ public class CalculadoraActivity extends AppCompatActivity implements View.OnCli
                             @Override
                             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-                                String id2 = firebaseAuth.getCurrentUser().getUid();
+                                id2 = firebaseAuth.getCurrentUser().getUid();
 
                                 String item = parent.getSelectedItem().toString();
 
@@ -337,17 +351,23 @@ public class CalculadoraActivity extends AppCompatActivity implements View.OnCli
                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                                         for(DataSnapshot dataSnapshot : snapshot.getChildren()){
 
+                                            String id = dataSnapshot.child("id").getValue().toString();
                                             String rut =  dataSnapshot.child("rut").getValue().toString();
                                             String nombre =  dataSnapshot.child("nombre").getValue().toString();
                                             String comuna =  dataSnapshot.child("comuna").getValue().toString();
                                             String direccion =  dataSnapshot.child("direccion").getValue().toString();
                                             String telefono =  dataSnapshot.child("telefono").getValue().toString();
 
+                                            bdEmpresa = FirebaseDatabase.getInstance().getReference("usuario").child(id1).child("empresa").child(id).child("Boleta");
+
+
                                             rut1 = "R.U.T.: "+rut;
                                             nombre1 = nombre;
                                             comuna1 = comuna;
                                             direccion1 = direccion;
                                             telefono1 = telefono;
+
+
 
                                         }
 
@@ -380,12 +400,26 @@ public class CalculadoraActivity extends AppCompatActivity implements View.OnCli
 
     @Override
     public void onClick(View view) {
+
+
         switch (view.getId()) {
             case R.id.btnImprimir:
                 if (bluetoothSocket != null) {
                     try {
 
                         DecimalFormat df = new DecimalFormat("#");
+
+
+                        dbValor dbvalor = new dbValor(CalculadoraActivity.this);
+                        SQLiteDatabase db = dbvalor.getWritableDatabase();
+
+                        if (db != null){
+                            Toast.makeText(CalculadoraActivity.this,"Base creada", Toast.LENGTH_LONG).show();
+
+                        }else{
+                            Toast.makeText(CalculadoraActivity.this,"Error", Toast.LENGTH_LONG).show();
+                        }
+
 
                         calc1 = resultado / 1.19;
                         calc2 = calc1 * 1.19;
@@ -409,6 +443,8 @@ public class CalculadoraActivity extends AppCompatActivity implements View.OnCli
                         int ancho2 = 0;
                         int alto2 = 0;
 
+                        String total = edtTexto.getText().toString();
+                        Integer total2 = Integer.parseInt(total);
 
                         String st = "\n";
                         String st1 = "==============================" + "\n";
@@ -428,6 +464,23 @@ public class CalculadoraActivity extends AppCompatActivity implements View.OnCli
                         String st15= "------------------------------" + "\n";
                         String st16= "TIMBRE ELECTRONICO SII" + "\n";
                         String st17= "Verifique documento en sii.cl" + "\n";
+
+
+
+                        if (!TextUtils.isEmpty(salida) && !TextUtils.isEmpty(edtTexto.getText().toString())) {
+
+                            String id = bdEmpresa.push().getKey();
+
+                            Boleta boleta = new Boleta(salida,total2);
+                            bdEmpresa.child(id).setValue(boleta);
+
+                            Toast.makeText(CalculadoraActivity.this, "Se registro correctamente", Toast.LENGTH_SHORT).show();
+
+
+                        } else {
+                            Toast.makeText(CalculadoraActivity.this, "Debe completar los campos", Toast.LENGTH_SHORT).show();
+
+                        }
 
                         String vt1 = rut1;
 

@@ -27,7 +27,7 @@
     <string name="action_cerrar_sesion">Cerrar Sesion</string>
 
     <string name="menu_inicio">Inicio</string>
-    <string name="menu_reporte">Reportes</string>
+    <string name="menu_reporte">Historial</string>
     <string name="menu_termino">Terminos y condiciones</string>
     <string name="menu_politica">Politica de privacidad</string>
     <string name="menu_cuenta">Cuenta</string>

@@ -68,7 +68,6 @@ public class MostrarEmisorActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String id2 = firebaseAuth.getCurrentUser().getUid();
-
                 String rutE = edt_rut.getText().toString();
                 String nombreE = edt_nombre.getText().toString();
                 String comunaE = edt_comuna.getText().toString();
