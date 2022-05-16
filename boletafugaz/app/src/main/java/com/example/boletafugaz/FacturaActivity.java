@@ -55,8 +55,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -65,11 +68,13 @@ public class FacturaActivity extends AppCompatActivity {
     private Spinner spn_giro;
     List<Empresa> empresas;
     List<Giro> giro;
-    String rut1, nombre1,comuna1, direccion1, telefono1;
+    String id3,rut1, nombre1,comuna1, direccion1, telefono1;
     private FirebaseAuth firebaseAuth;
     private DatabaseReference mDataBase;
+    private DatabaseReference mDataBase1;
     Spinner combo1,combo2,combo3;
     private EditText edt_rut,edt_Razon_Social,edt_Giro,edt_Direccion;
+    String id2;
 
 
     String regiones[] = {"Arica y Parinacota","Tarapaca",
@@ -176,6 +181,11 @@ public class FacturaActivity extends AppCompatActivity {
     String provincia;
     String comuna;
 
+    long ahora = System.currentTimeMillis();
+    Date fecha = new Date(ahora);
+    DateFormat df = new SimpleDateFormat("dd/MM/yy");
+    String salida = df.format(fecha);
+
 
     private RelativeLayout relativeLayout;
 
@@ -185,6 +195,7 @@ public class FacturaActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_factura);
+
 
         spn_empresa = findViewById(R.id.spn_empresa);
         spn_giro = findViewById(R.id.spn_giro);
@@ -196,6 +207,8 @@ public class FacturaActivity extends AppCompatActivity {
         combo2 = findViewById(R.id.spinner8);
         combo3 = findViewById(R.id.spinner6);
         btn_Volver1 = findViewById(R.id.btn_Volver1);
+
+        id2 = getIntent().getStringExtra("id usuario");
 
         empresa = getIntent().getStringExtra("empresa1");
         giro_empresa = getIntent().getStringExtra("giro_Empresa1");
@@ -218,16 +231,14 @@ public class FacturaActivity extends AppCompatActivity {
         System.out.println("comuna: "+comuna);
 
 
-
         edt_rut.setText(rut);
         edt_Razon_Social.setText(razon_Social);
         edt_Giro.setText(giro);
         edt_Direccion.setText(direccion);
 
 
-
-
         mDataBase = FirebaseDatabase.getInstance().getReference();
+        mDataBase1 = FirebaseDatabase.getInstance().getReference();
         firebaseAuth = FirebaseAuth.getInstance();
         btnAgregarProductos = findViewById(R.id.btn_agregar_productos);
 
@@ -251,16 +262,18 @@ public class FacturaActivity extends AppCompatActivity {
                 String comuna = combo3.getSelectedItem().toString();
 
 
-                Factura f = new Factura(empresa,giro_Empresa,rut,razon_Social,giro,direccion,region,provincia,comuna);
+                Factura f = new Factura(salida,rut,razon_Social,giro,direccion,region,provincia,comuna);
 
                 Intent i = new Intent(getApplicationContext(), AgregarProductosActivity.class);
 
+                i.putExtra("id empresa",id3);
                 i.putExtra("rut empresa",rut1);
                 i.putExtra("comuna empresa",comuna1);
                 i.putExtra("direccion empresa",direccion1);
-                i.putExtra("empresa", f.getEmpresa());
-                i.putExtra("giro_Empresa", f.getGiro_Empresa());
-                i.putExtra("rut", f.getRut());
+                i.putExtra("empresa", nombre1);
+                i.putExtra("fecha",salida);
+                i.putExtra("giro_Empresa", giro_Empresa);
+                i.putExtra("rut", f.getRut_cliente());
                 i.putExtra("razon_Social", f.getRazon_Social());
                 i.putExtra("giro", f.getGiro());
                 i.putExtra("direccion", f.getDireccion());
@@ -787,7 +800,7 @@ public class FacturaActivity extends AppCompatActivity {
                             @Override
                             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-                                String id2 = firebaseAuth.getCurrentUser().getUid();
+                                id2 = firebaseAuth.getCurrentUser().getUid();
                                 String item = parent.getSelectedItem().toString();
 
                                 DatabaseReference mDataBase2 = FirebaseDatabase.getInstance().getReference();
@@ -797,6 +810,8 @@ public class FacturaActivity extends AppCompatActivity {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                                         for(DataSnapshot dataSnapshot : snapshot.getChildren()){
+
+
                                             String id = dataSnapshot.child("id").getValue().toString();
                                             String rut =  dataSnapshot.child("rut").getValue().toString();
                                             String nombre =  dataSnapshot.child("nombre").getValue().toString();
@@ -804,11 +819,14 @@ public class FacturaActivity extends AppCompatActivity {
                                             String direccion =  dataSnapshot.child("direccion").getValue().toString();
                                             String telefono =  dataSnapshot.child("telefono").getValue().toString();
 
+                                            id3 = id;
                                             rut1 = "R.U.T.: "+rut;
                                             nombre1 = nombre;
                                             comuna1 = comuna;
                                             direccion1 = direccion;
                                             telefono1 = telefono;
+
+
 
                                             giro = new ArrayList<>();
                                             String id2 = firebaseAuth.getCurrentUser().getUid();

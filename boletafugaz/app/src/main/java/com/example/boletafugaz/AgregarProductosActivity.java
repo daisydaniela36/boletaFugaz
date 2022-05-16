@@ -17,6 +17,7 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -31,11 +32,16 @@ import android.widget.Toast;
 
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
 import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
+import com.example.boletafugaz.Model.Boleta;
+import com.example.boletafugaz.Model.Factura;
 import com.example.boletafugaz.Model.Giro;
 import com.example.boletafugaz.Model.Productos;
 import com.example.boletafugaz.Model.Total;
 import com.example.boletafugaz.utilidades.PrintBitmap;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
@@ -78,8 +84,12 @@ public class AgregarProductosActivity extends AppCompatActivity implements View.
     private BitMatrix bitMatrix;
     private Bitmap bitmap = null;
     private BarcodeEncoder barcodeEncoder;
+    private DatabaseReference bdFactura;
+    private DatabaseReference bdProductos;
     int suma;
     String a;
+    private FirebaseAuth firebaseAuth;
+
 
     String st1;
     String st2;
@@ -105,11 +115,7 @@ public class AgregarProductosActivity extends AppCompatActivity implements View.
     String st22;
     String st23;
     String st24;
-
-    long ahora = System.currentTimeMillis();
-    Date fecha = new Date(ahora);
-    DateFormat df = new SimpleDateFormat("dd/MM/yy");
-    String salida = df.format(fecha);
+    String st25;
 
     ArrayList<Productos> listaProductos = new ArrayList<>();
     ArrayList<Total> listaTotal = new ArrayList<>();
@@ -131,7 +137,8 @@ public class AgregarProductosActivity extends AppCompatActivity implements View.
 
     Context context = this;
 
-    String rut_empresa,comuna_empresa,direccion_empresa,empresa,giro_empresa,rut,razon_Social,giro,direccion,region,provincia,comuna;
+    String id2,id3,rut_empresa,comuna_empresa,direccion_empresa,fecha,empresa,giro_empresa,rut,razon_Social,giro,direccion,region,provincia,comuna;
+    String id4;
 
     public static final byte[] ESC_ALIGN_LEFT = new byte[] { 0x1b, 'a', 0x00 };
 
@@ -154,17 +161,24 @@ public class AgregarProductosActivity extends AppCompatActivity implements View.
         txtCantidad = findViewById(R.id.txtCantidad);
         txtPrecio = findViewById(R.id.txtPrecio);
         listaProductos = new ArrayList<>();
+        bdFactura = FirebaseDatabase.getInstance().getReference();
+        bdProductos = FirebaseDatabase.getInstance().getReference();
+        firebaseAuth = FirebaseAuth.getInstance();
 
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
         tblProductos = findViewById(R.id.tblProductos);
 
+
+        id3 = getIntent().getStringExtra("id empresa");
         rut_empresa = getIntent().getStringExtra("rut empresa");
         comuna_empresa = getIntent().getStringExtra("comuna empresa");
         direccion_empresa = getIntent().getStringExtra("direccion empresa");
-
+        fecha = getIntent().getStringExtra("fecha");
         empresa = getIntent().getStringExtra("empresa");
         giro_empresa = getIntent().getStringExtra("giro_Empresa");
+
+
         rut = getIntent().getStringExtra("rut");
         razon_Social = getIntent().getStringExtra("razon_Social");
         giro = getIntent().getStringExtra("giro");
@@ -172,6 +186,10 @@ public class AgregarProductosActivity extends AppCompatActivity implements View.
         region = getIntent().getStringExtra("region");
         provincia = getIntent().getStringExtra("provincia");
         comuna = getIntent().getStringExtra("comuna");
+
+        id2 = firebaseAuth.getCurrentUser().getUid();
+
+        bdFactura = FirebaseDatabase.getInstance().getReference("usuario").child(id2).child("empresa").child(id3).child("Factura");
 
         System.out.println("empresa: "+empresa);
         System.out.println("giro empresa: "+giro_empresa);
@@ -243,6 +261,8 @@ public class AgregarProductosActivity extends AppCompatActivity implements View.
                 int total = precioInt * cantidadInt ;
 
                 String total1 = String.valueOf(total);
+
+
 
 
                 listaProductos.add(new Productos(txtNombre.getText().toString(),txtCantidad.getText().toString(),txtPrecio.getText().toString(),total));
@@ -325,6 +345,7 @@ public class AgregarProductosActivity extends AppCompatActivity implements View.
             case R.id.btnImprimir2:
                 if (bluetoothSocket != null) {
                     try {
+                        String id1 = bdFactura.push().getKey();
 
 
                         int fuente2 = 0;
@@ -338,25 +359,46 @@ public class AgregarProductosActivity extends AppCompatActivity implements View.
                         st4 = "             N° 10" + "\n";
                         st5 = " ==============================" + "\n";
                         st6 = "Vendedor: " +empresa+ "\n";
-                        st7 = "Fecha emision: " +salida+ "\n";
-                        st8 = "direccion: " +direccion_empresa+" "+comuna_empresa+"\n";
-                        st9 =  " ==============================" + "\n";
-                        st10 = "         DATOS CLIENTE" + "\n";
-                        st11 = " ==============================" + "\n";
-                        st12 = "Rut: " +rut+ "\n";
-                        st13 = "Razon Social: " +razon_Social+"\n";
-                        st14 = "Giro: " +giro+"\n";
-                        st15 = "Direccion: " +direccion+"\n";
-                        st16 = "Region: " +region+"\n";
-                        st17 = "Provincia: " +provincia+"\n";
-                        st18 = "Comuna: " +comuna+"\n";
-                        st19 = " =============================="+"\n";
-                        st20 = "        DATOS PRODUCTOS"+"\n";
-                        st21 = " =============================="+"\n";
+                        st7 = "Giro: " +giro_empresa+ "\n";
+                        st8 = "Fecha emision: " +fecha+ "\n";
+                        st9 = "direccion: " +direccion_empresa+" "+comuna_empresa+"\n";
+                        st10 =  " ==============================" + "\n";
+                        st11 = "         DATOS CLIENTE" + "\n";
+                        st12 = " ==============================" + "\n";
+                        st13 = "Rut: " +rut+ "\n";
+                        st14 = "Razon Social: " +razon_Social+"\n";
+                        st15 = "Giro: " +giro+"\n";
+                        st16 = "Direccion: " +direccion+"\n";
+                        st17 = "Region: " +region+"\n";
+                        st18 = "Provincia: " +provincia+"\n";
+                        st19 = "Comuna: " +comuna+"\n";
+                        st20 = " =============================="+"\n";
+                        st21 = "        DATOS PRODUCTOS"+"\n";
+                        st22 = " =============================="+"\n";
 
 
 
                         valueOfEditText = empresa+"B"+"O"+"L"+"E"+"T"+"A"+ "ELECTRONICA"+"N° 541";
+
+
+
+
+                        if (!TextUtils.isEmpty(empresa)) {
+
+                            id4 = bdFactura.push().getKey();
+
+                            Factura factura = new Factura(fecha,rut,razon_Social,giro,direccion,region,provincia,comuna);
+                            bdFactura.child(id4).setValue(factura);
+
+                            bdProductos = FirebaseDatabase.getInstance().getReference("usuario").child(id2).child("empresa").child(id3).child("Factura").child(id4).child("Productos");
+
+                            Toast.makeText(AgregarProductosActivity.this, "Se registro correctamente", Toast.LENGTH_SHORT).show();
+
+
+                        } else {
+                            Toast.makeText(AgregarProductosActivity.this, "Debe completar los campos", Toast.LENGTH_SHORT).show();
+
+                        }
 
 
                         if(valueOfEditText.equals("")|| valueOfEditText == null){
@@ -395,10 +437,30 @@ public class AgregarProductosActivity extends AppCompatActivity implements View.
 
 
 
+
                         for(Productos p : listaProductos) {
 
-                            st22 ="Nombre: "+p.getNombre()+"\n"+"Cantidad: "+p.getCantidad()+"\n"+"Precio: "+p.getPrecio()+"\n"+"Total: "+p.getTotal()+"\n";
-                            st23 =" =============================="+"\n";
+                            st23 ="Nombre: "+p.getNombre()+"\n"+"Cantidad: "+p.getCantidad()+"\n"+"Precio: "+p.getPrecio()+"\n"+"Total: "+p.getTotal()+"\n";
+                            st24 =" =============================="+"\n";
+
+                            String total1 = String.valueOf(suma1);
+
+                            st25 = "Total: "+total1+"\n";
+
+                            if (!TextUtils.isEmpty(empresa)) {
+
+                                String id2 = bdProductos.push().getKey();
+
+                                Productos p2 = new Productos(p.getNombre(),p.getCantidad(),p.getPrecio(),suma1);
+                                bdProductos.child(id2).setValue(p2);
+
+                                Toast.makeText(AgregarProductosActivity.this, "Se registro correctamente", Toast.LENGTH_SHORT).show();
+
+
+                            } else {
+                                Toast.makeText(AgregarProductosActivity.this, "Debe completar los campos", Toast.LENGTH_SHORT).show();
+
+                            }
 
                             System.out.println(p.getNombre());
 
@@ -407,11 +469,9 @@ public class AgregarProductosActivity extends AppCompatActivity implements View.
 
                         }
 
-                        String total1 = String.valueOf(suma1);
 
-                        st24 = "Total: "+total1+"\n";
 
-                        out.write( getByteString(st24,negrita2, fuente2, ancho2, alto2));
+                        out.write( getByteString(st25,negrita2, fuente2, ancho2, alto2));
 
                         PrintHelper photoPrinter = new PrintHelper(AgregarProductosActivity.this);
                         photoPrinter.setScaleMode(PrintHelper.SCALE_MODE_FIT);

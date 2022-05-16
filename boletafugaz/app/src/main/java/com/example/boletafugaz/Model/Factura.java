@@ -1,9 +1,8 @@
 package com.example.boletafugaz.Model;
 
 public class Factura {
-    String empresa;
-    String giro_Empresa;
-    String rut;
+    String fecha;
+    String rut_cliente;
     String razon_Social;
     String giro;
     String direccion;
@@ -14,10 +13,9 @@ public class Factura {
     public Factura() {
     }
 
-    public Factura(String empresa, String giro_Empresa, String rut, String razon_Social, String giro, String direccion, String region, String provincia, String comuna) {
-        this.empresa = empresa;
-        this.giro_Empresa = giro_Empresa;
-        this.rut = rut;
+    public Factura(String fecha, String rut_cliente, String razon_Social, String giro, String direccion, String region, String provincia, String comuna) {
+        this.fecha = fecha;
+        this.rut_cliente = rut_cliente;
         this.razon_Social = razon_Social;
         this.giro = giro;
         this.direccion = direccion;
@@ -26,28 +24,20 @@ public class Factura {
         this.comuna = comuna;
     }
 
-    public String getEmpresa() {
-        return empresa;
+    public String getFecha() {
+        return fecha;
     }
 
-    public void setEmpresa(String empresa) {
-        this.empresa = empresa;
+    public void setFecha(String fecha) {
+        this.fecha = fecha;
     }
 
-    public String getGiro_Empresa() {
-        return giro_Empresa;
+    public String getRut_cliente() {
+        return rut_cliente;
     }
 
-    public void setGiro_Empresa(String giro_Empresa) {
-        this.giro_Empresa = giro_Empresa;
-    }
-
-    public String getRut() {
-        return rut;
-    }
-
-    public void setRut(String rut) {
-        this.rut = rut;
+    public void setRut_cliente(String rut_cliente) {
+        this.rut_cliente = rut_cliente;
     }
 
     public String getRazon_Social() {
