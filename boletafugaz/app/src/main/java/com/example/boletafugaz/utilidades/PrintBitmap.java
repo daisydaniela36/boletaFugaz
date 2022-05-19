@@ -4,10 +4,6 @@ import android.graphics.Bitmap;
 
 import zj.com.customize.sdk.Other;
 
-/**
- * Created by usuario on 6/03/2018.
- */
-
 public class PrintBitmap {
 
     public static byte[] POS_PrintBMP(Bitmap mBitmap, int nWidth, int nMode) {
