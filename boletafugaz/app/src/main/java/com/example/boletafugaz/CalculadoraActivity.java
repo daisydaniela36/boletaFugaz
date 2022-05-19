@@ -366,9 +366,6 @@ public class CalculadoraActivity extends AppCompatActivity implements View.OnCli
                                             comuna1 = comuna;
                                             direccion1 = direccion;
                                             telefono1 = telefono;
-
-
-
                                         }
 
                                     }

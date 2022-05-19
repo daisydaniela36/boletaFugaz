@@ -35,7 +35,6 @@ public class HistorialBoletasActivity extends AppCompatActivity {
     private DatabaseReference mDataBase1;
     private Spinner spn_empresa;
     String id2;
-    private DatabaseReference bdEmpresa;
     String rut1, nombre1,comuna1, direccion1, telefono1;
     String id4;
     ListView lbl_boletas;
@@ -58,7 +57,27 @@ public class HistorialBoletasActivity extends AppCompatActivity {
 
         loadEmpresa();
 
+        lbl_boletas.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
 
+                Boleta b = lista_boletas.get(position);
+
+                Intent i = new Intent(HistorialBoletasActivity.this, MostrarBoletaActivity.class);
+
+                i.putExtra("id", id4);
+                i.putExtra("rut", rut1);
+                i.putExtra("nombre", nombre1);
+                i.putExtra("comuna", comuna1);
+                i.putExtra("direccion", direccion1);
+                i.putExtra("telefono", telefono1);
+                i.putExtra("fecha", b.getFecha());
+                i.putExtra("total", b.getTotal());
+
+                startActivity(i);
+
+            }
+        });
 
 
         btn_VolverB.setOnClickListener(new View.OnClickListener() {

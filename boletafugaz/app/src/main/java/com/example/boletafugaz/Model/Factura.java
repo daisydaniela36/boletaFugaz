@@ -87,4 +87,8 @@ public class Factura {
     public void setComuna(String comuna) {
         this.comuna = comuna;
     }
+
+    @Override
+    public String toString() { return "fecha: " + fecha;
+    }
 }
