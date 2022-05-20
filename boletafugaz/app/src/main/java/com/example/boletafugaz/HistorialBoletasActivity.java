@@ -28,6 +28,8 @@ import java.util.List;
 
 public class HistorialBoletasActivity extends AppCompatActivity {
 
+
+
     private Button btn_VolverB;
     List<Empresa> empresas;
     private FirebaseAuth firebaseAuth;
@@ -194,4 +196,6 @@ public class HistorialBoletasActivity extends AppCompatActivity {
             }
         });
     }
+
+
 }
