@@ -66,15 +66,18 @@ import java.util.UUID;
 public class FacturaActivity extends AppCompatActivity {
     private Spinner spn_empresa;
     private Spinner spn_giro;
+    Spinner combo1,combo2,combo3;
+    private EditText edt_rut,edt_Razon_Social,edt_Giro,edt_Direccion;
+
     List<Empresa> empresas;
     List<Giro> giro;
-    String id3,rut1, nombre1,comuna1, direccion1, telefono1;
+
     private FirebaseAuth firebaseAuth;
     private DatabaseReference mDataBase;
     private DatabaseReference mDataBase1;
-    Spinner combo1,combo2,combo3;
-    private EditText edt_rut,edt_Razon_Social,edt_Giro,edt_Direccion;
+
     String id2;
+    String id3,rut1, nombre1,comuna1, direccion1, telefono1;
 
 
     String regiones[] = {"Arica y Parinacota","Tarapaca",

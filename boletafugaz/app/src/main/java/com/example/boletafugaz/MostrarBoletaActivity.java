@@ -1,38 +1,21 @@
 package com.example.boletafugaz;
-
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.print.PrintHelper;
-
-import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
-import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
-import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
-import com.example.boletafugaz.Model.Boleta;
-import com.example.boletafugaz.db.dbValor;
 import com.example.boletafugaz.utilidades.PrintBitmap;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.zxing.BarcodeFormat;
@@ -40,25 +23,20 @@ import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
-
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.UUID;
 
 public class MostrarBoletaActivity extends AppCompatActivity implements View.OnClickListener{
 
     private static final int REQUEST_DISPOSITIVO = 425;
     private static final String TAG_DEBUG = "tag_debug";
-    private static final int COD_PERMISOS = 872;
     private final int ANCHO_IMG_58_MM = 384;
     private static final int MODE_PRINT_IMG = 0;
     private TextView txtLabel;
-    private ImageButton btnClear;
 
     private BluetoothAdapter bluetoothAdapter;
     private BluetoothDevice dispositivoBluetooth;
@@ -66,16 +44,10 @@ public class MostrarBoletaActivity extends AppCompatActivity implements View.OnC
     private UUID aplicacionUUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
     private OutputStream outputStream;
     private InputStream inputStream;
-    private Thread hiloComunicacion;
-    private byte[] bufferLectura;
-    private int bufferLecturaPosicion;
     private volatile boolean pararLectura;
 
     private BarcodeEncoder barcodeEncoder;
     private String valueOfEditText;
-    private String valueOfEditText1;
-    private String valueOfEditText2;
-    private File codeFile;
     private RelativeLayout relativeLayout;
     private MultiFormatWriter writer;
     private BitMatrix bitMatrix;
@@ -83,10 +55,7 @@ public class MostrarBoletaActivity extends AppCompatActivity implements View.OnC
     private ImageView ivCodeContainer;
 
 
-
-    private String memoria = "";
     String id,rut, nombre,comuna, direccion, telefono,fecha,total,resultIva2;
-    int iva;
     EditText edt_Rut, edt_Nombre, edt_Comuna,edt_Direccion, edt_Telefono,edt_Fecha,edt_Total,edt_Iva;
     Button btnImprimirTexto, btnCerrarConexion,btn_Volver;
 
@@ -191,7 +160,6 @@ public class MostrarBoletaActivity extends AppCompatActivity implements View.OnC
 
                         valueOfEditText = "B"+"O"+"L"+"E"+"T"+"A"+ "ELECTRONICA"+"N° 541";
 
-                        //"fecha emision: 11/06/2021 monto total: 5000 el iva incluido               "
 
                         if(valueOfEditText.equals("")|| valueOfEditText == null){
                             showSnackbar(getResources().getString(R.string.etWithoutContent));
@@ -289,7 +257,6 @@ public class MostrarBoletaActivity extends AppCompatActivity implements View.OnC
     }
 
     public void clickBuscarDispositivosSync(View btn) {
-        // Cerramos la conexion antes de establecer otra
         cerrarConexion();
 
         Intent intentLista = new Intent(this, ListaBluetoothActivity.class);
@@ -354,83 +321,6 @@ public class MostrarBoletaActivity extends AppCompatActivity implements View.OnC
         }
     }
 
-
-    private void empezarEscucharDatos() {
-
-        final byte saltoLinea = 10;
-
-        // Inicializamos las variables para leer el inputStream
-        pararLectura = false;
-        bufferLecturaPosicion = 0;
-        bufferLectura = new byte[1024];
-
-        hiloComunicacion = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                // Mientras el hilo no sea interrumpido y la variable booleana esté en false
-                while (!Thread.currentThread().isInterrupted() && !pararLectura) {
-                    try {
-                        // Cantidad de bytes disponibles para leer al inputStream
-                        int bytesDisponibles = inputStream.available();
-
-                        if (bytesDisponibles > 0) {
-                            byte[] paqueteDeBytes = new byte[bytesDisponibles];// para guardar los bytes del inputStream
-                            inputStream.read(paqueteDeBytes);// leemos los byte y colocamos en paqueteDeBytes
-
-                            for (int i = 0; i < bytesDisponibles; i++) {
-                                byte b = paqueteDeBytes[i];// leemos los bytes uno a uno, lo guardamos en b
-
-                                // Si es un salto de linea asumimos que es un renglon y lo pasamos a String
-                                // Para ponerlo en el txtLabel, si no lo es guardamos en bufferLectura
-                                // el byte leido hasta completar el renglon
-                                if (b == saltoLinea) {
-                                    Log.v(TAG_DEBUG, "Encontramos salto de linea");
-
-                                    // array de bytes para copiar el array bufferLectura y pasarlo a String
-                                    byte[] bytesCopia = new byte[bufferLecturaPosicion];
-
-                                    // Copiamos el array
-                                    System.arraycopy(bufferLectura, 0, bytesCopia, 0, bytesCopia.length);
-
-                                    // Codificamos el array de byten en caracteres tipo ASCII de estados unidos
-                                    final String datosString = new String(bytesCopia, "US-ASCII");
-
-                                    // Colocamos la posicion en cero para leer una nueva linea y guardarla en bufferLectura
-                                    bufferLecturaPosicion = 0;
-
-                                    runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            // colocamos lo leido en el inputStream en el EditText
-                                            txtLabel.setText(datosString);
-                                        }
-                                    });
-                                } else {
-                                    Log.v(TAG_DEBUG, "leemos un byte");
-
-                                    // Si no es un salto de linea es otro caracter y por tanto lo guardamos
-                                    bufferLectura[bufferLecturaPosicion++] = b;
-                                }
-                            }
-                        } else {
-                            Log.v(TAG_DEBUG, "no hay bytes disponibles para leer");
-                        }
-
-
-                    } catch (IOException e) {
-                        pararLectura = true;
-
-                        Log.e(TAG_DEBUG, "Error ecuchar datos");
-                        e.printStackTrace();
-                    }
-                }
-            }
-        });
-
-        hiloComunicacion.start();
-
-    }
-
     private void cerrarConexion() {
         try {
             if (bluetoothSocket != null) {
@@ -446,16 +336,6 @@ public class MostrarBoletaActivity extends AppCompatActivity implements View.OnC
 
     }
 
-    /**
-     * (font:A font:B)
-     *
-     * @param str
-     * @param bold
-     * @param font
-     * @param widthsize
-     * @param heigthsize
-     * @return
-     */
     public static byte[] getByteString(String str, int bold, int font, int widthsize, int heigthsize) {
 
         if (str.length() == 0 | widthsize < 0 | widthsize > 3 | heigthsize < 0 | heigthsize > 3
@@ -495,72 +375,4 @@ public class MostrarBoletaActivity extends AppCompatActivity implements View.OnC
         cerrarConexion();
     }
 
-    public class TransformacionRotarBitmap extends BitmapTransformation {
-
-        private float anguloRotar = 0f;
-
-        public TransformacionRotarBitmap(Context context, float anguloRotar) {
-            super(context);
-
-            this.anguloRotar = anguloRotar;
-        }
-
-        @Override
-        protected Bitmap transform(BitmapPool pool, Bitmap toTransform, int outWidth, int outHeight) {
-            Matrix matrix = new Matrix();
-
-            matrix.postRotate(anguloRotar);
-
-            return Bitmap.createBitmap(toTransform, 0, 0, toTransform.getWidth(), toTransform.getHeight(), matrix, true);
-        }
-
-        @Override
-        public String getId() {
-            return "rotar" + anguloRotar;
-        }
-    }
-
-    /**
-     * Chequea cuales permisos faltan y los pide
-     *
-     * @return false si hay algun permiso faltante
-     */
-    private boolean pedirPermisosFaltantes() {
-        boolean todosConsedidos = true;
-        ArrayList<String> permisosFaltantes = new ArrayList<>();
-
-        boolean permisoCamera = (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) ==
-                PackageManager.PERMISSION_GRANTED);
-
-        boolean permisoEscrituraSD = (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) ==
-                PackageManager.PERMISSION_GRANTED);
-
-        boolean permisoLecturaSD = (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) ==
-                PackageManager.PERMISSION_GRANTED);
-
-
-        if (!permisoCamera) {
-            todosConsedidos = false;
-            permisosFaltantes.add(Manifest.permission.CAMERA);
-        }
-
-        if (!permisoEscrituraSD) {
-            todosConsedidos = false;
-            permisosFaltantes.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        }
-
-        if (!permisoLecturaSD) {
-            todosConsedidos = false;
-            permisosFaltantes.add(Manifest.permission.READ_EXTERNAL_STORAGE);
-        }
-
-        if (!todosConsedidos) {
-            String[] permisos = new String[permisosFaltantes.size()];
-            permisos = permisosFaltantes.toArray(permisos);
-
-            ActivityCompat.requestPermissions(this, permisos, COD_PERMISOS);
-        }
-
-        return todosConsedidos;
-    }
 }

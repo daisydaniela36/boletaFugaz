@@ -28,21 +28,21 @@ import java.util.List;
 
 public class HistorialBoletasActivity extends AppCompatActivity {
 
-
-
     private Button btn_VolverB;
-    List<Empresa> empresas;
     private FirebaseAuth firebaseAuth;
     private DatabaseReference mDataBase;
     private DatabaseReference mDataBase1;
     private Spinner spn_empresa;
-    String id2;
-    String rut1, nombre1,comuna1, direccion1, telefono1;
-    String id4;
-    ListView lbl_boletas;
 
+    List<Empresa> empresas;
     List<Boleta> lista_boletas = new ArrayList<Boleta>();
     ArrayAdapter<Boleta> arrayadapterBoletas;
+    ListView lbl_boletas;
+
+
+    String id1,id2;
+    String rut1, nombre1,comuna1, direccion1, telefono1;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +56,8 @@ public class HistorialBoletasActivity extends AppCompatActivity {
 
         firebaseAuth = FirebaseAuth.getInstance();
 
+        id1 = firebaseAuth.getCurrentUser().getUid();
+
 
         loadEmpresa();
 
@@ -67,7 +69,7 @@ public class HistorialBoletasActivity extends AppCompatActivity {
 
                 Intent i = new Intent(HistorialBoletasActivity.this, MostrarBoletaActivity.class);
 
-                i.putExtra("id", id4);
+                i.putExtra("id", id2);
                 i.putExtra("rut", rut1);
                 i.putExtra("nombre", nombre1);
                 i.putExtra("comuna", comuna1);
@@ -125,12 +127,12 @@ public class HistorialBoletasActivity extends AppCompatActivity {
                             @Override
                             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-                                id2 = firebaseAuth.getCurrentUser().getUid();
+
 
                                 String item = parent.getSelectedItem().toString();
 
                                 DatabaseReference mDataBase2 = FirebaseDatabase.getInstance().getReference();
-                                Query q = mDataBase2.child("usuario").child(id2).child("empresa").orderByChild("nombre").equalTo(item);
+                                Query q = mDataBase2.child("usuario").child(id1).child("empresa").orderByChild("nombre").equalTo(item);
 
                                 q.addValueEventListener(new ValueEventListener() {
                                     @Override
@@ -144,7 +146,7 @@ public class HistorialBoletasActivity extends AppCompatActivity {
                                             String direccion =  dataSnapshot.child("direccion").getValue().toString();
                                             String telefono =  dataSnapshot.child("telefono").getValue().toString();
 
-                                            id4 = id;
+                                            id2 = id;
                                             rut1 = "R.U.T.: "+rut;
                                             nombre1 = nombre;
                                             comuna1 = comuna;
@@ -152,7 +154,7 @@ public class HistorialBoletasActivity extends AppCompatActivity {
                                             telefono1 = telefono;
 
                                             mDataBase = FirebaseDatabase.getInstance().getReference();
-                                            mDataBase.child("usuario").child(id2).child("empresa").child(id4).child("Boleta").addValueEventListener(new ValueEventListener() {
+                                            mDataBase.child("usuario").child(id1).child("empresa").child(id2).child("Boleta").addValueEventListener(new ValueEventListener() {
                                                 @Override
                                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                                                     lista_boletas.clear();

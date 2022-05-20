@@ -29,14 +29,14 @@ import java.util.List;
 public class HistorialFacturasActivity extends AppCompatActivity {
 
     private Button btn_VolverF;
-    private Button btn_VolverB;
     List<Empresa> empresas;
+
     private FirebaseAuth firebaseAuth;
     private DatabaseReference mDataBase;
     private DatabaseReference mDataBase1;
     private Spinner spn_empresa;
+
     String id2;
-    private DatabaseReference bdEmpresa;
     String rut1, nombre1,comuna1, direccion1, telefono1;
     String id4;
     ListView lbl_facturas;

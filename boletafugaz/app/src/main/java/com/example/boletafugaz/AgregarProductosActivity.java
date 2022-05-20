@@ -1,20 +1,13 @@
 package com.example.boletafugaz;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.print.PrintHelper;
-
-import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -22,19 +15,13 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
-import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
-import com.example.boletafugaz.Model.Boleta;
 import com.example.boletafugaz.Model.Factura;
-import com.example.boletafugaz.Model.Giro;
 import com.example.boletafugaz.Model.Productos;
 import com.example.boletafugaz.Model.Total;
 import com.example.boletafugaz.utilidades.PrintBitmap;
@@ -47,17 +34,11 @@ import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Array;
-import java.text.DateFormat;
-import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.UUID;
 
 public class AgregarProductosActivity extends AppCompatActivity implements View.OnClickListener{
@@ -66,17 +47,16 @@ public class AgregarProductosActivity extends AppCompatActivity implements View.
     private static final int MODE_PRINT_IMG = 0;
     private static final int REQUEST_DISPOSITIVO = 425;
     private static final String TAG_DEBUG = "tag_debug";
-    private static final int COD_PERMISOS = 872;
+    TextView txtLabel;
+
     private BluetoothAdapter bluetoothAdapter;
     private BluetoothDevice dispositivoBluetooth;
     private BluetoothSocket bluetoothSocket;
     private OutputStream out;
     private InputStream inputStream;
-    private Thread hiloComunicacion;
     private UUID aplicacionUUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
-    private byte[] bufferLectura;
-    private int bufferLecturaPosicion;
     private volatile boolean pararLectura;
+
     private String valueOfEditText;
     private ImageView ivCodeContainer;
     private RelativeLayout relativeLayout;
@@ -84,58 +64,21 @@ public class AgregarProductosActivity extends AppCompatActivity implements View.
     private BitMatrix bitMatrix;
     private Bitmap bitmap = null;
     private BarcodeEncoder barcodeEncoder;
+
     private DatabaseReference bdFactura;
     private DatabaseReference bdProductos;
-    int suma;
-    String a;
     private FirebaseAuth firebaseAuth;
 
-
-    String st1;
-    String st2;
-    String st3;
-    String st4;
-    String st5;
-    String st6;
-    String st7;
-    String st8;
-    String st9;
-    String st10;
-    String st11;
-    String st12;
-    String st13;
-    String st14;
-    String st15;
-    String st16;
-    String st17;
-    String st18;
-    String st19;
-    String st20;
-    String st21;
-    String st22;
-    String st23;
-    String st24;
-    String st25;
 
     ArrayList<Productos> listaProductos = new ArrayList<>();
     ArrayList<Total> listaTotal = new ArrayList<>();
 
-
     private Button btnCerrarConexion,btnVolver,btnAgregar,btnImprimirTexto;
     private TableLayout tblProductos;
 
-    private TextView txtNombre;
-    private TextView txtCantidad;
-    private TextView txtPrecio;
-    private EditText total3;
-
+    private TextView txtNombre,txtCantidad,txtPrecio,total3;
     private TableRow row;
     int suma1 = 0;
-
-    String s;
-    TextView txtLabel;
-
-    Context context = this;
 
     String id2,id3,rut_empresa,comuna_empresa,direccion_empresa,fecha,empresa,giro_empresa,rut,razon_Social,giro,direccion,region,provincia,comuna;
     String id4;
@@ -333,13 +276,6 @@ public class AgregarProductosActivity extends AppCompatActivity implements View.
 
     }
 
-    public void sumar(){
-
-        listaProductos = new ArrayList<>();
-
-    }
-
-
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btnImprimir2:
@@ -353,28 +289,28 @@ public class AgregarProductosActivity extends AppCompatActivity implements View.
                         int ancho2 = 0;
                         int alto2 = 0;
 
-                        st1 = " ==============================" + "\n";
-                        st2 = "     "+rut_empresa+"\n";
-                        st3 = "      FACTURA ELECTRONICA" + "\n";
-                        st4 = "             N° 10" + "\n";
-                        st5 = " ==============================" + "\n";
-                        st6 = "Vendedor: " +empresa+ "\n";
-                        st7 = "Giro: " +giro_empresa+ "\n";
-                        st8 = "Fecha emision: " +fecha+ "\n";
-                        st9 = "direccion: " +direccion_empresa+" "+comuna_empresa+"\n";
-                        st10 =  " ==============================" + "\n";
-                        st11 = "         DATOS CLIENTE" + "\n";
-                        st12 = " ==============================" + "\n";
-                        st13 = "Rut: " +rut+ "\n";
-                        st14 = "Razon Social: " +razon_Social+"\n";
-                        st15 = "Giro: " +giro+"\n";
-                        st16 = "Direccion: " +direccion+"\n";
-                        st17 = "Region: " +region+"\n";
-                        st18 = "Provincia: " +provincia+"\n";
-                        st19 = "Comuna: " +comuna+"\n";
-                        st20 = " =============================="+"\n";
-                        st21 = "        DATOS PRODUCTOS"+"\n";
-                        st22 = " =============================="+"\n";
+                        String st1 = " ==============================" + "\n";
+                        String st2 = "     "+rut_empresa+"\n";
+                        String st3 = "      FACTURA ELECTRONICA" + "\n";
+                        String st4 = "             N° 10" + "\n";
+                        String st5 = " ==============================" + "\n";
+                        String st6 = "Vendedor: " +empresa+ "\n";
+                        String st7 = "Giro: " +giro_empresa+ "\n";
+                        String st8 = "Fecha emision: " +fecha+ "\n";
+                        String st9 = "direccion: " +direccion_empresa+" "+comuna_empresa+"\n";
+                        String st10 =  " ==============================" + "\n";
+                        String st11 = "         DATOS CLIENTE" + "\n";
+                        String st12 = " ==============================" + "\n";
+                        String st13 = "Rut: " +rut+ "\n";
+                        String st14 = "Razon Social: " +razon_Social+"\n";
+                        String st15 = "Giro: " +giro+"\n";
+                        String st16 = "Direccion: " +direccion+"\n";
+                        String st17 = "Region: " +region+"\n";
+                        String st18 = "Provincia: " +provincia+"\n";
+                        String st19 = "Comuna: " +comuna+"\n";
+                        String st20 = " =============================="+"\n";
+                        String st21 = "        DATOS PRODUCTOS"+"\n";
+                        String st22 = " =============================="+"\n";
 
 
 
@@ -440,12 +376,12 @@ public class AgregarProductosActivity extends AppCompatActivity implements View.
 
                         for(Productos p : listaProductos) {
 
-                            st23 ="Nombre: "+p.getNombre()+"\n"+"Cantidad: "+p.getCantidad()+"\n"+"Precio: "+p.getPrecio()+"\n"+"Total: "+p.getTotal()+"\n";
-                            st24 =" =============================="+"\n";
+                            String st23 ="Nombre: "+p.getNombre()+"\n"+"Cantidad: "+p.getCantidad()+"\n"+"Precio: "+p.getPrecio()+"\n"+"Total: "+p.getTotal()+"\n";
+                            String st24 =" =============================="+"\n";
 
                             String total1 = String.valueOf(suma1);
 
-                            st25 = "Total: "+total1+"\n";
+                            String st25 = "Total: "+total1+"\n";
 
                             if (!TextUtils.isEmpty(empresa)) {
 
@@ -466,21 +402,18 @@ public class AgregarProductosActivity extends AppCompatActivity implements View.
 
                             out.write( getByteString(st22,negrita2, fuente2, ancho2, alto2));
                             out.write( getByteString(st23,negrita2, fuente2, ancho2, alto2));
+                            out.write( getByteString(st24,negrita2, fuente2, ancho2, alto2));
+                            out.write( getByteString(st25,negrita2, fuente2, ancho2, alto2));
+
 
                         }
 
-
-
-                        out.write( getByteString(st25,negrita2, fuente2, ancho2, alto2));
 
                         PrintHelper photoPrinter = new PrintHelper(AgregarProductosActivity.this);
                         photoPrinter.setScaleMode(PrintHelper.SCALE_MODE_FIT);
 
                         Bitmap bitmap = ((BitmapDrawable) ivCodeContainer.getDrawable()).getBitmap();
                         out.write(PrintBitmap.POS_PrintBMP(bitmap, ANCHO_IMG_58_MM,MODE_PRINT_IMG));
-
-
-
 
 
                     } catch (IOException e) {
@@ -506,23 +439,6 @@ public class AgregarProductosActivity extends AppCompatActivity implements View.
 
         }
     }
-
-    public void cargarlista(){
-
-        listaProductos = new ArrayList<>();
-
-        String cantidad = txtCantidad.getText().toString();
-        String precio = txtPrecio.getText().toString();
-
-        int cantidadInt = Integer.parseInt(cantidad);
-        int precioInt = Integer.parseInt(precio);
-
-        int total = precioInt * cantidadInt ;
-
-        String total1 = String.valueOf(total);
-        listaProductos.add(new Productos(txtNombre.getText().toString(),txtCantidad.getText().toString(),txtPrecio.getText().toString(),total));
-    }
-
 
     public void clickBuscarDispositivosSync(View btn) {
         // Cerramos la conexion antes de establecer otra
@@ -613,83 +529,6 @@ public class AgregarProductosActivity extends AppCompatActivity implements View.
                 .show();
     }
 
-
-    private void empezarEscucharDatos() {
-
-        final byte saltoLinea = 10;
-
-        // Inicializamos las variables para leer el inputStream
-        pararLectura = false;
-        bufferLecturaPosicion = 0;
-        bufferLectura = new byte[1024];
-
-        hiloComunicacion = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                // Mientras el hilo no sea interrumpido y la variable booleana esté en false
-                while (!Thread.currentThread().isInterrupted() && !pararLectura) {
-                    try {
-                        // Cantidad de bytes disponibles para leer al inputStream
-                        int bytesDisponibles = inputStream.available();
-
-                        if (bytesDisponibles > 0) {
-                            byte[] paqueteDeBytes = new byte[bytesDisponibles];// para guardar los bytes del inputStream
-                            inputStream.read(paqueteDeBytes);// leemos los byte y colocamos en paqueteDeBytes
-
-                            for (int i = 0; i < bytesDisponibles; i++) {
-                                byte b = paqueteDeBytes[i];// leemos los bytes uno a uno, lo guardamos en b
-
-                                // Si es un salto de linea asumimos que es un renglon y lo pasamos a String
-                                // Para ponerlo en el txtLabel, si no lo es guardamos en bufferLectura
-                                // el byte leido hasta completar el renglon
-                                if (b == saltoLinea) {
-                                    Log.v(TAG_DEBUG, "Encontramos salto de linea");
-
-                                    // array de bytes para copiar el array bufferLectura y pasarlo a String
-                                    byte[] bytesCopia = new byte[bufferLecturaPosicion];
-
-                                    // Copiamos el array
-                                    System.arraycopy(bufferLectura, 0, bytesCopia, 0, bytesCopia.length);
-
-                                    // Codificamos el array de byten en caracteres tipo ASCII de estados unidos
-                                    final String datosString = new String(bytesCopia, "US-ASCII");
-
-                                    // Colocamos la posicion en cero para leer una nueva linea y guardarla en bufferLectura
-                                    bufferLecturaPosicion = 0;
-
-                                    runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            // colocamos lo leido en el inputStream en el EditText
-                                            txtLabel.setText(datosString);
-                                        }
-                                    });
-                                } else {
-                                    Log.v(TAG_DEBUG, "leemos un byte");
-
-                                    // Si no es un salto de linea es otro caracter y por tanto lo guardamos
-                                    bufferLectura[bufferLecturaPosicion++] = b;
-                                }
-                            }
-                        } else {
-                            Log.v(TAG_DEBUG, "no hay bytes disponibles para leer");
-                        }
-
-
-                    } catch (IOException e) {
-                        pararLectura = true;
-
-                        Log.e(TAG_DEBUG, "Error ecuchar datos");
-                        e.printStackTrace();
-                    }
-                }
-            }
-        });
-
-        hiloComunicacion.start();
-
-    }
-
     private void cerrarConexion() {
         try {
             if (bluetoothSocket != null) {
@@ -705,16 +544,6 @@ public class AgregarProductosActivity extends AppCompatActivity implements View.
 
     }
 
-    /**
-     * (font:A font:B)
-     *
-     * @param str
-     * @param bold
-     * @param font
-     * @param widthsize
-     * @param heigthsize
-     * @return
-     */
     public static byte[] getByteString(String str, int bold, int font, int widthsize, int heigthsize) {
 
         if (str.length() == 0 | widthsize < 0 | widthsize > 3 | heigthsize < 0 | heigthsize > 3
@@ -752,74 +581,5 @@ public class AgregarProductosActivity extends AppCompatActivity implements View.
     protected void onDestroy() {
         super.onDestroy();
         cerrarConexion();
-    }
-
-    public class TransformacionRotarBitmap extends BitmapTransformation {
-
-        private float anguloRotar = 0f;
-
-        public TransformacionRotarBitmap(Context context, float anguloRotar) {
-            super(context);
-
-            this.anguloRotar = anguloRotar;
-        }
-
-        @Override
-        protected Bitmap transform(BitmapPool pool, Bitmap toTransform, int outWidth, int outHeight) {
-            Matrix matrix = new Matrix();
-
-            matrix.postRotate(anguloRotar);
-
-            return Bitmap.createBitmap(toTransform, 0, 0, toTransform.getWidth(), toTransform.getHeight(), matrix, true);
-        }
-
-        @Override
-        public String getId() {
-            return "rotar" + anguloRotar;
-        }
-    }
-
-    /**
-     * Chequea cuales permisos faltan y los pide
-     *
-     * @return false si hay algun permiso faltante
-     */
-    private boolean pedirPermisosFaltantes() {
-        boolean todosConsedidos = true;
-        ArrayList<String> permisosFaltantes = new ArrayList<>();
-
-        boolean permisoCamera = (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) ==
-                PackageManager.PERMISSION_GRANTED);
-
-        boolean permisoEscrituraSD = (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) ==
-                PackageManager.PERMISSION_GRANTED);
-
-        boolean permisoLecturaSD = (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) ==
-                PackageManager.PERMISSION_GRANTED);
-
-
-        if (!permisoCamera) {
-            todosConsedidos = false;
-            permisosFaltantes.add(Manifest.permission.CAMERA);
-        }
-
-        if (!permisoEscrituraSD) {
-            todosConsedidos = false;
-            permisosFaltantes.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        }
-
-        if (!permisoLecturaSD) {
-            todosConsedidos = false;
-            permisosFaltantes.add(Manifest.permission.READ_EXTERNAL_STORAGE);
-        }
-
-        if (!todosConsedidos) {
-            String[] permisos = new String[permisosFaltantes.size()];
-            permisos = permisosFaltantes.toArray(permisos);
-
-            ActivityCompat.requestPermissions(this, permisos, COD_PERMISOS);
-        }
-
-        return todosConsedidos;
     }
 }
