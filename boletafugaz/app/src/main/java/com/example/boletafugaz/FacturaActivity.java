@@ -263,9 +263,10 @@ public class FacturaActivity extends AppCompatActivity {
                 String region = combo1.getSelectedItem().toString();
                 String  provincia = combo2.getSelectedItem().toString();
                 String comuna = combo3.getSelectedItem().toString();
+                int total = 0;
 
 
-                Factura f = new Factura(id4,giro_Empresa,salida,rut,razon_Social,giro,direccion,region,provincia,comuna);
+                Factura f = new Factura(id4,giro_Empresa,salida,rut,razon_Social,giro,direccion,region,provincia,comuna,total);
 
                 Intent i = new Intent(getApplicationContext(), AgregarProductosActivity.class);
 

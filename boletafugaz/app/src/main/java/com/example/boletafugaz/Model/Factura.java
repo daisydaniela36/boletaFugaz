@@ -11,11 +11,12 @@ public class Factura {
     String region;
     String provincia;
     String comuna;
+    Integer total;
 
     public Factura() {
     }
 
-    public Factura(String id,String giro_empresa,String fecha, String rut_cliente, String razon_Social, String giro, String direccion, String region, String provincia, String comuna) {
+    public Factura(String id,String giro_empresa,String fecha, String rut_cliente, String razon_Social, String giro, String direccion, String region, String provincia, String comuna,Integer total) {
         this.id = id;
         this.giro_empresa = giro_empresa;
         this.fecha = fecha;
@@ -26,6 +27,15 @@ public class Factura {
         this.region = region;
         this.provincia = provincia;
         this.comuna = comuna;
+        this.total = total;
+    }
+
+    public Integer getTotal() {
+        return total;
+    }
+
+    public void setTotal(Integer total) {
+        this.total = total;
     }
 
     public String getGiro_empresa() {

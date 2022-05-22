@@ -72,6 +72,8 @@ public class MostrarFacturaActivity extends AppCompatActivity implements View.On
     private Bitmap bitmap = null;
     private ImageView ivCodeContainer;
 
+    private int suma1 = 0;
+
     List<Productos> productos;
     private DatabaseReference bdProductos;
 
@@ -83,7 +85,7 @@ public class MostrarFacturaActivity extends AppCompatActivity implements View.On
 
     String id_usuario;
     String id1,rut, nombre,giro_empresa,comuna1, direccion1, telefono;
-    String id2,fecha, rut_cliente,razon_Social, giro, direccion2,region,provincia,comuna2;
+    String id2,fecha, rut_cliente,razon_Social, giro, direccion2,region,provincia,comuna2,total;
     EditText edt_Rut, edt_Nombre, edt_Comuna,edt_Direccion, edt_Telefono;
     Button btnImprimirTexto, btnCerrarConexion,btn_Volver;
 
@@ -124,6 +126,10 @@ public class MostrarFacturaActivity extends AppCompatActivity implements View.On
         region = getIntent().getStringExtra("region");
         provincia = getIntent().getStringExtra("provincia");
         comuna2 = getIntent().getStringExtra("comuna2");
+
+        total = getIntent().getStringExtra("total");
+
+
 
         firebaseAuth = FirebaseAuth.getInstance();
         id_usuario = firebaseAuth.getCurrentUser().getUid();
@@ -263,12 +269,16 @@ public class MostrarFacturaActivity extends AppCompatActivity implements View.On
                             String st24 =" =============================="+"\n";
 
 
+
+
                             outputStream.write( getByteString(st23,negrita2, fuente2, ancho2, alto2));
                             outputStream.write( getByteString(st24,negrita2, fuente2, ancho2, alto2));
 
                         }
 
-                        outputStream.write( getByteString(st22,negrita2, fuente2, ancho2, alto2));
+
+                        String st25 ="Total: "+total;
+                        outputStream.write( getByteString(st25,negrita2, fuente2, ancho2, alto2));
 
 
                         byte[] center = new byte[]{ 0x1b, 0x61, 0x01 };

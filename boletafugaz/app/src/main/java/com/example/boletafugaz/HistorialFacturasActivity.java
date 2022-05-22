@@ -87,6 +87,11 @@ public class HistorialFacturasActivity extends AppCompatActivity {
                 i.putExtra("provincia", f.getProvincia());
                 i.putExtra("comuna2", f.getComuna());
 
+                String total2 = String.valueOf(f.getTotal());
+                i.putExtra("total", total2);
+
+
+
                 startActivity(i);
 
             }

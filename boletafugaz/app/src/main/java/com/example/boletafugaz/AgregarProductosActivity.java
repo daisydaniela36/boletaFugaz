@@ -318,7 +318,7 @@ public class AgregarProductosActivity extends AppCompatActivity implements View.
 
                             id4 = bdFactura.push().getKey();
 
-                            Factura factura = new Factura(id4,giro_empresa,fecha,rut,razon_Social,giro,direccion,region,provincia,comuna);
+                            Factura factura = new Factura(id4,giro_empresa,fecha,rut,razon_Social,giro,direccion,region,provincia,comuna,suma1);
                             bdFactura.child(id4).setValue(factura);
 
                             bdProductos = FirebaseDatabase.getInstance().getReference("usuario").child(id2).child("empresa").child(id3).child("Factura").child(id4).child("Productos");
@@ -365,6 +365,7 @@ public class AgregarProductosActivity extends AppCompatActivity implements View.
                         out.write( getByteString(st19,negrita2, fuente2, ancho2, alto2));
                         out.write( getByteString(st20,negrita2, fuente2, ancho2, alto2));
                         out.write( getByteString(st21,negrita2, fuente2, ancho2, alto2));
+                        out.write( getByteString(st22,negrita2, fuente2, ancho2, alto2));
 
 
 
@@ -374,15 +375,11 @@ public class AgregarProductosActivity extends AppCompatActivity implements View.
                             String st23 ="Nombre: "+p.getNombre()+"\n"+"Cantidad: "+p.getCantidad()+"\n"+"Precio: "+p.getPrecio()+"\n"+"Total: "+p.getTotal()+"\n";
                             String st24 =" =============================="+"\n";
 
-                            String total1 = String.valueOf(suma1);
-
-                            String st25 = "Total: "+total1+"\n";
-
                             if (!TextUtils.isEmpty(empresa)) {
 
                                 String id2 = bdProductos.push().getKey();
 
-                                Productos p2 = new Productos(p.getNombre(),p.getCantidad(),p.getPrecio(),suma1);
+                                Productos p2 = new Productos(p.getNombre(),p.getCantidad(),p.getPrecio(),p.getTotal());
                                 bdProductos.child(id2).setValue(p2);
 
                                 Toast.makeText(AgregarProductosActivity.this, "Se registro correctamente", Toast.LENGTH_SHORT).show();
@@ -393,15 +390,16 @@ public class AgregarProductosActivity extends AppCompatActivity implements View.
 
                             }
 
-                            System.out.println(p.getNombre());
 
-                            out.write( getByteString(st22,negrita2, fuente2, ancho2, alto2));
                             out.write( getByteString(st23,negrita2, fuente2, ancho2, alto2));
                             out.write( getByteString(st24,negrita2, fuente2, ancho2, alto2));
-                            out.write( getByteString(st25,negrita2, fuente2, ancho2, alto2));
-
-
                         }
+
+                        String total1 = String.valueOf(suma1);
+
+                        String st25 = "Total: "+total1+"\n";
+
+                        out.write( getByteString(st25,negrita2, fuente2, ancho2, alto2));
 
 
                         PrintHelper photoPrinter = new PrintHelper(AgregarProductosActivity.this);
