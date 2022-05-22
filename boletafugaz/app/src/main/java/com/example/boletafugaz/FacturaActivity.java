@@ -254,7 +254,7 @@ public class FacturaActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                String empresa = spn_empresa.getSelectedItem().toString();
+                String id4 = "";
                 String giro_Empresa = spn_giro.getSelectedItem().toString();
                 String rut = edt_rut.getText().toString();
                 String razon_Social = edt_Razon_Social.getText().toString();
@@ -265,7 +265,7 @@ public class FacturaActivity extends AppCompatActivity {
                 String comuna = combo3.getSelectedItem().toString();
 
 
-                Factura f = new Factura(salida,rut,razon_Social,giro,direccion,region,provincia,comuna);
+                Factura f = new Factura(id4,giro_Empresa,salida,rut,razon_Social,giro,direccion,region,provincia,comuna);
 
                 Intent i = new Intent(getApplicationContext(), AgregarProductosActivity.class);
 

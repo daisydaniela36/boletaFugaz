@@ -5,6 +5,7 @@ public class Empresa {
     String id;
     String rut;
     String nombre;
+    String giro;
     String comuna;
     String direccion;
     String telefono;

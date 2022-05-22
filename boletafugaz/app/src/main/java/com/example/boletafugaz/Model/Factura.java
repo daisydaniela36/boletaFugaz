@@ -1,6 +1,8 @@
 package com.example.boletafugaz.Model;
 
 public class Factura {
+    String id;
+    String giro_empresa;
     String fecha;
     String rut_cliente;
     String razon_Social;
@@ -13,7 +15,9 @@ public class Factura {
     public Factura() {
     }
 
-    public Factura(String fecha, String rut_cliente, String razon_Social, String giro, String direccion, String region, String provincia, String comuna) {
+    public Factura(String id,String giro_empresa,String fecha, String rut_cliente, String razon_Social, String giro, String direccion, String region, String provincia, String comuna) {
+        this.id = id;
+        this.giro_empresa = giro_empresa;
         this.fecha = fecha;
         this.rut_cliente = rut_cliente;
         this.razon_Social = razon_Social;
@@ -24,6 +28,20 @@ public class Factura {
         this.comuna = comuna;
     }
 
+    public String getGiro_empresa() {
+        return giro_empresa;
+    }
+
+    public void setGiro_empresa(String giro_empresa) {
+        this.giro_empresa = giro_empresa;
+    }
+
+    public String getId() {
+        return id;
+    }
+    public void setId(String id) {
+        this.id = id;
+    }
     public String getFecha() {
         return fecha;
     }

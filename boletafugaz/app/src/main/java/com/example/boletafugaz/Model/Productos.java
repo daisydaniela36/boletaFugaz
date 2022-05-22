@@ -1,9 +1,8 @@
 package com.example.boletafugaz.Model;
 
-import java.util.ArrayList;
+
 
 public class Productos {
-    ArrayList<Productos> listaProductos = new ArrayList<>();
 
     String nombre;
     String cantidad;

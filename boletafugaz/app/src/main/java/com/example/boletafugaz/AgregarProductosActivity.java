@@ -312,18 +312,13 @@ public class AgregarProductosActivity extends AppCompatActivity implements View.
                         String st21 = "        DATOS PRODUCTOS"+"\n";
                         String st22 = " =============================="+"\n";
 
-
-
                         valueOfEditText = empresa+"B"+"O"+"L"+"E"+"T"+"A"+ "ELECTRONICA"+"N° 541";
-
-
-
 
                         if (!TextUtils.isEmpty(empresa)) {
 
                             id4 = bdFactura.push().getKey();
 
-                            Factura factura = new Factura(fecha,rut,razon_Social,giro,direccion,region,provincia,comuna);
+                            Factura factura = new Factura(id4,giro_empresa,fecha,rut,razon_Social,giro,direccion,region,provincia,comuna);
                             bdFactura.child(id4).setValue(factura);
 
                             bdProductos = FirebaseDatabase.getInstance().getReference("usuario").child(id2).child("empresa").child(id3).child("Factura").child(id4).child("Productos");

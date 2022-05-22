@@ -15,6 +15,7 @@ import android.widget.Spinner;
 import com.example.boletafugaz.Model.Boleta;
 import com.example.boletafugaz.Model.Empresa;
 import com.example.boletafugaz.Model.Factura;
+import com.example.boletafugaz.Model.Giro;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -30,18 +31,20 @@ public class HistorialFacturasActivity extends AppCompatActivity {
 
     private Button btn_VolverF;
     List<Empresa> empresas;
+    List<Factura> lista_facturas = new ArrayList<Factura>();
 
     private FirebaseAuth firebaseAuth;
     private DatabaseReference mDataBase;
     private DatabaseReference mDataBase1;
     private Spinner spn_empresa;
 
+    String id3;
+
     String id2;
-    String rut1, nombre1,comuna1, direccion1, telefono1;
+    String rut1, nombre1,giro_empresa,comuna1, direccion1, telefono1;
     String id4;
     ListView lbl_facturas;
 
-    List<Factura> lista_facturas = new ArrayList<Factura>();
     ArrayAdapter<Factura> arrayadapterFactura;
 
     @Override
@@ -55,6 +58,40 @@ public class HistorialFacturasActivity extends AppCompatActivity {
 
         firebaseAuth = FirebaseAuth.getInstance();
         loadEmpresa();
+
+
+        lbl_facturas.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+
+                Factura f = lista_facturas.get(position);
+
+                Intent i = new Intent(HistorialFacturasActivity.this, MostrarFacturaActivity.class);
+
+                i.putExtra("id1", id4);
+                i.putExtra("rut", rut1);
+                i.putExtra("nombre", nombre1);
+                i.putExtra("giro_empresa", giro_empresa);
+                i.putExtra("comuna1", comuna1);
+                i.putExtra("direccion1", direccion1);
+                i.putExtra("telefono", telefono1);
+
+                i.putExtra("id2", f.getId());
+                i.putExtra("giro_empresa", f.getGiro_empresa());
+                i.putExtra("fecha", f.getFecha());
+                i.putExtra("rut_cliente", f.getRut_cliente());
+                i.putExtra("razon_Social", f.getRazon_Social());
+                i.putExtra("giro", f.getGiro());
+                i.putExtra("direccion2", f.getDireccion());
+                i.putExtra("region", f.getRegion());
+                i.putExtra("provincia", f.getProvincia());
+                i.putExtra("comuna2", f.getComuna());
+
+                startActivity(i);
+
+            }
+        });
+
 
 
         btn_VolverF.setOnClickListener(new View.OnClickListener() {
@@ -75,7 +112,7 @@ public class HistorialFacturasActivity extends AppCompatActivity {
                 if(snapshot.exists()){
                     for(DataSnapshot ds: snapshot.getChildren()){
 
-                        String id3 = ds.getKey();
+                        id3 = ds.getKey();
                         String rut = ds.child("rut").getValue().toString();
                         String nombre = ds.child("nombre").getValue().toString();
                         String comuna = ds.child("comuna").getValue().toString();
