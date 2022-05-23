@@ -2,9 +2,11 @@ package com.example.boletafugaz;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -28,8 +30,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HistorialFacturasActivity extends AppCompatActivity {
-
-    private Button btn_VolverF;
     List<Empresa> empresas;
     List<Factura> lista_facturas = new ArrayList<Factura>();
 
@@ -45,14 +45,20 @@ public class HistorialFacturasActivity extends AppCompatActivity {
     String id4;
     ListView lbl_facturas;
 
+    String factura[] = {"SIN FACTURAS REGISTRADAS"};
+
     ArrayAdapter<Factura> arrayadapterFactura;
+    ArrayAdapter<Factura> arrayadapterFacturaerror;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_historial_facturas);
 
-        btn_VolverF = findViewById(R.id.btn_VolverF);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         spn_empresa = findViewById(R.id.spn_empresa);
         lbl_facturas = findViewById(R.id.lbl_listaFacturas);
 
@@ -64,6 +70,10 @@ public class HistorialFacturasActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
 
+                if(lista_facturas == null || lista_facturas.size() == 0 ) {
+                    // el arraylist no tiene valor
+                }
+                else{
                 Factura f = lista_facturas.get(position);
 
                 Intent i = new Intent(HistorialFacturasActivity.this, MostrarFacturaActivity.class);
@@ -93,16 +103,7 @@ public class HistorialFacturasActivity extends AppCompatActivity {
 
 
                 startActivity(i);
-
-            }
-        });
-
-
-
-        btn_VolverF.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(HistorialFacturasActivity.this, ProfileActivity.class));
+                }
             }
         });
     }
@@ -165,12 +166,16 @@ public class HistorialFacturasActivity extends AppCompatActivity {
                                                 @Override
                                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                                                     lista_facturas.clear();
-                                                    for (DataSnapshot objSnaoshot : snapshot.getChildren()) {
-                                                        Factura f = objSnaoshot.getValue(Factura.class);
-                                                        lista_facturas.add(f);
+                                                    if(snapshot.exists()){
+                                                        for (DataSnapshot objSnaoshot : snapshot.getChildren()) {
+                                                            Factura f = objSnaoshot.getValue(Factura.class);
+                                                            lista_facturas.add(f);
 
-                                                        arrayadapterFactura = new ArrayAdapter<Factura>(HistorialFacturasActivity.this, R.layout.list_item, lista_facturas);
-                                                        lbl_facturas.setAdapter(arrayadapterFactura);
+                                                            arrayadapterFactura = new ArrayAdapter<Factura>(HistorialFacturasActivity.this, R.layout.list_item, lista_facturas);
+                                                            lbl_facturas.setAdapter(arrayadapterFactura);
+                                                        }
+                                                    }else{
+                                                        lbl_facturas.setAdapter(new ArrayAdapter<String>(HistorialFacturasActivity.this,android.R.layout.simple_list_item_1, factura));
                                                     }
                                                 }
                                                 @Override
@@ -204,5 +209,11 @@ public class HistorialFacturasActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item){
+        Intent myIntent = new Intent(getApplicationContext(), ProfileActivity.class);
+        startActivityForResult(myIntent, 0);
+        return true;
     }
 }

@@ -83,19 +83,6 @@
             android:textColor="@color/black"
             android:textSize="16sp" />
 
-        <Button
-            android:id="@+id/btn_volver"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginBottom="30dp"
-            android:background="@drawable/btn_fondo_color"
-            android:elevation="5dp"
-            android:text="VOLVER"
-            android:textColor="@color/black"
-            android:textSize="16sp" />
-
     </LinearLayout>
 
     <com.google.android.material.appbar.AppBarLayout
@@ -114,12 +101,5 @@
 
     <include layout="@layout/content_registrar_giro" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@android:drawable/ic_dialog_email" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

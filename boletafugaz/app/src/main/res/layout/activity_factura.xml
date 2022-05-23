@@ -261,21 +261,19 @@
             android:layout_marginRight="7dp"
             android:text="AGREGAR PRODUCTOS" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/btn_Volver1"
-                style="@style/Widget.AppCompat.Button.Colored"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginLeft="7dp"
-                android:layout_marginRight="7dp"
-                android:layout_width="50dp"
-                android:text="VOLVER" />
-        </LinearLayout>
-
     </LinearLayout>
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/Theme.BoletaFugaz.NoActionBar.AppBarOverlay">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/Theme.BoletaFugaz.NoActionBar.PopupOverlay" />
+
+    </com.google.android.material.appbar.AppBarLayout>
 </RelativeLayout>

@@ -82,6 +82,7 @@ public class AgregarProductosActivity extends AppCompatActivity implements View.
 
     String id2,id3,rut_empresa,comuna_empresa,direccion_empresa,fecha,empresa,giro_empresa,rut,razon_Social,giro,direccion,region,provincia,comuna;
     String id4;
+    String cantidad1;
 
     public static final byte[] ESC_ALIGN_LEFT = new byte[] { 0x1b, 'a', 0x00 };
 
@@ -107,6 +108,10 @@ public class AgregarProductosActivity extends AppCompatActivity implements View.
         bdFactura = FirebaseDatabase.getInstance().getReference();
         bdProductos = FirebaseDatabase.getInstance().getReference();
         firebaseAuth = FirebaseAuth.getInstance();
+
+
+
+        cantidad1 = String.valueOf(txtCantidad);
 
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
@@ -193,6 +198,8 @@ public class AgregarProductosActivity extends AppCompatActivity implements View.
             @Override
             public void onClick(View view) {
 
+                if(!txtNombre.getText().toString().isEmpty() && !txtCantidad.getText().toString().isEmpty() && !txtPrecio.getText().toString().isEmpty()){
+
                 listaTotal = new ArrayList<>();
 
                 String cantidad = txtCantidad.getText().toString();
@@ -204,9 +211,6 @@ public class AgregarProductosActivity extends AppCompatActivity implements View.
                 int total = precioInt * cantidadInt ;
 
                 String total1 = String.valueOf(total);
-
-
-
 
                 listaProductos.add(new Productos(txtNombre.getText().toString(),txtCantidad.getText().toString(),txtPrecio.getText().toString(),total));
 
@@ -221,7 +225,6 @@ public class AgregarProductosActivity extends AppCompatActivity implements View.
                 }
 
 
-
                 String t = String.valueOf(suma1);
 
                 total3.setText("Total: "+t);
@@ -232,6 +235,7 @@ public class AgregarProductosActivity extends AppCompatActivity implements View.
                 row = new TableRow(getBaseContext());
 
                 TextView textView;
+
 
 
                 for (int i = 0; i < 4; i++){
@@ -246,9 +250,12 @@ public class AgregarProductosActivity extends AppCompatActivity implements View.
 
                 }
                 tblProductos.addView(row);
+            } else{
+                    Toast.makeText(AgregarProductosActivity.this, "Complete los campos", Toast.LENGTH_SHORT).show();
+                }
             }
-        });
 
+        });
 
 
         btnVolver.setOnClickListener(new View.OnClickListener() {
@@ -281,8 +288,6 @@ public class AgregarProductosActivity extends AppCompatActivity implements View.
             case R.id.btnImprimir2:
                 if (bluetoothSocket != null) {
                     try {
-                        String id1 = bdFactura.push().getKey();
-
 
                         int fuente2 = 0;
                         int negrita2 = 1;
@@ -314,22 +319,12 @@ public class AgregarProductosActivity extends AppCompatActivity implements View.
 
                         valueOfEditText = empresa+"B"+"O"+"L"+"E"+"T"+"A"+ "ELECTRONICA"+"N° 541";
 
-                        if (!TextUtils.isEmpty(empresa)) {
+                        id4 = bdFactura.push().getKey();
 
-                            id4 = bdFactura.push().getKey();
+                        Factura factura = new Factura(id4,giro_empresa,fecha,rut,razon_Social,giro,direccion,region,provincia,comuna,suma1);
+                        bdFactura.child(id4).setValue(factura);
 
-                            Factura factura = new Factura(id4,giro_empresa,fecha,rut,razon_Social,giro,direccion,region,provincia,comuna,suma1);
-                            bdFactura.child(id4).setValue(factura);
-
-                            bdProductos = FirebaseDatabase.getInstance().getReference("usuario").child(id2).child("empresa").child(id3).child("Factura").child(id4).child("Productos");
-
-                            Toast.makeText(AgregarProductosActivity.this, "Se registro correctamente", Toast.LENGTH_SHORT).show();
-
-
-                        } else {
-                            Toast.makeText(AgregarProductosActivity.this, "Debe completar los campos", Toast.LENGTH_SHORT).show();
-
-                        }
+                        bdProductos = FirebaseDatabase.getInstance().getReference("usuario").child(id2).child("empresa").child(id3).child("Factura").child(id4).child("Productos");
 
 
                         if(valueOfEditText.equals("")|| valueOfEditText == null){

@@ -96,5 +96,9 @@
     <string name="ac">AC</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="title_activity_registrar_giro">RegistrarGiroActivity</string>
+    <string name="title_activity_registrar_giro">Registrar Giro</string>
+    <string name="title_activity_factura">Factura</string>
+    <string name="title_activity_mostrar_emisor">Datos de Emisor</string>
+    <string name="title_activity_historial_boleta">Registro de Boletas</string>
+    <string name="title_activity_historial_factura">Registro de Facturas</string>
 </resources>

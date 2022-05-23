@@ -2,10 +2,12 @@ package com.example.boletafugaz;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -28,7 +30,6 @@ import java.util.List;
 
 public class HistorialBoletasActivity extends AppCompatActivity {
 
-    private Button btn_VolverB;
     private FirebaseAuth firebaseAuth;
     private DatabaseReference mDataBase;
     private DatabaseReference mDataBase1;
@@ -43,13 +44,18 @@ public class HistorialBoletasActivity extends AppCompatActivity {
     String id1,id2;
     String rut1, nombre1,comuna1, direccion1, telefono1;
 
+    String boletas[] = {"SIN BOLETAS REGISTRADAS"};
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_historial_boletas);
 
-        btn_VolverB = findViewById(R.id.btn_VolverB);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         spn_empresa = findViewById(R.id.spn_empresa);
         lbl_boletas = findViewById(R.id.lbl_listaBoletas);
 
@@ -65,35 +71,34 @@ public class HistorialBoletasActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
 
-                Boleta b = lista_boletas.get(position);
+                if(lista_boletas == null || lista_boletas.size() == 0 ) {
+                    // el arraylist no tiene valor
+                }
+                else{
+                    Boleta b = lista_boletas.get(position);
 
-                Intent i = new Intent(HistorialBoletasActivity.this, MostrarBoletaActivity.class);
+                    Intent i = new Intent(HistorialBoletasActivity.this, MostrarBoletaActivity.class);
 
-                i.putExtra("id", id2);
-                i.putExtra("rut", rut1);
-                i.putExtra("nombre", nombre1);
-                i.putExtra("comuna", comuna1);
-                i.putExtra("direccion", direccion1);
-                i.putExtra("telefono", telefono1);
-                i.putExtra("fecha", b.getFecha());
+                    i.putExtra("id", id2);
+                    i.putExtra("rut", rut1);
+                    i.putExtra("nombre", nombre1);
+                    i.putExtra("comuna", comuna1);
+                    i.putExtra("direccion", direccion1);
+                    i.putExtra("telefono", telefono1);
+                    i.putExtra("fecha", b.getFecha());
 
-                String total1 = String.valueOf(b.getTotal());
-                i.putExtra("total", total1);
+                    String total1 = String.valueOf(b.getTotal());
+                    i.putExtra("total", total1);
 
-                System.out.println(rut1);
-                System.out.println(b.getFecha());
-                System.out.println(b.getTotal());
+                    System.out.println(rut1);
+                    System.out.println(b.getFecha());
+                    System.out.println(b.getTotal());
 
-                startActivity(i);
-
-            }
-        });
+                    startActivity(i);
+                }
 
 
-        btn_VolverB.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(HistorialBoletasActivity.this, ProfileActivity.class));
+
             }
         });
     }
@@ -158,12 +163,16 @@ public class HistorialBoletasActivity extends AppCompatActivity {
                                                 @Override
                                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                                                     lista_boletas.clear();
+                                                    if(snapshot.exists()){
                                                     for (DataSnapshot objSnaoshot : snapshot.getChildren()) {
                                                         Boleta b = objSnaoshot.getValue(Boleta.class);
                                                         lista_boletas.add(b);
 
                                                         arrayadapterBoletas = new ArrayAdapter<Boleta>(HistorialBoletasActivity.this, R.layout.list_item, lista_boletas);
                                                         lbl_boletas.setAdapter(arrayadapterBoletas);
+                                                    }
+                                                }else{
+                                                        lbl_boletas.setAdapter(new ArrayAdapter<String>(HistorialBoletasActivity.this,android.R.layout.simple_list_item_1, boletas));
                                                     }
                                                 }
                                                 @Override
@@ -199,5 +208,10 @@ public class HistorialBoletasActivity extends AppCompatActivity {
         });
     }
 
+    public boolean onOptionsItemSelected(MenuItem item){
+        Intent myIntent = new Intent(getApplicationContext(), ProfileActivity.class);
+        startActivityForResult(myIntent, 0);
+        return true;
+    }
 
 }

@@ -14,7 +14,6 @@ import androidx.fragment.app.Fragment;
 import com.example.boletafugaz.CalculadoraActivity;
 import com.example.boletafugaz.FacturaActivity;
 import com.example.boletafugaz.R;
-import com.example.boletafugaz.RegistrarEmisorActivity;
 
 
 public class InicioFragment extends Fragment {

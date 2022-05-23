@@ -15,7 +15,6 @@ import android.widget.Toast;
 
 import com.example.boletafugaz.Model.Empresa;
 import com.example.boletafugaz.R;
-import com.example.boletafugaz.RegistrarEmisorActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;

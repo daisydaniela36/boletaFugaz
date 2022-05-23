@@ -1,9 +1,11 @@
 package com.example.boletafugaz;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -25,15 +27,19 @@ public class MostrarEmisorActivity extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private Button btn_editar;
     private Button btn_registrar_giro;
-    private Button btn_volver;
     private DatabaseReference bdEmpresa;
     private DatabaseReference mDataBase;
-    String id;
+    String id,rut,nombre,comuna,direccion,telefono;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mostrar_emisor);
+
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         firebaseAuth = FirebaseAuth.getInstance();
         mDataBase = FirebaseDatabase.getInstance().getReference();
@@ -49,20 +55,19 @@ public class MostrarEmisorActivity extends AppCompatActivity {
         edt_telefono = findViewById(R.id.edt_telefono);
         btn_editar = findViewById(R.id.btn_editar);
         btn_registrar_giro = findViewById(R.id.btn_registrar_giro);
-        btn_volver = findViewById(R.id.btn_volver);
 
         id = getIntent().getStringExtra("id");
-        String rutE = getIntent().getStringExtra("rut");
-        String nombreE = getIntent().getStringExtra("nombre");
-        String comunaE = getIntent().getStringExtra("comuna");
-        String direccionE = getIntent().getStringExtra("direccion");
-        String telefonoE = getIntent().getStringExtra("telefono");
+        rut = getIntent().getStringExtra("rut");
+        nombre = getIntent().getStringExtra("nombre");
+        comuna = getIntent().getStringExtra("comuna");
+        direccion = getIntent().getStringExtra("direccion");
+        telefono = getIntent().getStringExtra("telefono");
 
-        edt_rut.setText(rutE);
-        edt_nombre.setText(nombreE);
-        edt_comuna.setText(comunaE);
-        edt_direccion.setText(direccionE);
-        edt_telefono.setText(telefonoE);
+        edt_rut.setText(rut);
+        edt_nombre.setText(nombre);
+        edt_comuna.setText(comuna);
+        edt_direccion.setText(direccion);
+        edt_telefono.setText(telefono);
 
         btn_editar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -93,20 +98,23 @@ public class MostrarEmisorActivity extends AppCompatActivity {
                 startActivity(new Intent(MostrarEmisorActivity.this, RegistrarGiroActivity.class));
 
                 Intent i = new Intent(getApplicationContext(), RegistrarGiroActivity.class);
-                i.putExtra("id2", id);
+                i.putExtra("id", id);
+                i.putExtra("rut", rut);
+                i.putExtra("nombre", nombre);
+                i.putExtra("comuna", comuna);
+                i.putExtra("direccion", direccion);
+                i.putExtra("telefono", telefono);
                 startActivity(i);
                 finish();
 
             }
         });
 
-        btn_volver.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(MostrarEmisorActivity.this, ProfileActivity.class));
-            }
-        });
-
+    }
+    public boolean onOptionsItemSelected(MenuItem item){
+        Intent myIntent = new Intent(getApplicationContext(), ProfileActivity.class);
+        startActivityForResult(myIntent, 0);
+        return true;
     }
 
 

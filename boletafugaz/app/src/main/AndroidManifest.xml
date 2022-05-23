@@ -13,17 +13,31 @@
         android:theme="@style/Theme.BoletaFugaz.NoActionBar">
         <activity android:name=".MostrarFacturaActivity"></activity>
         <activity android:name=".MostrarBoletaActivity" />
-        <activity android:name=".HistorialFacturasActivity" />
-        <activity android:name=".HistorialBoletasActivity" />
+
+        <activity android:name=".HistorialFacturasActivity"
+            android:label="@string/title_activity_historial_factura"
+            android:theme="@style/Theme.BoletaFugaz.NoActionBar.NoActionBar" />
+
+
+        <activity android:name=".HistorialBoletasActivity"
+            android:label="@string/title_activity_historial_boleta"
+            android:theme="@style/Theme.BoletaFugaz.NoActionBar.NoActionBar" />
         <activity android:name=".AgregarProductosActivity" />
+
         <activity
             android:name=".RegistrarGiroActivity"
             android:label="@string/title_activity_registrar_giro"
             android:theme="@style/Theme.BoletaFugaz.NoActionBar.NoActionBar" />
-        <activity android:name=".MostrarEmisorActivity" />
-        <activity android:name=".FacturaActivity" />
+
+        <activity android:name=".MostrarEmisorActivity"
+            android:label="@string/title_activity_mostrar_emisor"
+            android:theme="@style/Theme.BoletaFugaz.NoActionBar.NoActionBar" />
+
+        <activity android:name=".FacturaActivity"
+                  android:label="@string/title_activity_factura"
+                  android:theme="@style/Theme.BoletaFugaz.NoActionBar.NoActionBar" />
+
         <activity android:name=".GenerarQRActivity" />
-        <activity android:name=".RegistrarEmisorActivity" />
         <activity android:name=".ListaBluetoothActivity" />
         <activity
             android:name=".ProfileActivity"

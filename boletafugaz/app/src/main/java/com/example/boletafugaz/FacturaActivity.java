@@ -2,6 +2,7 @@ package com.example.boletafugaz;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.print.PrintHelper;
@@ -192,12 +193,16 @@ public class FacturaActivity extends AppCompatActivity {
 
     private RelativeLayout relativeLayout;
 
-    private Button btnAgregarProductos,btn_Volver1;
+    private Button btnAgregarProductos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_factura);
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
         spn_empresa = findViewById(R.id.spn_empresa);
@@ -209,7 +214,6 @@ public class FacturaActivity extends AppCompatActivity {
         combo1 = findViewById(R.id.spinner7);
         combo2 = findViewById(R.id.spinner8);
         combo3 = findViewById(R.id.spinner6);
-        btn_Volver1 = findViewById(R.id.btn_Volver1);
 
         id2 = getIntent().getStringExtra("id usuario");
 
@@ -265,42 +269,36 @@ public class FacturaActivity extends AppCompatActivity {
                 String comuna = combo3.getSelectedItem().toString();
                 int total = 0;
 
+                if(!giro_Empresa.isEmpty() && !rut.isEmpty() && !razon_Social.isEmpty()  && !giro.isEmpty() && !direccion.isEmpty()){
 
-                Factura f = new Factura(id4,giro_Empresa,salida,rut,razon_Social,giro,direccion,region,provincia,comuna,total);
+                    Factura f = new Factura(id4,giro_Empresa,salida,rut,razon_Social,giro,direccion,region,provincia,comuna,total);
 
-                Intent i = new Intent(getApplicationContext(), AgregarProductosActivity.class);
+                    Intent i = new Intent(getApplicationContext(), AgregarProductosActivity.class);
 
-                i.putExtra("id empresa",id3);
-                i.putExtra("rut empresa",rut1);
-                i.putExtra("comuna empresa",comuna1);
-                i.putExtra("direccion empresa",direccion1);
-                i.putExtra("empresa", nombre1);
-                i.putExtra("fecha",salida);
-                i.putExtra("giro_Empresa", giro_Empresa);
-                i.putExtra("rut", f.getRut_cliente());
-                i.putExtra("razon_Social", f.getRazon_Social());
-                i.putExtra("giro", f.getGiro());
-                i.putExtra("direccion", f.getDireccion());
-                i.putExtra("region", f.getRegion());
-                i.putExtra("provincia", f.getProvincia());
-                i.putExtra("comuna", f.getComuna());
+                    i.putExtra("id empresa",id3);
+                    i.putExtra("rut empresa",rut1);
+                    i.putExtra("comuna empresa",comuna1);
+                    i.putExtra("direccion empresa",direccion1);
+                    i.putExtra("empresa", nombre1);
+                    i.putExtra("fecha",salida);
+                    i.putExtra("giro_Empresa", giro_Empresa);
+                    i.putExtra("rut", f.getRut_cliente());
+                    i.putExtra("razon_Social", f.getRazon_Social());
+                    i.putExtra("giro", f.getGiro());
+                    i.putExtra("direccion", f.getDireccion());
+                    i.putExtra("region", f.getRegion());
+                    i.putExtra("provincia", f.getProvincia());
+                    i.putExtra("comuna", f.getComuna());
 
-                startActivity(i);
+                    startActivity(i);
+
+                }else{
+                    Toast.makeText(FacturaActivity.this, "Complete los campos", Toast.LENGTH_SHORT).show();
+                }
 
             }
 
         });
-
-        btn_Volver1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(getApplicationContext(), ProfileActivity.class);
-
-                startActivity(i);
-            }
-        });
-
-
 
         combo1.setAdapter(new ArrayAdapter<String>(FacturaActivity.this, android.R.layout.simple_spinner_dropdown_item, regiones));
         combo1.setSelection(getIndexSpinner(combo1, region));
@@ -779,6 +777,14 @@ public class FacturaActivity extends AppCompatActivity {
         });
 
     }
+
+    public boolean onOptionsItemSelected(MenuItem item){
+        Intent myIntent = new Intent(getApplicationContext(), ProfileActivity.class);
+        startActivityForResult(myIntent, 0);
+        return true;
+    }
+
+
     public void loadEmpresa(){
         empresas = new ArrayList<>();
         String id = firebaseAuth.getCurrentUser().getUid();

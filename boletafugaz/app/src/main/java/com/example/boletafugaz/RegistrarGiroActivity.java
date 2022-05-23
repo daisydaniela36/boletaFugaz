@@ -15,37 +15,44 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.text.TextUtils;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 public class RegistrarGiroActivity extends AppCompatActivity {
-    String id2;
+    String id,rut,nombre,comuna,direccion,telefono;
     private EditText edt_nombre;
-    private Button btn_registrar,btn_volver;
+    private Button btn_registrar;
     private DatabaseReference bdGiro;
     private FirebaseAuth firebaseAuth;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) { super.onCreate(savedInstanceState);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registrar_giro);
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        FloatingActionButton fab = findViewById(R.id.fab);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         firebaseAuth = FirebaseAuth.getInstance();
 
-        id2 = getIntent().getStringExtra("id2");
+        id = getIntent().getStringExtra("id");
+        rut = getIntent().getStringExtra("rut");
+        nombre = getIntent().getStringExtra("nombre");
+        comuna = getIntent().getStringExtra("comuna");
+        direccion = getIntent().getStringExtra("direccion");
+        telefono = getIntent().getStringExtra("telefono");
 
 
 
         String id = firebaseAuth.getCurrentUser().getUid();
-        bdGiro = FirebaseDatabase.getInstance().getReference("usuario").child(id).child("empresa").child(id2).child("giro");
+        bdGiro = FirebaseDatabase.getInstance().getReference("usuario").child(id).child("empresa").child(id).child("giro");
 
         edt_nombre = findViewById(R.id.edt_nombre);
         btn_registrar = findViewById(R.id.btn_registrar);
-        btn_volver = findViewById(R.id.btn_volver);
 
         btn_registrar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -77,14 +84,19 @@ public class RegistrarGiroActivity extends AppCompatActivity {
                 edt_nombre.setText("");
             }
         });
-
-        btn_volver.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(RegistrarGiroActivity.this, ProfileActivity.class));
-            }
-        });
-
     }
 
+    public boolean onOptionsItemSelected(MenuItem item){
+        Intent i = new Intent(getApplicationContext(), MostrarEmisorActivity.class);
+        i.putExtra("id", id);
+        i.putExtra("rut", rut);
+        i.putExtra("nombre", nombre);
+        i.putExtra("comuna", comuna);
+        i.putExtra("direccion", direccion);
+        i.putExtra("telefono", telefono);
+        startActivity(i);
+        finish();
+        return true;
+    }
 }
+
