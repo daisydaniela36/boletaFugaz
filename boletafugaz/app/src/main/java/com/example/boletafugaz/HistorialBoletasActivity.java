@@ -209,8 +209,9 @@ public class HistorialBoletasActivity extends AppCompatActivity {
     }
 
     public boolean onOptionsItemSelected(MenuItem item){
-        Intent myIntent = new Intent(getApplicationContext(), ProfileActivity.class);
-        startActivityForResult(myIntent, 0);
+        Intent i = new Intent(getApplicationContext(), ProfileActivity.class);
+        startActivity(i);
+        finish();
         return true;
     }
 

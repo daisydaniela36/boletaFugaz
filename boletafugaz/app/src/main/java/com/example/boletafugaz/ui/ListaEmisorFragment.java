@@ -65,8 +65,6 @@ public class ListaEmisorFragment extends Fragment {
 
                 startActivity(i);
 
-
-
             }
         });
 
@@ -84,6 +82,7 @@ public class ListaEmisorFragment extends Fragment {
                 for (DataSnapshot objSnaoshot : snapshot.getChildren()) {
                     Empresa e = objSnaoshot.getValue(Empresa.class);
                     lista_empresa.add(e);
+
 
                     arrayadapterempresa = new ArrayAdapter<Empresa>(getContext(), R.layout.list_item, lista_empresa);
                     lbl_emisor.setAdapter(arrayadapterempresa);

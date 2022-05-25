@@ -12,6 +12,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -25,6 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.print.PrintHelper;
 import com.example.boletafugaz.Model.Boleta;
 import com.example.boletafugaz.Model.Empresa;
@@ -110,10 +112,13 @@ public class CalculadoraActivity extends AppCompatActivity implements View.OnCli
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calculadora);
 
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         txtLabel = findViewById(R.id.txt_label);
         edtTexto = findViewById(R.id.txtPrecio);
         btnImprimirTexto =  findViewById(R.id.btnImprimir);
-        btnVolver = findViewById(R.id.btnVolver);
         btnCerrarConexion = findViewById(R.id.btn_cerrar_conexion);
         spn_empresa = findViewById(R.id.spn_empresa);
         ivCodeContainer = findViewById(R.id.ivg_imagen);
@@ -271,17 +276,15 @@ public class CalculadoraActivity extends AppCompatActivity implements View.OnCli
 
         });
 
-
-        btnVolver.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(CalculadoraActivity.this,ProfileActivity.class));
-                finish();
-            }
-        });
-
         btnImprimirTexto.setOnClickListener(this);
         btnCerrarConexion.setOnClickListener(this);
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item){
+        Intent i = new Intent(getApplicationContext(), ProfileActivity.class);
+        startActivity(i);
+        finish();
+        return true;
     }
 
     public void loadEmpresa(){

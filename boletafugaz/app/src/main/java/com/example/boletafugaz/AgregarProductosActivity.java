@@ -1,6 +1,7 @@
 package com.example.boletafugaz;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.print.PrintHelper;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -13,6 +14,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -73,7 +75,7 @@ public class AgregarProductosActivity extends AppCompatActivity implements View.
     ArrayList<Productos> listaProductos = new ArrayList<>();
     ArrayList<Total> listaTotal = new ArrayList<>();
 
-    private Button btnCerrarConexion,btnVolver,btnAgregar,btnImprimirTexto;
+    private Button btnCerrarConexion,btnAgregar,btnImprimirTexto;
     private TableLayout tblProductos;
 
     private TextView txtNombre,txtCantidad,txtPrecio,total3;
@@ -92,10 +94,13 @@ public class AgregarProductosActivity extends AppCompatActivity implements View.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_agregar_productos);
 
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
 
 
         btnCerrarConexion = findViewById(R.id.btn_cerrar_conexion);
-        btnVolver = findViewById(R.id.btn_volver);
         btnAgregar = findViewById(R.id.btn_Agregar);
         txtLabel = findViewById(R.id.txt_label);
         btnImprimirTexto = findViewById(R.id.btnImprimir2);
@@ -257,30 +262,27 @@ public class AgregarProductosActivity extends AppCompatActivity implements View.
 
         });
 
-
-        btnVolver.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(getApplicationContext(), FacturaActivity.class);
-
-                i.putExtra("empresa1", empresa);
-                i.putExtra("giro_Empresa1", giro_empresa);
-                i.putExtra("rut1", rut);
-                i.putExtra("razon_Social1", razon_Social);
-                i.putExtra("giro1", giro);
-                i.putExtra("direccion1", direccion);
-                i.putExtra("region1", region);
-                i.putExtra("provincia1", provincia);
-                i.putExtra("comuna1", comuna);
-
-
-                startActivity(i);
-            }
-        });
-
         btnImprimirTexto.setOnClickListener(this);
         btnCerrarConexion.setOnClickListener(this);
 
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item){
+        Intent i = new Intent(getApplicationContext(), FacturaActivity.class);
+
+        i.putExtra("empresa1", empresa);
+        i.putExtra("giro_Empresa1", giro_empresa);
+        i.putExtra("rut1", rut);
+        i.putExtra("razon_Social1", razon_Social);
+        i.putExtra("giro1", giro);
+        i.putExtra("direccion1", direccion);
+        i.putExtra("region1", region);
+        i.putExtra("provincia1", provincia);
+        i.putExtra("comuna1", comuna);
+
+        startActivity(i);
+        finish();
+        return true;
     }
 
     public void onClick(View view) {

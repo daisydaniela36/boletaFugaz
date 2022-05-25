@@ -101,4 +101,9 @@
     <string name="title_activity_mostrar_emisor">Datos de Emisor</string>
     <string name="title_activity_historial_boleta">Registro de Boletas</string>
     <string name="title_activity_historial_factura">Registro de Facturas</string>
+    <string name="title_activity_mostrar_factura">Datos de Factura</string>
+    <string name="title_activity_mostrar_boleta">Datos de Boleta</string>
+    <string name="title_activity_mostrar_datos_productos">Datos de Productos</string>
+    <string name="title_activity_agregar_productos">Registrar Productos</string>
+    <string name="title_activity_calculadora">Calculadora</string>
 </resources>

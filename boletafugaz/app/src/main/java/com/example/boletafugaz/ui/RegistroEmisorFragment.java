@@ -22,7 +22,7 @@ import com.google.firebase.database.FirebaseDatabase;
 public class RegistroEmisorFragment extends Fragment {
 
     private EditText edt_rut, edt_nombre,edt_comuna, edt_direccion, edt_telefono;
-    private Button btn_registrar, btn_volver;
+    private Button btn_registrar;
     private FirebaseAuth firebaseAuth;
     private DatabaseReference bdEmpresa;
 
@@ -44,7 +44,6 @@ public class RegistroEmisorFragment extends Fragment {
         edt_direccion = root.findViewById(R.id.edt_direccion);
         edt_telefono = root.findViewById(R.id.edt_telefono);
         btn_registrar = root.findViewById(R.id.btn_registrar);
-        btn_volver = root.findViewById(R.id.btn_volver);
 
         btn_registrar.setOnClickListener(new View.OnClickListener() {
             @Override

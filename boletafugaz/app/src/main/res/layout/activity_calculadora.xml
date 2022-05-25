@@ -10,6 +10,7 @@
         android:id="@+id/txt_label"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
         android:gravity="center"
         android:padding="10dp"
         android:textColor="@color/black"
@@ -20,7 +21,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="7dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="95dp"
         android:layout_marginRight="7dp"
         android:onClick="clickBuscarDispositivosSync"
         android:text="Dispositivos sincornizados" />
@@ -30,7 +31,7 @@
         android:layout_height="620dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginTop="120dp"
+        android:layout_marginTop="150dp"
         android:layout_marginBottom="8dp"
         android:background="@color/colorPrimary"
         android:backgroundTint="@color/colorPrimary"
@@ -298,43 +299,15 @@
 
             </LinearLayout>
 
-            <LinearLayout
+            <Button
+                android:id="@+id/btnImprimir"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:layout_weight="1"
-                android:background="@color/color4"
-                android:orientation="horizontal">
-
-                <Button
-                    android:id="@+id/btnImprimir"
-                    style="@style/Widget.AppCompat.Button.Colored"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/btnImprimir"
-                    android:textColor="#0C0C0C"
-                    android:textColorHighlight="@color/color2"
-                    android:textColorHint="#FFFFFF"
-                    android:textColorLink="@color/color2"
-                    android:textSize="24sp"
-                    android:textStyle="bold" />
-
-                <Button
-                    android:id="@+id/btnVolver"
-                    style="@style/Widget.AppCompat.Button.Colored"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/btnVolver"
-                    android:textColor="#0C0C0C"
-                    android:textColorHighlight="@color/color2"
-                    android:textColorHint="#FFFFFF"
-                    android:textColorLink="@color/color2"
-                    android:textSize="24sp"
-                    android:textStyle="bold" />
-
-            </LinearLayout>
+                android:layout_marginLeft="7dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="7dp"
+                android:text="@string/btnImprimir"
+                android:textSize="18sp" />
 
             <Button
                 android:id="@+id/btn_cerrar_conexion"
@@ -358,4 +331,18 @@
 
 
     </LinearLayout>
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/Theme.BoletaFugaz.NoActionBar.AppBarOverlay">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/Theme.BoletaFugaz.NoActionBar.PopupOverlay" />
+
+    </com.google.android.material.appbar.AppBarLayout>
 </RelativeLayout>

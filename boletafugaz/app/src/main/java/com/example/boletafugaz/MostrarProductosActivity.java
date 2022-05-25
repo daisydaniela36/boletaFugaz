@@ -1,7 +1,10 @@
 package com.example.boletafugaz;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.print.PrintHelper;
+
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
@@ -13,27 +16,35 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.boletafugaz.Model.Productos;
 import com.example.boletafugaz.utilidades.PrintBitmap;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
-import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
-public class MostrarBoletaActivity extends AppCompatActivity implements View.OnClickListener{
-
+public class MostrarProductosActivity extends AppCompatActivity {
     private static final int REQUEST_DISPOSITIVO = 425;
     private static final String TAG_DEBUG = "tag_debug";
     private final int ANCHO_IMG_58_MM = 384;
@@ -56,20 +67,23 @@ public class MostrarBoletaActivity extends AppCompatActivity implements View.OnC
     private Bitmap bitmap = null;
     private ImageView ivCodeContainer;
 
+    List<Productos> productos;
+    private DatabaseReference bdProductos;
+    private FirebaseAuth firebaseAuth;
 
-    String id,rut, nombre,comuna, direccion, telefono,fecha,total,resultIva2;
-    EditText edt_Rut, edt_Nombre, edt_Comuna,edt_Direccion, edt_Telefono,edt_Fecha,edt_Total,edt_Iva;
+    String id_usuario;
+    String id1,rut, nombre,giro_empresa,comuna1, direccion1, telefono;
+    String id2,fecha, rut_cliente,razon_Social, giro, direccion2,region,provincia,comuna2,total;
     Button btnImprimirTexto, btnCerrarConexion;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_mostrar_boleta);
+        setContentView(R.layout.activity_mostrar_productos);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
 
         txtLabel = findViewById(R.id.txt_label);
         ivCodeContainer = findViewById(R.id.ivg_imagen);
@@ -77,51 +91,33 @@ public class MostrarBoletaActivity extends AppCompatActivity implements View.OnC
         btnImprimirTexto =  findViewById(R.id.btnImprimir);
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
-        edt_Rut = findViewById(R.id.edt_Rut);
-        edt_Nombre = findViewById(R.id.edt_Nombre);
-        edt_Comuna = findViewById(R.id.edt_Comuna);
-        edt_Direccion = findViewById(R.id.edt_Direccion);
-        edt_Telefono = findViewById(R.id.edt_Telefono);
-        edt_Fecha = findViewById(R.id.edt_Fecha);
-        edt_Total = findViewById(R.id.edt_Total);
-        edt_Iva = findViewById(R.id.edt_Iva);
+        firebaseAuth = FirebaseAuth.getInstance();
+        id_usuario = firebaseAuth.getCurrentUser().getUid();
 
-
-        id = getIntent().getStringExtra("id");
+        id1 = getIntent().getStringExtra("id1");
         rut = getIntent().getStringExtra("rut");
         nombre = getIntent().getStringExtra("nombre");
-        comuna = getIntent().getStringExtra("comuna");
-        direccion = getIntent().getStringExtra("direccion");
+        giro_empresa = getIntent().getStringExtra("giro_empresa");
+        comuna1 = getIntent().getStringExtra("comuna1");
+        direccion1 = getIntent().getStringExtra("direccion1");
         telefono = getIntent().getStringExtra("telefono");
+
+        id2 = getIntent().getStringExtra("id2");
         fecha = getIntent().getStringExtra("fecha");
+        rut_cliente = getIntent().getStringExtra("rut_cliente");
+        razon_Social = getIntent().getStringExtra("razon_Social");
+        giro = getIntent().getStringExtra("giro");
+        direccion2 = getIntent().getStringExtra("direccion2");
+        region = getIntent().getStringExtra("region");
+        provincia = getIntent().getStringExtra("provincia");
+        comuna2 = getIntent().getStringExtra("comuna2");
         total = getIntent().getStringExtra("total");
 
-        DecimalFormat df = new DecimalFormat("#");
-
-        int total1 = Integer.parseInt(total);
-
-        double calc1 = total1 / 1.19;
-        double calc2 = calc1 * 1.19;
-        double resultIva = calc2-calc1;
-        resultIva2 = String.valueOf(df.format(resultIva));
-
-
-        edt_Rut.setText(rut);
-        edt_Nombre.setText(nombre);
-        edt_Comuna.setText(comuna);
-        edt_Direccion.setText(direccion);
-        edt_Telefono.setText(telefono);
-        edt_Fecha.setText(fecha);
-        edt_Total.setText(total);
-        edt_Iva.setText(resultIva2);
-
-        btnImprimirTexto.setOnClickListener(this);
-        btnCerrarConexion.setOnClickListener(this);
-
+        loadProductos();
     }
 
-    public void onClick(View view) {
-        switch (view.getId()) {
+    public void onClick(View v) {
+        switch (v.getId()) {
             case R.id.btnImprimir:
                 if (bluetoothSocket != null) {
                     try {
@@ -131,25 +127,28 @@ public class MostrarBoletaActivity extends AppCompatActivity implements View.OnC
                         int ancho2 = 0;
                         int alto2 = 0;
 
-
-                        String st = "\n";
-                        String st1 = "==============================" + "\n";
-                        String st2 = rut + "\n";
-                        String st3 = "BOLETA ELECTRONICA" + "\n";
-                        String st4 = "N° 541" + "\n";
-                        String st5 = "------------------------------" + "\n";
-                        String st6= nombre+ "\n";
-                        String st7 = direccion + "\n";
-                        String st8 = comuna + "\n";
-                        String st9 = "+569"+telefono + "\n";
-                        String st10 = "==============================" + "\n";
-                        String st11 = "FECHA EMISION: "+fecha+ "\n";
-                        String st12 = "==============================" + "\n";
-                        String st13= "MONTO TOTAL: "+total + "\n"+ "\n";
-                        String st14= "el iva incluido en esta boleta  es de $"+resultIva2 + "\n";
-                        String st15= "------------------------------" + "\n";
-                        String st16= "TIMBRE ELECTRONICO SII" + "\n";
-                        String st17= "Verifique documento en sii.cl" + "\n";
+                        String st1 = " ==============================" + "\n";
+                        String st2 = "     "+rut+"\n";
+                        String st3 = "      FACTURA ELECTRONICA" + "\n";
+                        String st4 = "             N° 10" + "\n";
+                        String st5 = " ==============================" + "\n";
+                        String st6 = "Vendedor: " +nombre+ "\n";
+                        String st7 = "Giro: " +giro_empresa+ "\n";
+                        String st8 = "Fecha emision: " +fecha+ "\n";
+                        String st9 = "direccion: " +direccion1+" "+comuna1+"\n";
+                        String st10 =  " ==============================" + "\n";
+                        String st11 = "         DATOS CLIENTE" + "\n";
+                        String st12 = " ==============================" + "\n";
+                        String st13 = "Rut: " +rut_cliente+ "\n";
+                        String st14 = "Razon Social: " +razon_Social+"\n";
+                        String st15 = "Giro: " +giro+"\n";
+                        String st16 = "Direccion: " +direccion2+"\n";
+                        String st17 = "Region: " +region+"\n";
+                        String st18 = "Provincia: " +provincia+"\n";
+                        String st19 = "Comuna: " +comuna2+"\n";
+                        String st20 = " =============================="+"\n";
+                        String st21 = "        DATOS PRODUCTOS"+"\n";
+                        String st22 = " =============================="+"\n";
 
 
 
@@ -168,7 +167,6 @@ public class MostrarBoletaActivity extends AppCompatActivity implements View.OnC
                         outputStream.write(0x1C); outputStream.write(0x2E); // Cancelamos el modo de caracteres chino (FS .)
                         outputStream.write(0x1B); outputStream.write(0x74); outputStream.write(0x10); // Seleccionamos los caracteres escape (ESC t n) - n = 16(0x10) para WPC1252
 
-                        outputStream.write( getByteString(st,negrita2, fuente2, ancho2, alto2));
                         outputStream.write( getByteString(st1,negrita2, fuente2, ancho2, alto2));
                         outputStream.write( getByteString(st2,negrita2, fuente2, ancho2, alto2));
                         outputStream.write( getByteString(st3,negrita2, fuente2, ancho2, alto2));
@@ -184,11 +182,38 @@ public class MostrarBoletaActivity extends AppCompatActivity implements View.OnC
                         outputStream.write( getByteString(st13,negrita2, fuente2, ancho2, alto2));
                         outputStream.write( getByteString(st14,negrita2, fuente2, ancho2, alto2));
                         outputStream.write( getByteString(st15,negrita2, fuente2, ancho2, alto2));
+                        outputStream.write( getByteString(st16,negrita2, fuente2, ancho2, alto2));
+                        outputStream.write( getByteString(st17,negrita2, fuente2, ancho2, alto2));
+                        outputStream.write( getByteString(st18,negrita2, fuente2, ancho2, alto2));
+                        outputStream.write( getByteString(st19,negrita2, fuente2, ancho2, alto2));
+                        outputStream.write( getByteString(st20,negrita2, fuente2, ancho2, alto2));
+                        outputStream.write( getByteString(st21,negrita2, fuente2, ancho2, alto2));
+                        outputStream.write( getByteString(st22,negrita2, fuente2, ancho2, alto2));
+
+
+
+                        for(Productos p : productos){
+
+                            String st23 ="Nombre: "+p.getNombre()+"\n"+"Cantidad: "+p.getCantidad()+"\n"+"Precio: "+p.getPrecio()+"\n"+"Total: "+p.getTotal()+"\n";
+                            String st24 =" =============================="+"\n";
+
+
+
+
+                            outputStream.write( getByteString(st23,negrita2, fuente2, ancho2, alto2));
+                            outputStream.write( getByteString(st24,negrita2, fuente2, ancho2, alto2));
+
+                        }
+
+
+                        String st25 ="Total: "+total;
+                        outputStream.write( getByteString(st25,negrita2, fuente2, ancho2, alto2));
+
 
                         byte[] center = new byte[]{ 0x1b, 0x61, 0x01 };
                         outputStream.write( center );
 
-                        PrintHelper photoPrinter = new PrintHelper(MostrarBoletaActivity.this);
+                        PrintHelper photoPrinter = new PrintHelper(MostrarProductosActivity.this);
                         photoPrinter.setScaleMode(PrintHelper.SCALE_MODE_FIT);
 
                         Bitmap bitmap = ((BitmapDrawable) ivCodeContainer.getDrawable()).getBitmap();
@@ -196,10 +221,6 @@ public class MostrarBoletaActivity extends AppCompatActivity implements View.OnC
                         outputStream.write(PrintBitmap.POS_PrintBMP(bitmap, ANCHO_IMG_58_MM,MODE_PRINT_IMG));
 
                         outputStream.write("\n".getBytes());
-
-
-                        outputStream.write( getByteString(st16,negrita2, fuente2, ancho2, alto2));
-                        outputStream.write( getByteString(st17,negrita2, fuente2, ancho2, alto2));
 
                         byte[] center1 = new byte[]{ 0x1b, 0x61, 0x01 };
                         outputStream.write( center1 );
@@ -226,15 +247,66 @@ public class MostrarBoletaActivity extends AppCompatActivity implements View.OnC
                 break;
 
         }
+
     }
 
     public boolean onOptionsItemSelected(MenuItem item){
-        Intent i = new Intent(getApplicationContext(), HistorialBoletasActivity.class);
+        Intent i = new Intent(getApplicationContext(), MostrarFacturaActivity.class);
+
+        i.putExtra("id1", id1);
+        i.putExtra("rut", rut);
+        i.putExtra("nombre", nombre);
+        i.putExtra("giro_empresa", giro_empresa);
+        i.putExtra("comuna1", comuna1);
+        i.putExtra("direccion1", direccion1);
+        i.putExtra("telefono", telefono);
+
+
+        i.putExtra("id2", id2);
+        i.putExtra("fecha", fecha);
+        i.putExtra("rut_cliente", rut_cliente);
+        i.putExtra("giro_empresa", giro_empresa);
+        i.putExtra("razon_Social", razon_Social);
+        i.putExtra("giro", giro);
+        i.putExtra("direccion2", direccion2);
+        i.putExtra("region", region);
+        i.putExtra("provincia", provincia);
+        i.putExtra("comuna2", comuna2);
+        i.putExtra("total", total);
+
         startActivity(i);
         finish();
         return true;
     }
 
+    public void loadProductos(){
+        productos = new ArrayList<>();
+        bdProductos = FirebaseDatabase.getInstance().getReference();
+        bdProductos.child("usuario").child(id_usuario).child("empresa").child(id1).child("Factura").child(id2).child("Productos").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                if(snapshot.exists()){
+                    for (DataSnapshot ds : snapshot.getChildren()) {
+                        String nombre = ds.child("nombre").getValue().toString();
+                        String cantidad = ds.child("cantidad").getValue().toString();
+                        String precio = ds.child("precio").getValue().toString();
+                        String total = ds.child("total").getValue().toString();
+
+                        int total2 = Integer.parseInt(total);
+                        productos.add(new Productos(nombre,cantidad, precio, total2));
+
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+    }
 
     private void showSnackbar(String message){
         final Snackbar snackBar = Snackbar.make(relativeLayout, message, Snackbar.LENGTH_LONG);
@@ -300,7 +372,7 @@ public class MostrarBoletaActivity extends AppCompatActivity implements View.OnC
                                     @Override
                                     public void run() {
                                         txtLabel.setText(nombreDispositivo + " conectada");
-                                        Toast.makeText(MostrarBoletaActivity.this, "Dispositivo Conectado", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(MostrarProductosActivity.this, "Dispositivo Conectado", Toast.LENGTH_SHORT).show();
                                     }
                                 });
 
@@ -309,7 +381,7 @@ public class MostrarBoletaActivity extends AppCompatActivity implements View.OnC
                                     @Override
                                     public void run() {
                                         txtLabel.setText("");
-                                        Toast.makeText(MostrarBoletaActivity.this, "No se pudo conectar el dispositivo", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(MostrarProductosActivity.this, "No se pudo conectar el dispositivo", Toast.LENGTH_SHORT).show();
                                     }
                                 });
                                 Log.e(TAG_DEBUG, "Error al conectar el dispositivo bluetooth");

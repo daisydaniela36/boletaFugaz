@@ -6,25 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".MostrarFacturaActivity">
 
-    <TextView
-        android:id="@+id/txt_label"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:padding="10dp"
-        android:textColor="@color/black"
-        android:textSize="19sp"
-        android:textStyle="bold" />
-
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="7dp"
-        android:layout_marginTop="40dp"
-        android:layout_marginRight="7dp"
-        android:onClick="clickBuscarDispositivosSync"
-        android:text="Dispositivos sincornizados" />
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -37,7 +18,6 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="15dp"
             android:layout_marginLeft="15dp"
-            android:layout_marginTop="90dp"
             android:orientation="horizontal">
 
             <EditText
@@ -177,40 +157,29 @@
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/btnImprimir"
+                android:id="@+id/btnVerProductos"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:layout_width="50dp"
                 android:layout_marginLeft="7dp"
                 android:layout_marginRight="7dp"
-                android:text="IMPRIMIR" />
+                android:text="VER PRODUCTOS" />
 
-            <Button
-                android:id="@+id/btn_volver"
-                style="@style/Widget.AppCompat.Button.Colored"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginLeft="7dp"
-                android:layout_marginRight="7dp"
-                android:layout_width="50dp"
-                android:text="VOLVER" />
         </LinearLayout>
-
-        <Button
-            android:id="@+id/btn_cerrar_conexion"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="7dp"
-            android:layout_marginRight="7dp"
-            android:text="CERRAR CONEXION" />
-
-        <ImageView
-            android:id="@+id/ivg_imagen"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:visibility="invisible"
-            tools:srcCompat="@tools:sample/avatars" />
     </LinearLayout>
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/Theme.BoletaFugaz.NoActionBar.AppBarOverlay">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/Theme.BoletaFugaz.NoActionBar.PopupOverlay" />
+
+    </com.google.android.material.appbar.AppBarLayout>
 
 </RelativeLayout>
