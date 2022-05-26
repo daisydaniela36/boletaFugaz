@@ -10,14 +10,18 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,7 +48,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class MostrarProductosActivity extends AppCompatActivity {
+public class MostrarProductosActivity extends AppCompatActivity implements View.OnClickListener {
     private static final int REQUEST_DISPOSITIVO = 425;
     private static final String TAG_DEBUG = "tag_debug";
     private final int ANCHO_IMG_58_MM = 384;
@@ -71,10 +75,18 @@ public class MostrarProductosActivity extends AppCompatActivity {
     private DatabaseReference bdProductos;
     private FirebaseAuth firebaseAuth;
 
+    private TableRow row;
+    private TableLayout tblProductos;
+
     String id_usuario;
     String id1,rut, nombre,giro_empresa,comuna1, direccion1, telefono;
     String id2,fecha, rut_cliente,razon_Social, giro, direccion2,region,provincia,comuna2,total;
     Button btnImprimirTexto, btnCerrarConexion;
+
+    TextView txt_Total2;
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +98,7 @@ public class MostrarProductosActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         txtLabel = findViewById(R.id.txt_label);
+        txt_Total2 = findViewById(R.id.txt_Total2);
         ivCodeContainer = findViewById(R.id.ivg_imagen);
         btnCerrarConexion = findViewById(R.id.btn_cerrar_conexion);
         btnImprimirTexto =  findViewById(R.id.btnImprimir);
@@ -113,7 +126,58 @@ public class MostrarProductosActivity extends AppCompatActivity {
         comuna2 = getIntent().getStringExtra("comuna2");
         total = getIntent().getStringExtra("total");
 
+        txt_Total2.setText("Total: "+total);
+
+        tblProductos = findViewById(R.id.tblProductos);
         loadProductos();
+
+
+        TextView textView1;
+        TextView textView2;
+        TextView textView3;
+        TextView textView4;
+
+        row = new TableRow(getBaseContext());
+
+        textView1 = new TextView(getBaseContext());
+        textView1.setText("Nombre");
+        textView1.setGravity(Gravity.CENTER);
+        textView1.setPadding(54,30,54,30);
+        textView1.setBackgroundResource(R.color.black);
+        textView1.setTextColor(Color.WHITE);
+        row.addView(textView1);
+
+        textView2 = new TextView(getBaseContext());
+        textView2.setText("Cantidad");
+        textView2.setGravity(Gravity.CENTER);
+        textView2.setPadding(54,30,54,30);
+        textView2.setBackgroundResource(R.color.black);
+        textView2.setTextColor(Color.WHITE);
+        row.addView(textView2);
+
+        textView3 = new TextView(getBaseContext());
+        textView3.setText("Precio");
+        textView3.setGravity(Gravity.CENTER);
+        textView3.setPadding(54,30,54,30);
+        textView3.setBackgroundResource(R.color.black);
+        textView3.setTextColor(Color.WHITE);
+        row.addView(textView3);
+
+        textView4 = new TextView(getBaseContext());
+        textView4.setText("Total");
+        textView4.setGravity(Gravity.CENTER);
+        textView4.setPadding(54,30,54,30);
+        textView4.setBackgroundResource(R.color.black);
+        textView4.setTextColor(Color.WHITE);
+        row.addView(textView4);
+
+
+        tblProductos.addView(row);
+
+
+        btnImprimirTexto.setOnClickListener(this);
+        btnCerrarConexion.setOnClickListener(this);
+
     }
 
     public void onClick(View v) {
@@ -194,10 +258,10 @@ public class MostrarProductosActivity extends AppCompatActivity {
 
                         for(Productos p : productos){
 
+                            String total = String.valueOf(p.getTotal());
+
                             String st23 ="Nombre: "+p.getNombre()+"\n"+"Cantidad: "+p.getCantidad()+"\n"+"Precio: "+p.getPrecio()+"\n"+"Total: "+p.getTotal()+"\n";
                             String st24 =" =============================="+"\n";
-
-
 
 
                             outputStream.write( getByteString(st23,negrita2, fuente2, ancho2, alto2));
@@ -295,6 +359,27 @@ public class MostrarProductosActivity extends AppCompatActivity {
 
                         int total2 = Integer.parseInt(total);
                         productos.add(new Productos(nombre,cantidad, precio, total2));
+
+                        row = new TableRow(getBaseContext());
+
+                        TextView textView;
+
+
+                        String total3 = String.valueOf(total2);
+                        String[] cadena = new String[]{nombre, cantidad, precio, total3};
+
+                        for (int i = 0; i < 4; i++){
+
+                            textView = new TextView(getBaseContext());
+                            textView.setGravity(Gravity.CENTER);
+                            textView.setPadding(30,30,30,30);
+                            textView.setBackgroundResource(R.color.white);
+                            textView.setText(cadena[i]);
+                            textView.setTextColor(Color.BLACK);
+                            row.addView(textView);
+
+                        }
+                        tblProductos.addView(row);
 
                     }
                 }

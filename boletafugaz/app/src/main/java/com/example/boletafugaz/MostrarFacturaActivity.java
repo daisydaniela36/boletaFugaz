@@ -10,10 +10,12 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -21,6 +23,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -57,8 +61,13 @@ public class MostrarFacturaActivity extends AppCompatActivity{
 
     String id1,rut, nombre,giro_empresa,comuna1, direccion1, telefono;
     String id2,fecha, rut_cliente,razon_Social, giro, direccion2,region,provincia,comuna2,total;
-    EditText edt_Rut, edt_Nombre, edt_Comuna,edt_Direccion, edt_Telefono;
+
+    TextView txt_Rut, txt_Nombre,txt_Giro_Empresa, txt_Comuna,txt_Direccion, txt_Telefono;
+    TextView txt_Fecha,txt_Rut_Cliente, txt_Razon_Social, txt_Giro,txt_Direccion2, txt_Region,txt_Provincia,txt_Comuna2;
+
     Button btnVerProductos;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,11 +80,21 @@ public class MostrarFacturaActivity extends AppCompatActivity{
 
         btnVerProductos =  findViewById(R.id.btnVerProductos);
 
-        edt_Rut = findViewById(R.id.edt_Rut);
-        edt_Nombre = findViewById(R.id.edt_Nombre);
-        edt_Comuna = findViewById(R.id.edt_Comuna);
-        edt_Direccion = findViewById(R.id.edt_Direccion);
-        edt_Telefono = findViewById(R.id.edt_Telefono);
+        txt_Rut = findViewById(R.id.txt_Rut);
+        txt_Nombre = findViewById(R.id.txt_Nombre);
+        txt_Giro_Empresa = findViewById(R.id.txt_Giro_Empresa);
+        txt_Comuna = findViewById(R.id.txt_Comuna);
+        txt_Direccion = findViewById(R.id.txt_Direccion);
+        txt_Telefono = findViewById(R.id.txt_Telefono);
+
+        txt_Fecha = findViewById(R.id.txt_Fecha);
+        txt_Rut_Cliente = findViewById(R.id.txt_Rut_Cliente);
+        txt_Razon_Social = findViewById(R.id.txt_Razon_Social);
+        txt_Giro = findViewById(R.id.txt_Giro);
+        txt_Direccion2 = findViewById(R.id.txt_Direccion2);
+        txt_Region = findViewById(R.id.txt_Region);
+        txt_Provincia = findViewById(R.id.txt_Provincia);
+        txt_Comuna2 = findViewById(R.id.txt_Comuna2);
 
         id1 = getIntent().getStringExtra("id1");
         rut = getIntent().getStringExtra("rut");
@@ -96,12 +115,22 @@ public class MostrarFacturaActivity extends AppCompatActivity{
         comuna2 = getIntent().getStringExtra("comuna2");
         total = getIntent().getStringExtra("total");
 
+        txt_Rut.setText(rut);
+        txt_Nombre.setText("Nombre: "+nombre);
+        txt_Giro_Empresa.setText("Giro: "+giro_empresa);
+        txt_Comuna.setText("Comuna: "+comuna1);
+        txt_Direccion.setText("Direccion: "+direccion1);
+        txt_Telefono.setText("Telefono: "+telefono);
 
-        edt_Rut.setText(rut);
-        edt_Nombre.setText(nombre);
-        edt_Comuna.setText(comuna1);
-        edt_Direccion.setText(direccion1);
-        edt_Telefono.setText(telefono);
+        txt_Fecha.setText("Fecha: "+fecha);
+        txt_Rut_Cliente.setText("Rut: "+rut_cliente);
+        txt_Razon_Social.setText("Razon Social: "+razon_Social);
+        txt_Giro.setText("Giro: "+giro);
+        txt_Direccion2.setText("Direccion: "+direccion2);
+        txt_Region.setText("Region: "+region);
+        txt_Provincia.setText("Provincia: "+provincia);
+        txt_Comuna2.setText("Comuna: "+comuna2);
+
 
 
         btnVerProductos.setOnClickListener(new View.OnClickListener() {
