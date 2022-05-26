@@ -85,10 +85,17 @@ public class HistorialBoletasActivity extends AppCompatActivity {
                     i.putExtra("comuna", comuna1);
                     i.putExtra("direccion", direccion1);
                     i.putExtra("telefono", telefono1);
+
+                    String numero_boleta = String.valueOf(b.getNumero_boleta());
+                    i.putExtra("numero_boleta", numero_boleta);
+
                     i.putExtra("fecha", b.getFecha());
 
-                    String total1 = String.valueOf(b.getTotal());
-                    i.putExtra("total", total1);
+                    String iva = String.valueOf(b.getIva());
+                    i.putExtra("iva", iva);
+
+                    String total = String.valueOf(b.getTotal());
+                    i.putExtra("total", total);
 
                     System.out.println(rut1);
                     System.out.println(b.getFecha());

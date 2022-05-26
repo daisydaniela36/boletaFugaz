@@ -413,6 +413,8 @@ public class CalculadoraActivity extends AppCompatActivity implements View.OnCli
                         int ancho2 = 0;
                         int alto2 = 0;
 
+                        int  numero = 20;
+
                         String total = edtTexto.getText().toString();
                         Integer total2 = Integer.parseInt(total);
 
@@ -420,7 +422,7 @@ public class CalculadoraActivity extends AppCompatActivity implements View.OnCli
                         String st1 = "==============================" + "\n";
                         String st2 = rut1 + "\n";
                         String st3 = "BOLETA ELECTRONICA" + "\n";
-                        String st4 = "N° 541" + "\n";
+                        String st4 = "N° "+numero + "\n";
                         String st5 = "------------------------------" + "\n";
                         String st6= nombre1+ "\n";
                         String st7 = direccion1 + "\n";
@@ -435,13 +437,17 @@ public class CalculadoraActivity extends AppCompatActivity implements View.OnCli
                         String st16= "TIMBRE ELECTRONICO SII" + "\n";
                         String st17= "Verifique documento en sii.cl" + "\n";
 
+                        int iva = Integer.parseInt(df.format(resultIva));
+
+
+
 
 
                         if (!TextUtils.isEmpty(salida) && !TextUtils.isEmpty(edtTexto.getText().toString())) {
 
                             String id = bdEmpresa.push().getKey();
 
-                            Boleta boleta = new Boleta(salida,total2);
+                            Boleta boleta = new Boleta(numero,salida,iva,total2);
                             bdEmpresa.child(id).setValue(boleta);
 
                             Toast.makeText(CalculadoraActivity.this, "Se registro correctamente", Toast.LENGTH_SHORT).show();

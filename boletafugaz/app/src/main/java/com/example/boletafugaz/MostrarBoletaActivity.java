@@ -57,8 +57,8 @@ public class MostrarBoletaActivity extends AppCompatActivity implements View.OnC
     private ImageView ivCodeContainer;
 
 
-    String id,rut, nombre,comuna, direccion, telefono,fecha,total,resultIva2;
-    EditText edt_Rut, edt_Nombre, edt_Comuna,edt_Direccion, edt_Telefono,edt_Fecha,edt_Total,edt_Iva;
+    TextView txt_Rut,txt_Numero_Boleta, txt_Nombre, txt_Comuna,txt_Direccion, txt_Telefono,txt_Fecha,txt_Total,txt_Iva;
+    String id,rut, nombre,comuna, direccion, telefono,numero_boleta,fecha,total,iva;
     Button btnImprimirTexto, btnCerrarConexion;
 
     @Override
@@ -77,14 +77,15 @@ public class MostrarBoletaActivity extends AppCompatActivity implements View.OnC
         btnImprimirTexto =  findViewById(R.id.btnImprimir);
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
-        edt_Rut = findViewById(R.id.edt_Rut);
-        edt_Nombre = findViewById(R.id.edt_Nombre);
-        edt_Comuna = findViewById(R.id.edt_Comuna);
-        edt_Direccion = findViewById(R.id.edt_Direccion);
-        edt_Telefono = findViewById(R.id.edt_Telefono);
-        edt_Fecha = findViewById(R.id.edt_Fecha);
-        edt_Total = findViewById(R.id.edt_Total);
-        edt_Iva = findViewById(R.id.edt_Iva);
+        txt_Rut = findViewById(R.id.txt_Rut);
+        txt_Numero_Boleta = findViewById(R.id.txt_Numero_Boleta);
+        txt_Nombre = findViewById(R.id.txt_Nombre);
+        txt_Comuna = findViewById(R.id.txt_Comuna);
+        txt_Direccion = findViewById(R.id.txt_Direccion);
+        txt_Telefono = findViewById(R.id.txt_Telefono);
+        txt_Fecha = findViewById(R.id.txt_Fecha);
+        txt_Total = findViewById(R.id.txt_Total);
+        txt_Iva = findViewById(R.id.txt_Iva);
 
 
         id = getIntent().getStringExtra("id");
@@ -93,27 +94,20 @@ public class MostrarBoletaActivity extends AppCompatActivity implements View.OnC
         comuna = getIntent().getStringExtra("comuna");
         direccion = getIntent().getStringExtra("direccion");
         telefono = getIntent().getStringExtra("telefono");
+        numero_boleta = getIntent().getStringExtra("numero_boleta");
         fecha = getIntent().getStringExtra("fecha");
+        iva = getIntent().getStringExtra("iva");
         total = getIntent().getStringExtra("total");
 
-        DecimalFormat df = new DecimalFormat("#");
-
-        int total1 = Integer.parseInt(total);
-
-        double calc1 = total1 / 1.19;
-        double calc2 = calc1 * 1.19;
-        double resultIva = calc2-calc1;
-        resultIva2 = String.valueOf(df.format(resultIva));
-
-
-        edt_Rut.setText(rut);
-        edt_Nombre.setText(nombre);
-        edt_Comuna.setText(comuna);
-        edt_Direccion.setText(direccion);
-        edt_Telefono.setText(telefono);
-        edt_Fecha.setText(fecha);
-        edt_Total.setText(total);
-        edt_Iva.setText(resultIva2);
+        txt_Rut.setText(rut);
+        txt_Numero_Boleta.setText("N°: "+numero_boleta);
+        txt_Nombre.setText("Nombre: "+nombre);
+        txt_Comuna.setText("Comuna: "+comuna);
+        txt_Direccion.setText("Direccion: "+direccion);
+        txt_Telefono.setText("Telefono: "+telefono);
+        txt_Fecha.setText("Fecha: "+fecha);
+        txt_Total.setText("Total: "+total);
+        txt_Iva.setText("Iva: "+iva);
 
         btnImprimirTexto.setOnClickListener(this);
         btnCerrarConexion.setOnClickListener(this);
@@ -136,7 +130,7 @@ public class MostrarBoletaActivity extends AppCompatActivity implements View.OnC
                         String st1 = "==============================" + "\n";
                         String st2 = rut + "\n";
                         String st3 = "BOLETA ELECTRONICA" + "\n";
-                        String st4 = "N° 541" + "\n";
+                        String st4 = "N° "+numero_boleta + "\n";
                         String st5 = "------------------------------" + "\n";
                         String st6= nombre+ "\n";
                         String st7 = direccion + "\n";
@@ -146,7 +140,7 @@ public class MostrarBoletaActivity extends AppCompatActivity implements View.OnC
                         String st11 = "FECHA EMISION: "+fecha+ "\n";
                         String st12 = "==============================" + "\n";
                         String st13= "MONTO TOTAL: "+total + "\n"+ "\n";
-                        String st14= "el iva incluido en esta boleta  es de $"+resultIva2 + "\n";
+                        String st14= "el iva incluido en esta boleta  es de $"+iva + "\n";
                         String st15= "------------------------------" + "\n";
                         String st16= "TIMBRE ELECTRONICO SII" + "\n";
                         String st17= "Verifique documento en sii.cl" + "\n";
@@ -154,7 +148,8 @@ public class MostrarBoletaActivity extends AppCompatActivity implements View.OnC
 
 
 
-                        valueOfEditText = "B"+"O"+"L"+"E"+"T"+"A"+ "ELECTRONICA"+"N° 541";
+                        valueOfEditText = rut+"B"+"O"+"L"+"E"+"T"+"A"+ "ELECTRONICA"+"N° 541"+nombre+direccion+telefono+telefono+telefono+telefono+telefono+telefono+telefono+telefono+telefono+telefono+telefono+telefono+telefono+telefono+telefono+telefono+telefono+telefono+telefono+telefono+telefono+telefono+telefono+telefono+telefono+telefono+telefono+telefono+telefono+telefono+telefono+telefono+telefono+telefono+telefono+telefono+telefono+telefono+telefono+telefono+telefono+telefono+telefono+telefono+telefono+telefono+telefono+telefono+telefono+telefono+telefono+telefono+telefono+telefono+telefono+telefono+telefono+telefono+telefono+telefono+telefono+telefono+telefono+telefono+telefono+telefono+telefono+telefono+telefono+telefono+telefono+telefono+telefono+telefono+telefono+telefono+telefono+telefono+telefono+telefono+telefono+telefono+telefono+telefono+telefono+telefono+telefono+telefono+telefono+telefono+telefono+telefono+telefono+telefono+telefono+telefono+telefono+telefono+telefono+telefono+telefono;
+
 
 
                         if(valueOfEditText.equals("")|| valueOfEditText == null){

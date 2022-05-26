@@ -22,7 +22,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 public class RegistrarGiroActivity extends AppCompatActivity {
-    String id,rut,nombre,comuna,direccion,telefono;
+    String id1,rut,nombre,comuna,direccion,telefono;
     private EditText edt_nombre;
     private Button btn_registrar;
     private DatabaseReference bdGiro;
@@ -39,7 +39,7 @@ public class RegistrarGiroActivity extends AppCompatActivity {
 
         firebaseAuth = FirebaseAuth.getInstance();
 
-        id = getIntent().getStringExtra("id");
+        id1 = getIntent().getStringExtra("id");
         rut = getIntent().getStringExtra("rut");
         nombre = getIntent().getStringExtra("nombre");
         comuna = getIntent().getStringExtra("comuna");
@@ -49,7 +49,7 @@ public class RegistrarGiroActivity extends AppCompatActivity {
 
 
         String id = firebaseAuth.getCurrentUser().getUid();
-        bdGiro = FirebaseDatabase.getInstance().getReference("usuario").child(id).child("empresa").child(id).child("giro");
+        bdGiro = FirebaseDatabase.getInstance().getReference("usuario").child(id).child("empresa").child(id1).child("giro");
 
         edt_nombre = findViewById(R.id.edt_nombre);
         btn_registrar = findViewById(R.id.btn_registrar);
@@ -88,7 +88,7 @@ public class RegistrarGiroActivity extends AppCompatActivity {
 
     public boolean onOptionsItemSelected(MenuItem item){
         Intent i = new Intent(getApplicationContext(), MostrarEmisorActivity.class);
-        i.putExtra("id", id);
+        i.putExtra("id", id1);
         i.putExtra("rut", rut);
         i.putExtra("nombre", nombre);
         i.putExtra("comuna", comuna);
