@@ -40,6 +40,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -82,9 +83,11 @@ public class AgregarProductosActivity extends AppCompatActivity implements View.
     private TableRow row;
     int suma1 = 0;
 
-    String id2,id3,rut_empresa,comuna_empresa,direccion_empresa,fecha,empresa,giro_empresa,rut,razon_Social,giro,direccion,region,provincia,comuna;
+    String id2,id3,rut_empresa,comuna_empresa,direccion_empresa,fecha,empresa,giro_empresa,numero_factura,rut,razon_Social,giro,direccion,region,provincia,comuna;
     String id4;
     String cantidad1;
+    int numero_factura1;
+    double calc1, calc2,resultIva;
 
     public static final byte[] ESC_ALIGN_LEFT = new byte[] { 0x1b, 'a', 0x00 };
 
@@ -131,6 +134,8 @@ public class AgregarProductosActivity extends AppCompatActivity implements View.
         empresa = getIntent().getStringExtra("empresa");
         giro_empresa = getIntent().getStringExtra("giro_Empresa");
 
+        numero_factura = getIntent().getStringExtra("numero_factura");
+        numero_factura1 = Integer.parseInt(numero_factura);
 
         rut = getIntent().getStringExtra("rut");
         razon_Social = getIntent().getStringExtra("razon_Social");
@@ -230,6 +235,8 @@ public class AgregarProductosActivity extends AppCompatActivity implements View.
                 }
 
 
+
+
                 String t = String.valueOf(suma1);
 
                 total3.setText("Total: "+t);
@@ -296,10 +303,26 @@ public class AgregarProductosActivity extends AppCompatActivity implements View.
                         int ancho2 = 0;
                         int alto2 = 0;
 
+                        DecimalFormat df = new DecimalFormat("#");
+
+                        calc1 = suma1 / 1.19;
+                        calc2 = calc1 * 1.19;
+                        resultIva = calc2-calc1;
+
+                        df.format(resultIva);
+
+                        int iva = Integer.parseInt( df.format(resultIva));
+
+                        int subtotal = suma1 - iva;
+
+                        String subtotal2 = String.valueOf(subtotal);
+
+                        String iva2 = String.valueOf(iva);
+
                         String st1 = " ==============================" + "\n";
                         String st2 = "     "+rut_empresa+"\n";
                         String st3 = "      FACTURA ELECTRONICA" + "\n";
-                        String st4 = "             N° 10" + "\n";
+                        String st4 = "             N°"+numero_factura1 + "\n";
                         String st5 = " ==============================" + "\n";
                         String st6 = "Vendedor: " +empresa+ "\n";
                         String st7 = "Giro: " +giro_empresa+ "\n";
@@ -319,11 +342,12 @@ public class AgregarProductosActivity extends AppCompatActivity implements View.
                         String st21 = "        DATOS PRODUCTOS"+"\n";
                         String st22 = " =============================="+"\n";
 
-                        valueOfEditText = empresa+"B"+"O"+"L"+"E"+"T"+"A"+ "ELECTRONICA"+"N° 541";
+                        valueOfEditText = rut_empresa+"B"+"O"+"L"+"E"+"T"+"A"+ "ELECTRONICA"+"N° 541"+empresa+direccion+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa;
+
 
                         id4 = bdFactura.push().getKey();
 
-                        Factura factura = new Factura(id4,giro_empresa,fecha,rut,razon_Social,giro,direccion,region,provincia,comuna,suma1);
+                        Factura factura = new Factura(id4,numero_factura1,giro_empresa,fecha,rut,razon_Social,giro,direccion,region,provincia,comuna,iva,suma1);
                         bdFactura.child(id4).setValue(factura);
 
                         bdProductos = FirebaseDatabase.getInstance().getReference("usuario").child(id2).child("empresa").child(id3).child("Factura").child(id4).child("Productos");
@@ -335,9 +359,6 @@ public class AgregarProductosActivity extends AppCompatActivity implements View.
                             Toast.makeText(getApplicationContext(), getResources().getString(R.string.etWithContent), Toast.LENGTH_SHORT).show();
                             generateQrCode(valueOfEditText);
                         }
-
-
-
 
                         out.write( getByteString(st1,negrita2, fuente2, ancho2, alto2));
                         out.write( getByteString(st2,negrita2, fuente2, ancho2, alto2));
@@ -363,8 +384,6 @@ public class AgregarProductosActivity extends AppCompatActivity implements View.
                         out.write( getByteString(st20,negrita2, fuente2, ancho2, alto2));
                         out.write( getByteString(st21,negrita2, fuente2, ancho2, alto2));
                         out.write( getByteString(st22,negrita2, fuente2, ancho2, alto2));
-
-
 
 
                         for(Productos p : listaProductos) {
@@ -394,9 +413,13 @@ public class AgregarProductosActivity extends AppCompatActivity implements View.
 
                         String total1 = String.valueOf(suma1);
 
-                        String st25 = "Total: "+total1+"\n";
+                        String st25 = "Subtotal: "+subtotal2+"\n";
+                        String st26 = "Iva 19%: "+iva2+"\n";
+                        String st27 = "Total: "+total1+"\n";
 
                         out.write( getByteString(st25,negrita2, fuente2, ancho2, alto2));
+                        out.write( getByteString(st26,negrita2, fuente2, ancho2, alto2));
+                        out.write( getByteString(st27,negrita2, fuente2, ancho2, alto2));
 
 
                         PrintHelper photoPrinter = new PrintHelper(AgregarProductosActivity.this);

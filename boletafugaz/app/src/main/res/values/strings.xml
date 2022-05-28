@@ -106,4 +106,6 @@
     <string name="title_activity_mostrar_datos_productos">Datos de Productos</string>
     <string name="title_activity_agregar_productos">Registrar Productos</string>
     <string name="title_activity_calculadora">Calculadora</string>
+    <string name="title_activity_lista_giro">Listado de giros</string>
+    <string name="title_activity_mostrar_giro">Datos de giro</string>
 </resources>

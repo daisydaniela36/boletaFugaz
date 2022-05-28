@@ -27,6 +27,7 @@ public class MostrarEmisorActivity extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private Button btn_editar;
     private Button btn_registrar_giro;
+    private Button btn_ver_Lista;
     private DatabaseReference bdEmpresa;
     private DatabaseReference mDataBase;
     String id,rut,nombre,comuna,direccion,telefono;
@@ -55,6 +56,7 @@ public class MostrarEmisorActivity extends AppCompatActivity {
         edt_telefono = findViewById(R.id.edt_telefono);
         btn_editar = findViewById(R.id.btn_editar);
         btn_registrar_giro = findViewById(R.id.btn_registrar_giro);
+        btn_ver_Lista = findViewById(R.id.btn_ver_lista);
 
         id = getIntent().getStringExtra("id");
         rut = getIntent().getStringExtra("rut");
@@ -68,6 +70,25 @@ public class MostrarEmisorActivity extends AppCompatActivity {
         edt_comuna.setText(comuna);
         edt_direccion.setText(direccion);
         edt_telefono.setText(telefono);
+
+        btn_ver_Lista.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getApplicationContext(), ListaGiroActivity.class);
+
+                i.putExtra("id", id);
+                i.putExtra("rut", rut);
+                i.putExtra("nombre", nombre);
+                i.putExtra("comuna", comuna);
+                i.putExtra("direccion", direccion);
+                i.putExtra("telefono", telefono);
+
+                startActivity(i);
+                finish();
+
+            }
+        });
+
 
         btn_editar.setOnClickListener(new View.OnClickListener() {
             @Override

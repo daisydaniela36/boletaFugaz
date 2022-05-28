@@ -79,11 +79,11 @@ public class MostrarProductosActivity extends AppCompatActivity implements View.
     private TableLayout tblProductos;
 
     String id_usuario;
-    String id1,rut, nombre,giro_empresa,comuna1, direccion1, telefono;
-    String id2,fecha, rut_cliente,razon_Social, giro, direccion2,region,provincia,comuna2,total;
+    String id1,rut_empresa, empresa,giro_empresa,comuna1, direccion1, telefono;
+    String id2,numero_factura,fecha, rut_cliente,razon_Social, giro, direccion2,region,provincia,comuna2,iva,total;
     Button btnImprimirTexto, btnCerrarConexion;
 
-    TextView txt_Total2;
+    TextView txt_Total,txt_Subtotal,txt_Iva;
 
 
 
@@ -98,7 +98,9 @@ public class MostrarProductosActivity extends AppCompatActivity implements View.
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         txtLabel = findViewById(R.id.txt_label);
-        txt_Total2 = findViewById(R.id.txt_Total2);
+        txt_Total = findViewById(R.id.txt_Total2);
+        txt_Subtotal = findViewById(R.id.txt_Subtotal);
+        txt_Iva = findViewById(R.id.txt_Iva);
         ivCodeContainer = findViewById(R.id.ivg_imagen);
         btnCerrarConexion = findViewById(R.id.btn_cerrar_conexion);
         btnImprimirTexto =  findViewById(R.id.btnImprimir);
@@ -108,14 +110,15 @@ public class MostrarProductosActivity extends AppCompatActivity implements View.
         id_usuario = firebaseAuth.getCurrentUser().getUid();
 
         id1 = getIntent().getStringExtra("id1");
-        rut = getIntent().getStringExtra("rut");
-        nombre = getIntent().getStringExtra("nombre");
+        rut_empresa = getIntent().getStringExtra("rut");
+        empresa = getIntent().getStringExtra("nombre");
         giro_empresa = getIntent().getStringExtra("giro_empresa");
         comuna1 = getIntent().getStringExtra("comuna1");
         direccion1 = getIntent().getStringExtra("direccion1");
         telefono = getIntent().getStringExtra("telefono");
 
         id2 = getIntent().getStringExtra("id2");
+        numero_factura = getIntent().getStringExtra("numero_factura");
         fecha = getIntent().getStringExtra("fecha");
         rut_cliente = getIntent().getStringExtra("rut_cliente");
         razon_Social = getIntent().getStringExtra("razon_Social");
@@ -124,9 +127,20 @@ public class MostrarProductosActivity extends AppCompatActivity implements View.
         region = getIntent().getStringExtra("region");
         provincia = getIntent().getStringExtra("provincia");
         comuna2 = getIntent().getStringExtra("comuna2");
+        iva = getIntent().getStringExtra("iva");
         total = getIntent().getStringExtra("total");
 
-        txt_Total2.setText("Total: "+total);
+        int iva1 = Integer.parseInt(iva);
+        int total1 = Integer.parseInt(total);
+
+        int subtotal = total1 - iva1;
+
+        String subtotal1 = String.valueOf(subtotal);
+
+        txt_Subtotal.setText("Subtotal: "+subtotal1);
+        txt_Iva.setText("Iva: "+iva);
+        txt_Total.setText("Total: "+total);
+
 
         tblProductos = findViewById(R.id.tblProductos);
         loadProductos();
@@ -192,11 +206,11 @@ public class MostrarProductosActivity extends AppCompatActivity implements View.
                         int alto2 = 0;
 
                         String st1 = " ==============================" + "\n";
-                        String st2 = "     "+rut+"\n";
+                        String st2 = "     "+rut_empresa+"\n";
                         String st3 = "      FACTURA ELECTRONICA" + "\n";
-                        String st4 = "             N° 10" + "\n";
+                        String st4 = "             N° "+numero_factura + "\n";
                         String st5 = " ==============================" + "\n";
-                        String st6 = "Vendedor: " +nombre+ "\n";
+                        String st6 = "Vendedor: " +empresa+ "\n";
                         String st7 = "Giro: " +giro_empresa+ "\n";
                         String st8 = "Fecha emision: " +fecha+ "\n";
                         String st9 = "direccion: " +direccion1+" "+comuna1+"\n";
@@ -217,7 +231,8 @@ public class MostrarProductosActivity extends AppCompatActivity implements View.
 
 
 
-                        valueOfEditText = "B"+"O"+"L"+"E"+"T"+"A"+ "ELECTRONICA"+"N° 541";
+                        valueOfEditText = rut_empresa+"B"+"O"+"L"+"E"+"T"+"A"+ "ELECTRONICA"+"N° 541"+empresa+direccion1+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa+empresa;
+
 
 
                         if(valueOfEditText.equals("")|| valueOfEditText == null){
@@ -258,7 +273,6 @@ public class MostrarProductosActivity extends AppCompatActivity implements View.
 
                         for(Productos p : productos){
 
-                            String total = String.valueOf(p.getTotal());
 
                             String st23 ="Nombre: "+p.getNombre()+"\n"+"Cantidad: "+p.getCantidad()+"\n"+"Precio: "+p.getPrecio()+"\n"+"Total: "+p.getTotal()+"\n";
                             String st24 =" =============================="+"\n";
@@ -269,26 +283,34 @@ public class MostrarProductosActivity extends AppCompatActivity implements View.
 
                         }
 
+                        int iva1 = Integer.parseInt(iva);
+                        int total1 = Integer.parseInt(total);
 
-                        String st25 ="Total: "+total;
+                        int subtotal = total1 - iva1;
+
+                        String subtotal1 = String.valueOf(subtotal);
+
+                        String st25 ="Subtotal: "+subtotal1+"\n";
+                        String st26 ="Iva 19%: "+iva+"\n";
+                        String st27 ="Total: "+total+"\n";
+
+
                         outputStream.write( getByteString(st25,negrita2, fuente2, ancho2, alto2));
-
-
-                        byte[] center = new byte[]{ 0x1b, 0x61, 0x01 };
-                        outputStream.write( center );
+                        outputStream.write( getByteString(st26,negrita2, fuente2, ancho2, alto2));
+                        outputStream.write( getByteString(st27,negrita2, fuente2, ancho2, alto2));
 
                         PrintHelper photoPrinter = new PrintHelper(MostrarProductosActivity.this);
                         photoPrinter.setScaleMode(PrintHelper.SCALE_MODE_FIT);
 
                         Bitmap bitmap = ((BitmapDrawable) ivCodeContainer.getDrawable()).getBitmap();
 
+                        String st28= "     TIMBRE ELECTRONICO SII" + "\n";
+                        String st29= "  Verifique documento en sii.cl" + "\n";
+
                         outputStream.write(PrintBitmap.POS_PrintBMP(bitmap, ANCHO_IMG_58_MM,MODE_PRINT_IMG));
 
-                        outputStream.write("\n".getBytes());
-
-                        byte[] center1 = new byte[]{ 0x1b, 0x61, 0x01 };
-                        outputStream.write( center1 );
-
+                        outputStream.write( getByteString(st28,negrita2, fuente2, ancho2, alto2));
+                        outputStream.write( getByteString(st29,negrita2, fuente2, ancho2, alto2));
 
                     } catch (IOException e) {
                         Log.e(TAG_DEBUG, "Error al escribir en el socket");
@@ -318,8 +340,8 @@ public class MostrarProductosActivity extends AppCompatActivity implements View.
         Intent i = new Intent(getApplicationContext(), MostrarFacturaActivity.class);
 
         i.putExtra("id1", id1);
-        i.putExtra("rut", rut);
-        i.putExtra("nombre", nombre);
+        i.putExtra("rut", rut_empresa);
+        i.putExtra("nombre", empresa);
         i.putExtra("giro_empresa", giro_empresa);
         i.putExtra("comuna1", comuna1);
         i.putExtra("direccion1", direccion1);

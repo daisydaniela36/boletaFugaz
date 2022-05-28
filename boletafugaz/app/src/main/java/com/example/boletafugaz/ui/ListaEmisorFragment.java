@@ -79,6 +79,8 @@ public class ListaEmisorFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 lista_empresa.clear();
+
+
                 for (DataSnapshot objSnaoshot : snapshot.getChildren()) {
                     Empresa e = objSnaoshot.getValue(Empresa.class);
                     lista_empresa.add(e);

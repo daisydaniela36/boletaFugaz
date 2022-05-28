@@ -13,31 +13,41 @@
         android:theme="@style/Theme.BoletaFugaz.NoActionBar">
 
 
-        <activity android:name=".MostrarProductosActivity"
+        <activity android:name=".MostrarGiroActivity"
+            android:label="@string/title_activity_mostrar_giro"
+            android:theme="@style/Theme.BoletaFugaz.NoActionBar.NoActionBar" />
+
+
+        <activity
+            android:name=".ListaGiroActivity"
+            android:label="@string/title_activity_lista_giro"
+            android:theme="@style/Theme.BoletaFugaz.NoActionBar.NoActionBar" />
+        <activity
+            android:name=".MostrarProductosActivity"
             android:label="@string/title_activity_mostrar_datos_productos"
             android:theme="@style/Theme.BoletaFugaz.NoActionBar.NoActionBar" />
-
-        <activity android:name=".MostrarFacturaActivity"
+        <activity
+            android:name=".MostrarFacturaActivity"
             android:label="@string/title_activity_mostrar_factura"
             android:theme="@style/Theme.BoletaFugaz.NoActionBar.NoActionBar" />
-
-        <activity android:name=".MostrarBoletaActivity"
+        <activity
+            android:name=".MostrarBoletaActivity"
             android:label="@string/title_activity_mostrar_boleta"
             android:theme="@style/Theme.BoletaFugaz.NoActionBar.NoActionBar" />
-
-        <activity android:name=".HistorialFacturasActivity"
+        <activity
+            android:name=".HistorialFacturasActivity"
             android:label="@string/title_activity_historial_factura"
             android:theme="@style/Theme.BoletaFugaz.NoActionBar.NoActionBar" />
-
-        <activity android:name=".HistorialBoletasActivity"
+        <activity
+            android:name=".HistorialBoletasActivity"
             android:label="@string/title_activity_historial_boleta"
             android:theme="@style/Theme.BoletaFugaz.NoActionBar.NoActionBar" />
-
-        <activity android:name=".AgregarProductosActivity"
+        <activity
+            android:name=".AgregarProductosActivity"
             android:label="@string/title_activity_agregar_productos"
             android:theme="@style/Theme.BoletaFugaz.NoActionBar.NoActionBar" />
-
-        <activity android:name=".RegistrarGiroActivity"
+        <activity
+            android:name=".RegistrarGiroActivity"
             android:label="@string/title_activity_registrar_giro"
             android:theme="@style/Theme.BoletaFugaz.NoActionBar.NoActionBar" />
         <activity
@@ -48,16 +58,13 @@
             android:name=".FacturaActivity"
             android:label="@string/title_activity_factura"
             android:theme="@style/Theme.BoletaFugaz.NoActionBar.NoActionBar" />
-
         <activity android:name=".GenerarQRActivity" />
         <activity android:name=".ListaBluetoothActivity" />
-
-        <activity android:name=".ProfileActivity"
+        <activity
+            android:name=".ProfileActivity"
             android:label="@string/title_activity_profile"
             android:theme="@style/Theme.BoletaFugaz.NoActionBar" />
-
         <activity android:name=".ResetPasswordActivity" />
-
         <activity android:name=".InicioActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -65,11 +72,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".CalculadoraActivity"
+        <activity
+            android:name=".CalculadoraActivity"
             android:label="@string/title_activity_calculadora"
             android:theme="@style/Theme.BoletaFugaz.NoActionBar" />
-
         <activity android:name=".SignUpActivity" />
         <activity android:name=".LoginActivity" />
     </application>

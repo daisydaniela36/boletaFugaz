@@ -2,6 +2,7 @@ package com.example.boletafugaz.Model;
 
 public class Factura {
     String id;
+    Integer numero_factura;
     String giro_empresa;
     String fecha;
     String rut_cliente;
@@ -11,13 +12,15 @@ public class Factura {
     String region;
     String provincia;
     String comuna;
+    Integer iva;
     Integer total;
 
     public Factura() {
     }
 
-    public Factura(String id,String giro_empresa,String fecha, String rut_cliente, String razon_Social, String giro, String direccion, String region, String provincia, String comuna,Integer total) {
+    public Factura(String id,Integer numero_factura,String giro_empresa,String fecha, String rut_cliente, String razon_Social, String giro, String direccion, String region, String provincia, String comuna,Integer iva,Integer total) {
         this.id = id;
+        this.numero_factura = numero_factura;
         this.giro_empresa = giro_empresa;
         this.fecha = fecha;
         this.rut_cliente = rut_cliente;
@@ -27,16 +30,22 @@ public class Factura {
         this.region = region;
         this.provincia = provincia;
         this.comuna = comuna;
+        this.iva = iva;
         this.total = total;
     }
 
-    public Integer getTotal() {
-        return total;
+
+    public String getId() {
+        return id;
     }
 
-    public void setTotal(Integer total) {
-        this.total = total;
+    public void setId(String id) {
+        this.id = id;
     }
+
+    public Integer getNumero_factura() { return numero_factura; }
+
+    public void setNumero_factura(Integer numero_factura) { this.numero_factura = numero_factura; }
 
     public String getGiro_empresa() {
         return giro_empresa;
@@ -46,12 +55,6 @@ public class Factura {
         this.giro_empresa = giro_empresa;
     }
 
-    public String getId() {
-        return id;
-    }
-    public void setId(String id) {
-        this.id = id;
-    }
     public String getFecha() {
         return fecha;
     }
@@ -116,7 +119,19 @@ public class Factura {
         this.comuna = comuna;
     }
 
+    public Integer getIva() { return iva; }
+
+    public void setIva(Integer iva) { this.iva = iva; }
+
+    public Integer getTotal() {
+        return total;
+    }
+
+    public void setTotal(Integer total) {
+        this.total = total;
+    }
+
     @Override
-    public String toString() { return "fecha: " + fecha;
+    public String toString() { return "fecha: " + fecha+"\n"+"Total: "+total;
     }
 }

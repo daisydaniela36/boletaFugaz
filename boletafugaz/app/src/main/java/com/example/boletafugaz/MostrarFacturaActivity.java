@@ -60,10 +60,10 @@ import java.util.UUID;
 public class MostrarFacturaActivity extends AppCompatActivity{
 
     String id1,rut, nombre,giro_empresa,comuna1, direccion1, telefono;
-    String id2,fecha, rut_cliente,razon_Social, giro, direccion2,region,provincia,comuna2,total;
+    String id2,numero_factura,fecha, rut_cliente,razon_Social, giro, direccion2,region,provincia,comuna2,iva,total;
 
     TextView txt_Rut, txt_Nombre,txt_Giro_Empresa, txt_Comuna,txt_Direccion, txt_Telefono;
-    TextView txt_Fecha,txt_Rut_Cliente, txt_Razon_Social, txt_Giro,txt_Direccion2, txt_Region,txt_Provincia,txt_Comuna2;
+    TextView txt_Fecha,Numero_Factura,txt_Rut_Cliente, txt_Razon_Social, txt_Giro,txt_Direccion2, txt_Region,txt_Provincia,txt_Comuna2;
 
     Button btnVerProductos;
 
@@ -88,6 +88,7 @@ public class MostrarFacturaActivity extends AppCompatActivity{
         txt_Telefono = findViewById(R.id.txt_Telefono);
 
         txt_Fecha = findViewById(R.id.txt_Fecha);
+        Numero_Factura = findViewById(R.id.txt_Numero_Factura);
         txt_Rut_Cliente = findViewById(R.id.txt_Rut_Cliente);
         txt_Razon_Social = findViewById(R.id.txt_Razon_Social);
         txt_Giro = findViewById(R.id.txt_Giro);
@@ -105,6 +106,7 @@ public class MostrarFacturaActivity extends AppCompatActivity{
         telefono = getIntent().getStringExtra("telefono");
 
         id2 = getIntent().getStringExtra("id2");
+        numero_factura = getIntent().getStringExtra("numero_factura");
         fecha = getIntent().getStringExtra("fecha");
         rut_cliente = getIntent().getStringExtra("rut_cliente");
         razon_Social = getIntent().getStringExtra("razon_Social");
@@ -113,9 +115,11 @@ public class MostrarFacturaActivity extends AppCompatActivity{
         region = getIntent().getStringExtra("region");
         provincia = getIntent().getStringExtra("provincia");
         comuna2 = getIntent().getStringExtra("comuna2");
+        iva = getIntent().getStringExtra("iva");
         total = getIntent().getStringExtra("total");
 
         txt_Rut.setText(rut);
+        Numero_Factura.setText("N°: "+numero_factura);
         txt_Nombre.setText("Nombre: "+nombre);
         txt_Giro_Empresa.setText("Giro: "+giro_empresa);
         txt_Comuna.setText("Comuna: "+comuna1);
@@ -149,6 +153,7 @@ public class MostrarFacturaActivity extends AppCompatActivity{
 
 
                 i.putExtra("id2", id2);
+                i.putExtra("numero_factura", numero_factura);
                 i.putExtra("fecha", fecha);
                 i.putExtra("rut_cliente", rut_cliente);
                 i.putExtra("giro_empresa", giro_empresa);
@@ -158,6 +163,7 @@ public class MostrarFacturaActivity extends AppCompatActivity{
                 i.putExtra("region", region);
                 i.putExtra("provincia", provincia);
                 i.putExtra("comuna2", comuna2);
+                i.putExtra("iva", iva);
                 i.putExtra("total", total);
 
                 startActivity(i);

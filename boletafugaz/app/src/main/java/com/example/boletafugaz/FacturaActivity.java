@@ -259,6 +259,10 @@ public class FacturaActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 String id4 = "";
+
+                int numero_factura= 20;
+                String numero_factura1 = String.valueOf(numero_factura);
+
                 String giro_Empresa = spn_giro.getSelectedItem().toString();
                 String rut = edt_rut.getText().toString();
                 String razon_Social = edt_Razon_Social.getText().toString();
@@ -267,15 +271,18 @@ public class FacturaActivity extends AppCompatActivity {
                 String region = combo1.getSelectedItem().toString();
                 String  provincia = combo2.getSelectedItem().toString();
                 String comuna = combo3.getSelectedItem().toString();
+
+                int iva = 0;
                 int total = 0;
 
                 if(!giro_Empresa.isEmpty() && !rut.isEmpty() && !razon_Social.isEmpty()  && !giro.isEmpty() && !direccion.isEmpty()){
 
-                    Factura f = new Factura(id4,giro_Empresa,salida,rut,razon_Social,giro,direccion,region,provincia,comuna,total);
+                    Factura f = new Factura(id4,numero_factura,giro_Empresa,salida,rut,razon_Social,giro,direccion,region,provincia,comuna,iva,total);
 
                     Intent i = new Intent(getApplicationContext(), AgregarProductosActivity.class);
 
                     i.putExtra("id empresa",id3);
+                    i.putExtra("numero_factura",numero_factura1);
                     i.putExtra("rut empresa",rut1);
                     i.putExtra("comuna empresa",comuna1);
                     i.putExtra("direccion empresa",direccion1);

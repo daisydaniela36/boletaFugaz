@@ -48,7 +48,6 @@ public class HistorialFacturasActivity extends AppCompatActivity {
     String factura[] = {"SIN FACTURAS REGISTRADAS"};
 
     ArrayAdapter<Factura> arrayadapterFactura;
-    ArrayAdapter<Factura> arrayadapterFacturaerror;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +75,8 @@ public class HistorialFacturasActivity extends AppCompatActivity {
                 else{
                 Factura f = lista_facturas.get(position);
 
+                String numero_factura = String.valueOf( f.getNumero_factura());
+
                 Intent i = new Intent(HistorialFacturasActivity.this, MostrarFacturaActivity.class);
 
                 i.putExtra("id1", id4);
@@ -87,6 +88,7 @@ public class HistorialFacturasActivity extends AppCompatActivity {
                 i.putExtra("telefono", telefono1);
 
                 i.putExtra("id2", f.getId());
+                i.putExtra("numero_factura", numero_factura);
                 i.putExtra("giro_empresa", f.getGiro_empresa());
                 i.putExtra("fecha", f.getFecha());
                 i.putExtra("rut_cliente", f.getRut_cliente());
@@ -98,6 +100,9 @@ public class HistorialFacturasActivity extends AppCompatActivity {
                 i.putExtra("comuna2", f.getComuna());
 
                 String total2 = String.valueOf(f.getTotal());
+                String iva = String.valueOf( f.getIva());
+
+                i.putExtra("iva", iva);
                 i.putExtra("total", total2);
 
 
