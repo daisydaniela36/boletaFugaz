@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
@@ -28,6 +29,7 @@ public class MostrarEmisorActivity extends AppCompatActivity {
     private Button btn_editar;
     private Button btn_registrar_giro;
     private Button btn_ver_Lista;
+    private Button btn_Eliminar;
     private DatabaseReference bdEmpresa;
     private DatabaseReference mDataBase;
     String id,rut,nombre,comuna,direccion,telefono;
@@ -57,6 +59,7 @@ public class MostrarEmisorActivity extends AppCompatActivity {
         btn_editar = findViewById(R.id.btn_editar);
         btn_registrar_giro = findViewById(R.id.btn_registrar_giro);
         btn_ver_Lista = findViewById(R.id.btn_ver_lista);
+        btn_Eliminar = findViewById(R.id.btn_Eliminar);
 
         id = getIntent().getStringExtra("id");
         rut = getIntent().getStringExtra("rut");
@@ -89,6 +92,17 @@ public class MostrarEmisorActivity extends AppCompatActivity {
             }
         });
 
+        btn_Eliminar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String id2 = firebaseAuth.getCurrentUser().getUid();
+                mDataBase.child("usuario").child(id2).child("empresa").child(id).removeValue();
+
+                Intent intent = new Intent(MostrarEmisorActivity.this, ProfileActivity.class);
+                startActivity(intent);
+
+            }
+        });
 
         btn_editar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -109,6 +123,8 @@ public class MostrarEmisorActivity extends AppCompatActivity {
 
 
                 mDataBase.child("usuario").child(id2).child("empresa").child(id).updateChildren(map);
+
+                Toast.makeText(MostrarEmisorActivity.this, "Se ah editado correctamente", Toast.LENGTH_SHORT).show();
 
             }
         });
