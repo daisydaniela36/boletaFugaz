@@ -3,6 +3,7 @@ package com.example.boletafugaz;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.content.Intent;
@@ -12,6 +13,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
 
@@ -38,13 +40,21 @@ public class HistorialBoletasActivity extends AppCompatActivity {
     List<Empresa> empresas;
     List<Boleta> lista_boletas = new ArrayList<Boleta>();
     ArrayAdapter<Boleta> arrayadapterBoletas;
+
+    Boleta arrayAdapter;
+
     ListView lbl_boletas;
+    RecyclerView rv;
 
 
     String id1,id2;
     String rut1, nombre1,comuna1, direccion1, telefono1;
 
     String boletas[] = {"SIN BOLETAS REGISTRADAS"};
+    String r[] = {"NO SE ENCONTRO REGISTRO POR FAVOR BUSQUE POR FORMATO DD/MM/AA"};
+
+    Button btn_Aceptar;
+    EditText edt_Buscar;
 
 
     @Override
@@ -58,14 +68,28 @@ public class HistorialBoletasActivity extends AppCompatActivity {
 
         spn_empresa = findViewById(R.id.spn_empresa);
         lbl_boletas = findViewById(R.id.lbl_listaBoletas);
+        edt_Buscar = findViewById(R.id.edt_Buscar);
+        btn_Aceptar = findViewById(R.id.btn_Aceptar);
 
 
         firebaseAuth = FirebaseAuth.getInstance();
 
         id1 = firebaseAuth.getCurrentUser().getUid();
-
-
         loadEmpresa();
+
+        btn_Aceptar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                String buscar = String.valueOf(edt_Buscar.getText().toString());
+
+                buscarBoleta(buscar);
+
+                edt_Buscar.setText("");
+
+            }
+        });
+
 
         lbl_boletas.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -110,6 +134,21 @@ public class HistorialBoletasActivity extends AppCompatActivity {
         });
     }
 
+
+    public void buscarBoleta(String s){
+        ArrayList<Boleta>listaBoletas = new ArrayList<>();
+        for(Boleta obj: lista_boletas){
+            if(obj.getFecha().toLowerCase().contains(s.toLowerCase())){
+                listaBoletas.add(obj);
+                ArrayAdapter<Boleta> arrayAdapter = new ArrayAdapter<Boleta>(HistorialBoletasActivity.this, R.layout.list_item, listaBoletas);
+                lbl_boletas.setAdapter(arrayAdapter);
+            }else{
+                lbl_boletas.setAdapter(new ArrayAdapter<String>(HistorialBoletasActivity.this,R.layout.list_item, r));
+            }
+        }
+
+    }
+
     public void loadEmpresa(){
         empresas = new ArrayList<>();
         String id = firebaseAuth.getCurrentUser().getUid();
@@ -134,12 +173,9 @@ public class HistorialBoletasActivity extends AppCompatActivity {
                         spn_empresa.setAdapter(arrayAdapter);
 
 
-
                         spn_empresa.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                             @Override
                             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-
 
                                 String item = parent.getSelectedItem().toString();
 
@@ -179,7 +215,7 @@ public class HistorialBoletasActivity extends AppCompatActivity {
                                                         lbl_boletas.setAdapter(arrayadapterBoletas);
                                                     }
                                                 }else{
-                                                        lbl_boletas.setAdapter(new ArrayAdapter<String>(HistorialBoletasActivity.this,android.R.layout.simple_list_item_1, boletas));
+                                                        lbl_boletas.setAdapter(new ArrayAdapter<String>(HistorialBoletasActivity.this,R.layout.list_item, boletas));
                                                     }
                                                 }
                                                 @Override

@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
 
@@ -46,8 +47,12 @@ public class HistorialFacturasActivity extends AppCompatActivity {
     ListView lbl_facturas;
 
     String factura[] = {"SIN FACTURAS REGISTRADAS"};
+    String r[] = {"NO SE ENCONTRO REGISTRO POR FAVOR BUSQUE POR FORMATO DD/MM/AA"};
 
     ArrayAdapter<Factura> arrayadapterFactura;
+
+    Button btn_Aceptar;
+    EditText edt_Buscar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,9 +65,24 @@ public class HistorialFacturasActivity extends AppCompatActivity {
 
         spn_empresa = findViewById(R.id.spn_empresa);
         lbl_facturas = findViewById(R.id.lbl_listaFacturas);
+        edt_Buscar = findViewById(R.id.edt_Buscar);
+        btn_Aceptar = findViewById(R.id.btn_Aceptar);
 
         firebaseAuth = FirebaseAuth.getInstance();
         loadEmpresa();
+
+        btn_Aceptar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                String buscar = String.valueOf(edt_Buscar.getText().toString());
+
+                buscarFactura(buscar);
+
+                edt_Buscar.setText("");
+
+            }
+        });
 
 
         lbl_facturas.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -111,6 +131,20 @@ public class HistorialFacturasActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    public void buscarFactura(String s){
+        ArrayList<Factura>listaFactura = new ArrayList<>();
+        for(Factura obj: lista_facturas){
+            if(obj.getFecha().toLowerCase().contains(s.toLowerCase())){
+                listaFactura.add(obj);
+                ArrayAdapter<Factura> arrayAdapter = new ArrayAdapter<Factura>(HistorialFacturasActivity.this, R.layout.list_item, listaFactura);
+                lbl_facturas.setAdapter(arrayAdapter);
+            }else{
+                lbl_facturas.setAdapter(new ArrayAdapter<String>(HistorialFacturasActivity.this,R.layout.list_item, r));
+            }
+        }
+
     }
 
     public void loadEmpresa(){
@@ -180,7 +214,7 @@ public class HistorialFacturasActivity extends AppCompatActivity {
                                                             lbl_facturas.setAdapter(arrayadapterFactura);
                                                         }
                                                     }else{
-                                                        lbl_facturas.setAdapter(new ArrayAdapter<String>(HistorialFacturasActivity.this,android.R.layout.simple_list_item_1, factura));
+                                                        lbl_facturas.setAdapter(new ArrayAdapter<String>(HistorialFacturasActivity.this,R.layout.list_item, factura));
                                                     }
                                                 }
                                                 @Override

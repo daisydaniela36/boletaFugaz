@@ -30,7 +30,7 @@
             android:orientation="horizontal">
 
             <EditText
-                android:id="@+id/editTextTextPersonName"
+                android:id="@+id/edt_Buscar"
                 android:layout_width="248dp"
                 android:layout_height="42dp"
                 android:layout_marginLeft="6dp"
@@ -42,7 +42,7 @@
                 android:textAlignment="viewStart" />
 
             <Button
-                android:id="@+id/button2"
+                android:id="@+id/btn_Aceptar"
                 android:layout_width="100dp"
                 android:layout_height="50dp"
                 android:layout_marginRight="10dp"
