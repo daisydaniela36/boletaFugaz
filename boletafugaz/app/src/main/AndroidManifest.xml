@@ -11,13 +11,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.BoletaFugaz.NoActionBar">
-
-
-        <activity android:name=".MostrarGiroActivity"
+        <activity android:name=".CambiarContrasenaActivity"></activity>
+        <activity
+            android:name=".MostrarGiroActivity"
             android:label="@string/title_activity_mostrar_giro"
             android:theme="@style/Theme.BoletaFugaz.NoActionBar.NoActionBar" />
-
-
         <activity
             android:name=".ListaGiroActivity"
             android:label="@string/title_activity_lista_giro"

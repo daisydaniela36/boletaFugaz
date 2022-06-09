@@ -43,7 +43,7 @@
                 android:textColorLink="@color/color1" />
 
             <EditText
-                android:id="@+id/edt_rut"
+                android:id="@+id/edt_Nombre"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginRight="20dp"
@@ -73,7 +73,7 @@
                 android:textColor="@color/color1" />
 
             <EditText
-                android:id="@+id/edt_nombre"
+                android:id="@+id/edt_Direccion"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginRight="20dp"
@@ -101,7 +101,7 @@
                 android:textColor="@color/color1" />
 
             <EditText
-                android:id="@+id/edt_comuna"
+                android:id="@+id/edt_Telefono"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginRight="20dp"
@@ -129,7 +129,7 @@
                 android:textColor="@color/color1" />
 
             <EditText
-                android:id="@+id/edt_direccion"
+                android:id="@+id/edt_Correo"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginRight="20dp"

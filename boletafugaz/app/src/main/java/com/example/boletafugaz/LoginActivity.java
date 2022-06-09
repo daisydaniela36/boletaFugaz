@@ -35,7 +35,6 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
 
-
         btn_ir_crearCuenta=findViewById(R.id.btn_ir_crearCuenta);
 
         firebaseAuth = FirebaseAuth.getInstance();
